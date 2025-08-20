@@ -1,4 +1,4 @@
-function Experience({ data, setData, setStep, onPrevious }) {
+function Experience({ data, setData, setStep }) {
   const handleChange = (index, field, value) => {
     const updated = [...data];
     updated[index][field] = value;
@@ -30,7 +30,7 @@ function Experience({ data, setData, setStep, onPrevious }) {
                 updated[i].company = e.target.value;
                 setData(updated);
               }}
-              className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600"
+              className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white"
             />
 
             <input
@@ -42,7 +42,7 @@ function Experience({ data, setData, setStep, onPrevious }) {
                 updated[i].position = e.target.value;
                 setData(updated);
               }}
-              className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600"
+              className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white"
             />
 
             <textarea
@@ -53,7 +53,7 @@ function Experience({ data, setData, setStep, onPrevious }) {
                 updated[i].responsibilities = e.target.value;
                 setData(updated);
               }}
-              className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600"
+              className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white"
             />
 
             <div className="flex gap-2">
@@ -66,7 +66,7 @@ function Experience({ data, setData, setStep, onPrevious }) {
                   updated[i].from = e.target.value;
                   setData(updated);
                 }}
-                className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600"
+                className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white"
               />
               <input
                 type="date"
@@ -77,7 +77,7 @@ function Experience({ data, setData, setStep, onPrevious }) {
                   updated[i].to = e.target.value;
                   setData(updated);
                 }}
-                className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600"
+                className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white"
               />
             </div>
 

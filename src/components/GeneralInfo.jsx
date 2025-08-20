@@ -8,31 +8,31 @@ function GeneralInfo({ data, setData, setStep, setShowForm }) {
         <input type="text" placeholder="Name"
           value={data.name}
           onChange={(e) => setData({ ...data, name: e.target.value })}
-          className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600"
+          className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white"
         />
 
         <input type="email" placeholder="Email"
           value={data.email}
           onChange={(e) => setData({ ...data, email: e.target.value })}
-          className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600"
+          className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white"
         />
 
         <input type="number" placeholder="Phone"
           value={data.phone}
           onChange={(e) => setData({ ...data, phone: e.target.value })}
-          className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600"
+          className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white"
         />
 
         <input type="text" placeholder="Github Username (optional)"
           value={data.github}
           onChange={(e) => setData({ ...data, github: e.target.value })}
-          className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600"
+          className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white"
         />
 
         <input type="url" placeholder="LinkedIn Profile URL (optional)"
           value={data.linkedin}
           onChange={(e) => setData({ ...data, linkedin: e.target.value })}
-          className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600"
+          className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white"
         />
 
         <div className="flex justify-between mt-3 mb-5">

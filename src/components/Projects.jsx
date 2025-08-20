@@ -1,4 +1,4 @@
-function Projects({ data, setData, setStep, onPrevious }) {
+function Projects({ data, setData, setStep }) {
   const handleChange = (index, field, value) => {
     const updated = [...data];
     updated[index][field] = value;
@@ -29,7 +29,7 @@ function Projects({ data, setData, setStep, onPrevious }) {
                 updated[i].name = e.target.value;
                 setData(updated);
               }}
-              className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600"
+              className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white"
             />
             <input
               type="text"
@@ -40,7 +40,7 @@ function Projects({ data, setData, setStep, onPrevious }) {
                 updated[i].technology = e.target.value;
                 setData(updated);
               }}
-              className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600"
+              className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white"
             />
             <textarea
               placeholder="Project Description"
@@ -50,7 +50,7 @@ function Projects({ data, setData, setStep, onPrevious }) {
                 updated[i].description = e.target.value;
                 setData(updated);
               }}
-              className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600"
+              className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white"
             />
             <input
               type="url"
@@ -61,7 +61,7 @@ function Projects({ data, setData, setStep, onPrevious }) {
                 updated[i].url = e.target.value;
                 setData(updated);
               }}
-              className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600"
+              className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white"
             />
             {/* Show delete button only if more than 1 project */}
             {data.length > 1 && (
@@ -84,9 +84,9 @@ function Projects({ data, setData, setStep, onPrevious }) {
             Previous
           </button>
           <button
-            onClick={() => alert("form completed")}
+            onClick={() => setStep(4)}
             className="text-white bg-yellow-600 font-bold px-10 py-2 rounded-3xl border border-solid text-xl cursor-pointer transition-all ease-in duration-300 mt-5 mb-5 hover:bg-white hover:text-yellow-600">
-            Preview
+            Next
           </button>
         </div>
 
