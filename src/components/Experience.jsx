@@ -6,7 +6,7 @@ function Experience({ data, setData, setStep }) {
   };
 
   const addExperience = () => {
-    setData([...data, { company: "", position: "", responsibilities: "", from: "", to: "" }]);
+    setData([...data, {id: Date.now(), company: "", position: "", responsibilities: "", from: "", to: "" }]);
   };
 
   const deleteExperience = (index) => {
@@ -20,14 +20,15 @@ function Experience({ data, setData, setStep }) {
         <h2 className="text-[clamp(25px,3vw,60px)] text-center font-sans font-bold mb-20 p-4 text-yellow-600 italic">Experience</h2>
 
         {data.map((exp,i)=>(
-          <div key = {i} className = "mb-8 border-b pb-6">
+          <div key = {exp.id} className = "mb-8 border-b pb-6">
             <input
               type="text"
               placeholder="Company Name"
               value={data.company}
               onChange={(e) => {
-                const updated = [...data];
-                updated[i].company = e.target.value;
+                const updated = data.map((item, idx) =>
+                  idx === i ? { ...item, company: e.target.value } : item
+                );
                 setData(updated);
               }}
               className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white"
@@ -38,8 +39,9 @@ function Experience({ data, setData, setStep }) {
               placeholder="Position Title"
               value={data.position}
               onChange={(e) => {
-                const updated = [...data];
-                updated[i].position = e.target.value;
+                const updated = data.map((item, idx) =>
+                  idx === i ? { ...item, company: e.target.value } : item
+                );
                 setData(updated);
               }}
               className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white"
@@ -49,8 +51,9 @@ function Experience({ data, setData, setStep }) {
               placeholder="Main Responsibilities"
               value={data.responsibilities}
               onChange={(e) => {
-                const updated = [...data];
-                updated[i].responsibilities = e.target.value;
+                const updated = data.map((item, idx) =>
+                  idx === i ? { ...item, company: e.target.value } : item
+                );
                 setData(updated);
               }}
               className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white"
@@ -62,8 +65,9 @@ function Experience({ data, setData, setStep }) {
                 placeholder="From"
                 value={data.from}
                 onChange={(e) => {
-                  const updated = [...data];
-                  updated[i].from = e.target.value;
+                  const updated = data.map((item, idx) =>
+                    idx === i ? { ...item, company: e.target.value } : item
+                  );
                   setData(updated);
                 }}
                 className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white"
@@ -73,8 +77,9 @@ function Experience({ data, setData, setStep }) {
                 placeholder="To"
                 value={data.to}
                 onChange={(e) => {
-                  const updated = [...data];
-                  updated[i].to = e.target.value;
+                  const updated = data.map((item, idx) =>
+                    idx === i ? { ...item, company: e.target.value } : item
+                  );
                   setData(updated);
                 }}
                 className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white"
@@ -84,7 +89,10 @@ function Experience({ data, setData, setStep }) {
             {/* Show delete button only if more than 1 experience */}
             {data.length > 1 && (
               <button
-                onClick={() => deleteExperience(i)}
+                onClick={() => {
+                  const updated = data.filter((item) => item.id !== exp.id);
+                  setData(updated);
+                }}
                 className="bg-red-600 text-white px-4 py-2 rounded-lg mt-3 cursor-pointer hover:bg-red-700 transition-all ease-in duration-300"
               >
                 Delete Experience

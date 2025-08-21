@@ -6,7 +6,7 @@ function Projects({ data, setData, setStep }) {
   };
 
   const addProject = () => {
-    setData([...data, { name: "", technology: "", description: "", url: "" }]);
+    setData([...data, {id: Date.now(), name: "", technology: "", description: "", url: "" }]);
   };
 
   const deleteProject = (index) => {
@@ -19,14 +19,15 @@ function Projects({ data, setData, setStep }) {
         <h2 className="text-[clamp(25px,3vw,60px)] text-center font-sans font-bold mb-10 p-4 text-yellow-600 italic">Projects</h2>
 
         {data.map((proj, i) => (
-          <div key={i} className="mb-8 border-b pb-6">
+          <div key={proj.id} className="mb-8 border-b pb-6">
             <input
               type="text"
               placeholder="Project Name"
               value={data.name}
               onChange={(e) => {
-                const updated = [...data];
-                updated[i].name = e.target.value;
+                const updated = data.map((item, idx) =>
+                  idx === i ? { ...item, company: e.target.value } : item
+                );
                 setData(updated);
               }}
               className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white"
@@ -36,8 +37,9 @@ function Projects({ data, setData, setStep }) {
               placeholder="Tech-stack used"
               value={data.technology}
               onChange={(e) => {
-                const updated = [...data];
-                updated[i].technology = e.target.value;
+                const updated = data.map((item, idx) =>
+                  idx === i ? { ...item, company: e.target.value } : item
+                );
                 setData(updated);
               }}
               className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white"
@@ -46,8 +48,9 @@ function Projects({ data, setData, setStep }) {
               placeholder="Project Description"
               value={data.description}
               onChange={(e) => {
-                const updated = [...data];
-                updated[i].description = e.target.value;
+                const updated = data.map((item, idx) =>
+                  idx === i ? { ...item, company: e.target.value } : item
+                );
                 setData(updated);
               }}
               className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white"
@@ -57,8 +60,9 @@ function Projects({ data, setData, setStep }) {
               placeholder="Github link"
               value={data.url}
               onChange={(e) => {
-                const updated = [...data];
-                updated[i].url = e.target.value;
+                const updated = data.map((item, idx) =>
+                  idx === i ? { ...item, company: e.target.value } : item
+                );
                 setData(updated);
               }}
               className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white"
@@ -66,7 +70,10 @@ function Projects({ data, setData, setStep }) {
             {/* Show delete button only if more than 1 project */}
             {data.length > 1 && (
               <button
-                onClick={() => deleteProject(i)}
+                onClick={() => {
+                  const updated = data.filter((item) => item.id !== proj.id);
+                  setData(updated);
+                }}
                 className="bg-red-600 text-white px-4 py-2 rounded-lg mt-3 cursor-pointer hover:bg-red-700 transition-all ease-in duration-300"
               >
                 Delete Project

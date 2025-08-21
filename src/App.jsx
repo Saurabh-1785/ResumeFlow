@@ -27,10 +27,10 @@ function App() {
     dateend: "",
   });
   const [experience, setExperience] = useState([
-    { company: "", position: "", responsibilities: "", from: "", to: "" }
+    { id: Date.now(), company: "", position: "", responsibilities: "", from: "", to: "" }
   ]);
   const [projects, setProjects] = useState([
-    { name: "", technology: "", description: "", url: "" }
+    { id: Date.now(), name: "", technology: "", description: "", url: "" }
   ]);
   const [skills, setSkills] = useState({ 
     languages: "", 

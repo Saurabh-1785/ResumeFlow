@@ -27,6 +27,12 @@ function Skills({ data, setData, setStep }) {
           className="block w-full border p-3 mb-10 rounded italic text-black dark:bg-black dark:text-white"
         />
 
+        <input type="text" placeholder="Others (Soft Skills, Certifications,....)"
+          value={data.others}
+          onChange={(e) => setData({ ...data, others: e.target.value })}
+          className="block w-full border p-3 mb-10 rounded italic text-black dark:bg-black dark:text-white"
+        />
+
         <div className="flex justify-between m  t-3 mb-5">
           <button
             onClick={() => setStep(3)}
