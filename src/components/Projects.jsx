@@ -23,7 +23,7 @@ function Projects({ data, setData, setStep }) {
             <input
               type="text"
               placeholder="Project Name"
-              value={data.name}
+              value={proj.name}
               onChange={(e) => {
                 const updated = data.map((item, idx) =>
                   idx === i ? { ...item, company: e.target.value } : item
@@ -35,7 +35,7 @@ function Projects({ data, setData, setStep }) {
             <input
               type="text"
               placeholder="Tech-stack used"
-              value={data.technology}
+              value={proj.technology}
               onChange={(e) => {
                 const updated = data.map((item, idx) =>
                   idx === i ? { ...item, company: e.target.value } : item
@@ -46,7 +46,7 @@ function Projects({ data, setData, setStep }) {
             />
             <textarea
               placeholder="Project Description"
-              value={data.description}
+              value={proj.description}
               onChange={(e) => {
                 const updated = data.map((item, idx) =>
                   idx === i ? { ...item, company: e.target.value } : item
@@ -58,7 +58,7 @@ function Projects({ data, setData, setStep }) {
             <input
               type="url"
               placeholder="Github link"
-              value={data.url}
+              value={proj.url}
               onChange={(e) => {
                 const updated = data.map((item, idx) =>
                   idx === i ? { ...item, company: e.target.value } : item
