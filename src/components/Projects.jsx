@@ -1,7 +1,8 @@
 function Projects({ data, setData, setStep }) {
-  const handleChange = (index, field, value) => {
-    const updated = [...data];
-    updated[index][field] = value;
+  const handleChange = (id, field, value) => {
+    const updated = data.map((proj) =>
+      proj.id === id ? { ...proj, [field]: value } : proj
+    );
     setData(updated);
   };
 
@@ -24,47 +25,35 @@ function Projects({ data, setData, setStep }) {
               type="text"
               placeholder="Project Name"
               value={proj.name}
-              onChange={(e) => {
-                const updated = data.map((item, idx) =>
-                  idx === i ? { ...item, company: e.target.value } : item
-                );
-                setData(updated);
-              }}
+              onChange={(e) => 
+                handleChange(proj.id, "name", e.target.value)
+              }
               className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white"
             />
             <input
               type="text"
               placeholder="Tech-stack used"
               value={proj.technology}
-              onChange={(e) => {
-                const updated = data.map((item, idx) =>
-                  idx === i ? { ...item, company: e.target.value } : item
-                );
-                setData(updated);
-              }}
+              onChange={(e) => 
+                handleChange(proj.id, "technology", e.target.value)
+              }
               className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white"
             />
             <textarea
               placeholder="Project Description"
               value={proj.description}
-              onChange={(e) => {
-                const updated = data.map((item, idx) =>
-                  idx === i ? { ...item, company: e.target.value } : item
-                );
-                setData(updated);
-              }}
+              onChange={(e) => 
+                handleChange(proj.id, "description", e.target.value)
+              }
               className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white"
             />
             <input
               type="url"
               placeholder="Github link"
               value={proj.url}
-              onChange={(e) => {
-                const updated = data.map((item, idx) =>
-                  idx === i ? { ...item, company: e.target.value } : item
-                );
-                setData(updated);
-              }}
+              onChange={(e) => 
+                handleChange(proj.id, "url", e.target.value)
+              }
               className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white"
             />
             {/* Show delete button only if more than 1 project */}

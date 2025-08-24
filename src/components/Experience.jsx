@@ -1,12 +1,15 @@
 function Experience({ data, setData, setStep }) {
-  const handleChange = (index, field, value) => {
-    const updated = [...data];
-    updated[index][field] = value;
+  const handleChange = (id, field, value) => {
+    const updated = data.map((exp) =>
+      exp.id === id ? { ...exp, [field]: value } : exp
+    );
     setData(updated);
   };
 
   const addExperience = () => {
-    setData([...data, {id: Date.now(), company: "", position: "", responsibilities: "", from: "", to: "" }]);
+    setData([
+      ...data,
+      {id: Date.now(), company: "", position: "", responsibilities: "", from: "", to: "" }]);
   };
 
   const deleteExperience = (index) => {
@@ -24,38 +27,29 @@ function Experience({ data, setData, setStep }) {
             <input
               type="text"
               placeholder="Company Name"
-              value={data.company}
-              onChange={(e) => {
-                const updated = data.map((item, idx) =>
-                  idx === i ? { ...item, company: e.target.value } : item
-                );
-                setData(updated);
-              }}
+              value={exp.company}
+              onChange={(e) => 
+                handleChange(exp.id, "company", e.target.value)
+              }
               className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white"
             />
 
             <input
               type="text"
               placeholder="Position Title"
-              value={data.position}
-              onChange={(e) => {
-                const updated = data.map((item, idx) =>
-                  idx === i ? { ...item, company: e.target.value } : item
-                );
-                setData(updated);
-              }}
+              value={exp.position}
+              onChange={(e) => 
+                handleChange(exp.id, "position", e.target.value)
+              }
               className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white"
             />
 
             <textarea
               placeholder="Main Responsibilities"
-              value={data.responsibilities}
-              onChange={(e) => {
-                const updated = data.map((item, idx) =>
-                  idx === i ? { ...item, company: e.target.value } : item
-                );
-                setData(updated);
-              }}
+              value={exp.responsibilities}
+              onChange={(e) =>
+                handleChange(exp.id, "responsibilities", e.target.value)
+              }
               className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white"
             />
 
@@ -63,25 +57,19 @@ function Experience({ data, setData, setStep }) {
               <input
                 type="date"
                 placeholder="From"
-                value={data.from}
-                onChange={(e) => {
-                  const updated = data.map((item, idx) =>
-                    idx === i ? { ...item, company: e.target.value } : item
-                  );
-                  setData(updated);
-                }}
+                value={exp.from}
+                onChange={(e) => 
+                  handleChange(exp.id, "from", e.target.value)
+                }
                 className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white"
               />
               <input
                 type="date"
                 placeholder="To"
-                value={data.to}
-                onChange={(e) => {
-                  const updated = data.map((item, idx) =>
-                    idx === i ? { ...item, company: e.target.value } : item
-                  );
-                  setData(updated);
-                }}
+                value={exp.to}
+                onChange={(e) => 
+                  handleChange(exp.id, "to", e.target.value)
+                }
                 className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white"
               />
             </div>
