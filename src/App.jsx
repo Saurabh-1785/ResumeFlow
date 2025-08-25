@@ -22,12 +22,9 @@ function App() {
     github: "",
     linkedin: "",
   });
-  const [education, setEducation] = useState({
-    institution: "",
-    study: "",
-    datestart: "",
-    dateend: "",
-  });
+  const [education, setEducation] = useState([
+    { id: Date.now(), institution: "", place: "", study: "",grade: "", datestart: "", dateend: ""}
+  ]);
   const [experience, setExperience] = useState([
     { id: Date.now(), company: "", position: "", responsibilities: "", from: "", to: "" }
   ]);

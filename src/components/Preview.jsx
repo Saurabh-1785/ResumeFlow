@@ -1,4 +1,29 @@
+import { generateLatex } from "../utils/generateLatex";
+
 function Preview({ general, education, experience, projects, skills, setStep }) {
+
+  const handleDownloadPDF = async () => {
+    const tex = generateLatex(general, education, experience, projects, skills);
+
+    const response = await fetch("http://localhost:5000/generate-pdf", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ tex }),
+    });
+
+    if (!response.ok) {
+      alert("Error generating PDF");
+      return;
+    }
+
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "resume.pdf";
+    link.click();
+  };
+
   return (
     <div className="border border-r-20 rounded-tr-4xl rounded-bl-4xl p-10 mt-10 mb-10 w-full max-w-3xl border-yellow-600">
       <h2 className="text-[clamp(25px,3vw,60px)] text-center font-bold mb-10 p-4 text-yellow-600 italic">
@@ -20,10 +45,16 @@ function Preview({ general, education, experience, projects, skills, setStep }) 
       {/* Education */}
       <div className="mb-6 italic overflow-auto">
         <h3 className="text-2xl mb-3 font-semibold text-yellow-600">Education</h3>
-        <p><strong>Institution:</strong> {education.institution}</p>
-        <p><strong>Study:</strong> {education.study}</p>
-        <p><strong>From:</strong> {education.datestart}</p>
-        <p><strong>To:</strong> {education.dateend}</p>
+        {education.map((edu, i) => (
+          <div key={i} className="mb-3">
+            <p><strong>Institution Name:</strong> {edu.institution}</p>
+            <p><strong>Place:</strong> {edu.place}</p>
+            <p><strong>Study:</strong> {edu.study}</p>
+            <p><strong>Grade:</strong> {edu.grade}</p>
+            <p><strong>Year Start:</strong> {edu.datestart}</p>
+            <p><strong>Year End:</strong> {edu.dateend}</p>
+          </div>
+        ))}
       </div>
       <hr className="mb-6 text-yellow-600"></hr>
 
@@ -48,7 +79,7 @@ function Preview({ general, education, experience, projects, skills, setStep }) 
         {projects.map((proj, i) => (
           <div key={i} className="mb-3">
             <p><strong>Name:</strong> {proj.name}</p>
-            <p><strong>Tech:</strong> {proj.technology}</p>
+            <p><strong>Tech-stack used:</strong> {proj.technology}</p>
             <p><strong>Description:</strong> {proj.description}</p>
             <p><strong>URL:</strong> {proj.url}</p>
           </div>
@@ -64,6 +95,7 @@ function Preview({ general, education, experience, projects, skills, setStep }) 
         <p><strong>Frameworks:</strong> {skills.frameworks}</p>
         <p><strong>Libraries:</strong> {skills.libraries}</p>
         <p><strong>Tools:</strong> {skills.tools}</p>
+        <p><strong>Others:</strong> {skills.others}</p>
       </div>
       <hr className="mb-6 text-yellow-600"></hr>
 
@@ -75,11 +107,12 @@ function Preview({ general, education, experience, projects, skills, setStep }) 
         >
           Go Back & Edit
         </button>
+
         <button
-          onClick={() => alert("Form Completed")}
-          className="text-white bg-green-600 font-bold px-10 py-2 rounded-3xl border border-solid text-xl cursor-pointer transition-all ease-in duration-300 mt-5 mb-5 hover:bg-white hover:text-green-600"
+          onClick={handleDownloadPDF}
+          className="text-white bg-blue-600 font-bold px-10 py-2 rounded-3xl border border-solid text-xl cursor-pointer transition-all ease-in duration-300 mt-5 mb-5 hover:bg-white hover:text-blue-600"
         >
-          Submit
+          Download
         </button>
       </div>
     </div>
