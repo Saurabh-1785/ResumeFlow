@@ -1,36 +1,26 @@
 {
   "name": "cv-application",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "lint": "eslint .",
-    "preview": "vite preview",
-    "start": "concurrently \"npm run server\" \"npm run start-react\"",
-    "server": "cd server && nodemon index.js",
-    "start-react": "react-scripts start"
-
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "frontend": "cd frontend && npm run dev",
+    "backend": "cd backend && node index.js",
+    "dev": "concurrently -n \"frontend,backend\" -c \"bgBlue,bgYellow\" \"npm run frontend\" \"npm run backend\""
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Saurabh-1785/CV-Application.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Saurabh-1785/CV-Application/issues"
+  },
+  "homepage": "https://github.com/Saurabh-1785/CV-Application#readme",
   "dependencies": {
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1"
-  },
-  "devDependencies": {
-    "@eslint/js": "^9.33.0",
-    "@tailwindcss/vite": "^4.1.12",
-    "@types/react": "^19.1.10",
-    "@types/react-dom": "^19.1.7",
-    "@vitejs/plugin-react": "^5.0.0",
-    "autoprefixer": "^10.4.21",
-    "concurrently": "^9.2.0",
-    "eslint": "^9.33.0",
-    "eslint-plugin-react-hooks": "^5.2.0",
-    "eslint-plugin-react-refresh": "^0.4.20",
-    "globals": "^16.3.0",
-    "postcss": "^8.5.6",
-    "tailwindcss": "^4.1.12",
-    "vite": "^7.1.2"
+    "concurrently": "^9.2.1"
   }
 }

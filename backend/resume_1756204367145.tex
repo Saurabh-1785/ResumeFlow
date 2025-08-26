@@ -1,0 +1,131 @@
+
+\documentclass[letterpaper,11pt]{article}
+\usepackage{fontawesome5}
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage[english]{babel}
+\usepackage{tabularx}
+\input{glyphtounicode}
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\addtolength{\oddsidemargin}{-0.5in}
+\addtolength{\evensidemargin}{-0.5in}
+\addtolength{\textwidth}{1in}
+\addtolength{\topmargin}{-.5in}
+\addtolength{\textheight}{1.0in}
+
+\titleformat{\section}{\scshape\large}{}{0em}{}[\titlerule]
+
+\newcommand{\resumeItem}[1]{\item\small{#1}}
+\newcommand{\resumeSubheading}[4]{
+  \vspace{-2pt}\item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \textbf{#1} & #2 \\
+      \textit{#3} & \textit{#4} \\
+    \end{tabular*}\vspace{-7pt}
+}
+\newcommand{\resumeProjectHeading}[2]{
+  \item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      {#1} & #2 \\
+    \end{tabular*}\vspace{-7pt}
+}
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0.15in, label={}]}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
+\newcommand{\resumeItemListStart}{\begin{itemize}}
+\newcommand{\resumeItemListEnd}{\end{itemize}}
+
+\begin{document}
+
+% ---------- HEADING ----------
+\begin{center}
+  \textbf{\Huge \scshape Saurabh Chauhan} \\ \vspace{3pt}
+  \small\href{8544709161}{\raisebox{-0.2\height} \rotatebox[origin=c]{270}\faPhone\ \underline8544709161}
+   $|$ \href{mailto:saurabhchauhan1785@gmail.com}{\faEnvelope\underline saurabhchauhan1785@gmail.com}
+   $|$ \href{www.linkedin.com/in/saurabh-chauhan-a96413323/}{\raisebox{-0.2\height}\faLinkedin\underline{LinkedIn}}
+   $|$ \href{www.github.com/Saurabh-1785}{\raisebox{-0.2\height}\faGithub\underline {GitHub}}
+\end{center}
+
+\section{Skills}
+\begin{itemize}[leftmargin=0.15in, label={}]
+  \item \textbf{Languages}{: Python, JavaScript, C/C++}
+  \item \textbf{Frameworks}{: Flask, TailwindCSS}
+  \item \textbf{Libraries}{: React, NumPy, Pandas, Matplotlib}
+  \item \textbf{Developer Tools}{: HTML, CSS, Git, GitHub, VS Code}
+  \item \textbf{Others}{: PR and Presentation Skills}
+\end{itemize}
+
+\section{Projects}
+\resumeSubHeadingListStart
+
+  \resumeProjectHeading
+    {\textbf{Portfolio} \href{www.github.com/Saurabh-1785}{\faLink} $|$ \emph{HTML, CSS, JavaScript}}{}
+    \resumeItemListStart
+           \resumeItem{A curated collection of my work, projects, and creative endeavors. This space reflects my skills, experience and passion for development.}
+         \resumeItemListEnd
+
+
+  \resumeProjectHeading
+    {\textbf{Interactive Tip Calculator} \href{www.github.com/Saurabh-1785}{\faLink} $|$ \emph{HTML, CSS, JavaScript}}{}
+    \resumeItemListStart
+           \resumeItem{Built a simple but effective platform to calculate Tip amount and its distribution among every individual.
+Enable users to enter the amount and select the tip percentage and number of people in distribution to calculate tip.}
+         \resumeItemListEnd
+
+
+  \resumeProjectHeading
+    {\textbf{Truss-Analyzer (Group Project)}  $|$ \emph{Flask, HTML, CSS, JavaScript}}{}
+    \resumeItemListStart
+           \resumeItem{Allows users to input truss structure data and analyze it using the Direct Stiffness Method.
+The application uses Flask as the backend, JavaScript for client-side interactions, and HTML/CSS for the UI.}
+         \resumeItemListEnd
+
+
+  \resumeProjectHeading
+    {\textbf{Medguard (Group Project)}  $|$ \emph{TensorFlow, Neural Network, Jupyter Notebook, Solidity}}{}
+    \resumeItemListStart
+           \resumeItem{• Built at Electrothon 7.0, this project provides an general idea for secure and safe management of users medical
+data.
+• This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and
+a Hardhat Ignition module that deploys that contract.}
+         \resumeItemListEnd
+
+\resumeSubHeadingListEnd
+
+\section{Experience}
+\resumeSubHeadingListStart
+
+  \resumeSubheading
+    {Developer Student Club}{2025-01-19 -- 2025-08-01}
+    {Volunteer}{}
+    \resumeItemListStart
+           \resumeItem{Active member as a poster editor where we worked with Figma and Canva.
+Volunteer at the workshops conducted by GDG.
+Volunteer at the workshops conducted by GDG.}
+         \resumeItemListEnd
+
+\resumeSubHeadingListEnd
+
+\section{Education}
+\resumeSubHeadingListStart
+
+  \resumeSubheading
+    {National Institute of Technology, Hamirpur}{2024 -- 2028}
+    {B. Tech CSE - 9.32}{Hamirpur, Himachal Pradesh}
+
+
+  \resumeSubheading
+    {P.N.N.M Geeta Adarsh Vidyalaya}{2022 -- 2023}
+    {Class 12 - 95.6\%}{Solan, Himachal Pradesh}
+
+\resumeSubHeadingListEnd
+
+\end{document}
