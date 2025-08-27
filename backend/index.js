@@ -49,6 +49,10 @@ app.post("/generate-pdf", (req, res) => {
       // Cleanup
       fs.unlinkSync(texFile);
       fs.unlinkSync(pdfFile);
+      fs.unlinkSync(texPath);
+      fs.unlinkSync(path.join(__dirname, "resume.log")); // delete log
+      fs.unlinkSync(path.join(__dirname, "resume.aux")); // delete aux
+
     });
   });
 });

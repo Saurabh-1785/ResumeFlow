@@ -61,11 +61,29 @@ function App() {
           </div>
         ) : (
           // Form Section
+          
           <div className="w-full max-w-3xl">
             <h2 className="text-5xl text-[clamp(20px,4vw,100px)] border-yellow-600 border-2 border-r-20 rounded-tr-4xl rounded-bl-4xl p-5 font-bold text-yellow-600 mt-5 text-center font-serif ">
               CV APPLICATION
             </h2>
-            
+
+            <div className="w-full flexS mb-0">
+              <div className="flex space-x-2 mt-40 mb-0 max-w-2xl w-full">
+                {["General", "Education", "Experience", "Projects", "Skills"].map((label, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setStep(index)}
+                    className={`flex-1 text-center px-3 py-2 rounded-t-lg transition cursor-pointer border-yellow-300 border-1 ${
+                      step === index
+                        ? "bg-yellow-600 text-black dark:text-white font-bold"
+                        : "bg-white dark:bg-black text-gray-500 hover:text-yellow-600"
+                    }`}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </div>
 
             {step === 0 && (
               <GeneralInfo data={general} setData={setGeneral} setStep={setStep} setShowForm={setShowForm} />
