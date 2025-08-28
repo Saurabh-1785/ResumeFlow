@@ -7,12 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview",
-    "start": "node server.js",       
-    "both": "concurrently \"npm start\" \"npm run dev\"",
-    "dev:frontend": "npm run dev:vite",        
-    "dev:backend": "cd server && npm start",   
-    "dev:all": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\""
+    "preview": "vite preview"
   },
   "dependencies": {
     "react": "^19.1.1",
