@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 
+
 function ThemeToggle() {
   const [darkMode, setDarkMode] = useState(() => {
     // Initialize based on system preference
@@ -22,7 +23,7 @@ function ThemeToggle() {
   return (
     <button
       onClick={toggleTheme}
-      className="fixed top-4 right-4 p-3 rounded-full bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-700 transition-all duration-300 shadow-lg z-50"
+      className="fixed cursor-pointer top-4 right-4 p-3 rounded-full bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-700 transition-all duration-300 shadow-lg z-50"
       aria-label="Toggle theme"
     >
       {darkMode ? (

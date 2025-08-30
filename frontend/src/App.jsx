@@ -1,3 +1,4 @@
+import './index.css';
 import { useState, useEffect } from "react";
 import GeneralInfo from "./components/GeneralInfo";
 import Education from "./components/Education";
@@ -40,21 +41,32 @@ function App() {
   });
 
   return (
-    <div className="min-h-screen bg-white text-black dark:bg-black dark:text-white transition-colors">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
       <ThemeToggle />
-      <div className="flex flex-col items-center justify-center p-10">
+      <div className="relative flex flex-col items-center justify-center p-10">
+        {/* Diamond Shape */}
+        <div className="absolute inset-0 hidden md:flex items-center justify-center overflow-hidden">
+          <div className="w-[120%] h-[90%] rotate-0 animate-slow-zoom border-8 border-yellow-400 dark:border-yellow-600 opacity-20 ">
+          </div>
+        </div>
+        <div className="absolute inset-0 flex items-center justify-center overflow-hidden z-0">
+          <div className="w-[120%] h-[90%] rotate-90 animate-slow-zoom border-8 border-yellow-400 dark:border-yellow-600 opacity-20">
+          </div>
+        </div>
+
         {!showForm ? (
           // Landing Page
-          <div className="flex flex-col items-center justify-center h-screen w-full text-center">
-            <h1 className="text-[clamp(40px,5vw,100px)] text-yellow-600 mb-10 font-bold">
+          <div className="flex flex-col items-center justify-center h-screen w-full text-center z-999">
+            <h1 className="text-[clamp(40px,5vw,100px)] font-abril text-yellow-600 mb-10 font-bold hover:text-yellow-700 transition-all ease-in duration-300 cursor-pointer dark:hover:text-yellow-400">
               CV Application
             </h1>
-            <p className="mt-10 text-[clamp(20px,2vw,50px)] font-roboto text-center italic">
-              User inputs the data in the given form and respected CV would be generated
+            <p className="mt-10 text-[clamp(20px,2vw,50px)] font-lobster text-yellow-700 text-center italic hover:text-yellow-600 transition-all ease-in duration-300 cursor-pointer dark:hover:text-yellow-800">
+              An AI-powered Latex styled CV generator that takes your input and refines it to produce high-impact, ATS-optimized resumes with a score of 80+.
             </p>
             <button
               onClick={() => { setShowForm(true); setStep(0); }}
-              className="inline text-yellow-600 border-yellow-600 px-6 py-3 rounded-lg border border-solid text-2xl font-inherit cursor-pointer transition-all ease-in duration-300 mt-20 hover:bg-yellow-600 hover:text-white"
+              className="inline font-dancing font-bold text-white bg-yellow-600 px-6 py-3 rounded-lg border border-solid text-3xl font-inherit cursor-pointer transition-all ease-in duration-300 mt-20 hover:bg-yellow-700 hover:text-gray-50 dark:hover:bg-yellow-400 dark:hover:text-gray-900
+              dark:bg-yellow-600 dark:text-gray-900"
             >
               Get Started
             </button>
@@ -112,8 +124,31 @@ function App() {
                   title="Live CV Preview"
                   className="w-full h-full border rounded-lg shadow"
                 ></iframe>
+                
               </div>
             </div>
+            <div className="flex justify-center">
+              <button className="flex text-center gap-1 font-bold font-dancing text-yellow-600 border-yellow-600 px-6 py-3 rounded-lg border border-solid text-2xl cursor-pointer transition-all ease-in duration-300 mt-20 hover:bg-yellow-600 hover:text-white">
+                <svg
+                  className="w-7 h-7 fill-current transition-colors duration-300"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 30 30"
+                >
+                  <g clipPath="url(#clip0_56_10)">
+                    <path d="M30 15.03C21.9538 15.515 15.5125 21.9538 15.0287 30H14.97C14.485 21.9538 8.045 15.515 0 15.03V14.9713C8.04625 14.485 14.485 8.04625 14.97 0H15.0287C15.5137 8.04625 21.9538 14.485 30 14.9713V15.03Z" />
+                  </g>
+                  <defs>
+                    <clipPath id="clip0_56_10">
+                      <rect width="30" height="30" fill="white" />
+                    </clipPath>
+                  </defs>
+                </svg>
+                Enhance pdf
+              </button>
+
+
+            </div>
+            
           </div>
         )}
       </div>

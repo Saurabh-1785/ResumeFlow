@@ -1,5 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Bungee&family=Dancing+Script:wght@400..700&family=Holtwood+One+SC&family=Inknut+Antiqua:wght@300;400;500;600;700;800;900&family=Lobster+Two:ital,wght@0,400;0,700;1,400;1,700&family=Miltonian&family=Nosifer&display=swap');
+
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Bungee&family=Holtwood+One+SC&family=Inknut+Antiqua:wght@300;400;500;600;700;800;900&family=Miltonian&family=Nosifer&display=swap');
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-primary: #1e40af;
+  --color-primary-dark: #000000;
+  --font-dancing: 'Dancing Script', cursive;
+  --font-abril: 'Abril Fatface', cursive;
+  --font-bungee: 'Bungee', cursive;
+  --font-holtwood: 'Holtwood One SC', serif;
+  --font-inknut: 'Inknut Antiqua', serif;
+  --font-miltonian: 'Miltonian', cursive;
+  --font-nosifer: 'Nosifer', cursive;
+  --font-lobster: 'Lobster Two', cursive;
+}
 
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -16,11 +32,33 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+html {
+  transition: background-color 0.3s, color 0.3s;
+}
 
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  background-color: #ffffff;
+  color: #000000;
+}
+.dark body {
+  background-color: #000000;
+  color: #ffffff;
+}
+
+@keyframes slow-zoom {
+  0%, 100% {
+    transform: scale(1) rotate(45deg);
+  }
+  50% {
+    transform: scale(1.1) rotate(45deg);
+  }
+}
+
+.animate-slow-zoom {
+  animation: slow-zoom 12s ease-in-out infinite;
 }
 
 
