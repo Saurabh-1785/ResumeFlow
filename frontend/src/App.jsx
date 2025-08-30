@@ -22,6 +22,7 @@ function App() {
     phone: "",
     github: "",
     linkedin: "",
+    about: "",
   });
   const [education, setEducation] = useState([
     { id: Date.now(), institution: "", place: "", study: "",grade: "", datestart: "", dateend: ""}
@@ -45,7 +46,7 @@ function App() {
       <ThemeToggle />
       <div className="relative flex flex-col items-center justify-center p-10">
         {/* Diamond Shape */}
-        <div className="absolute inset-0 hidden md:flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 hidden md:flex items-center justify-center overflow-hidden z-0">
           <div className="w-[120%] h-[90%] rotate-0 animate-slow-zoom border-8 border-yellow-400 dark:border-yellow-600 opacity-20 ">
           </div>
         </div>
@@ -56,12 +57,12 @@ function App() {
 
         {!showForm ? (
           // Landing Page
-          <div className="flex flex-col items-center justify-center h-screen w-full text-center z-999">
-            <h1 className="text-[clamp(40px,5vw,100px)] font-abril text-yellow-600 mb-10 font-bold hover:text-yellow-700 transition-all ease-in duration-300 cursor-pointer dark:hover:text-yellow-400">
-              CV Application
+          <div className="relative flex flex-col items-center justify-center h-screen w-full text-center z-10">
+            <h1 className="text-[clamp(40px,6vw,100px)] font-abril text-yellow-600 mb-10 font-bold hover:text-yellow-700 transition-all ease-in duration-300 cursor-pointer dark:hover:text-yellow-400">
+              ResumeFlow
             </h1>
             <p className="mt-10 text-[clamp(20px,2vw,50px)] font-lobster text-yellow-700 text-center italic hover:text-yellow-600 transition-all ease-in duration-300 cursor-pointer dark:hover:text-yellow-800">
-              An AI-powered Latex styled CV generator that takes your input and refines it to produce high-impact, ATS-optimized resumes with a score of 80+.
+              An AI-powered CV generator with LaTeX-quality design that transforms your input into a refined, ATS-optimized resume for maximum impact.
             </p>
             <button
               onClick={() => { setShowForm(true); setStep(0); }}
@@ -74,24 +75,27 @@ function App() {
         ) : (
           // Form Section
           
-          <div className="w-full ">
-            <h2 className="text-5xl text-[clamp(20px,4vw,100px)] border-yellow-600 border-2 border-r-20 rounded-tr-4xl rounded-bl-4xl p-5 font-bold text-yellow-600 mt-5 mb-10 text-center font-serif ">
-              CV APPLICATION
-            </h2>
+          <div className="w-full z-10">
+            <div className='flex justify-center mb-10'>
+              <h2 className="text-[clamp(40px,5vw,100px)] font-abril text-yellow-600 mb-10 font-bold hover:text-yellow-700 transition-all ease-in duration-300 cursor-pointer dark:hover:text-yellow-400 ">
+                ResumeFlow
+              </h2>
+            </div>
+            
 
             <div className="flex w-full min-h-screen">
 
-              {/* Sidebar Navigation */}
+              {/* Tabs*/}
               <div className="w-1/2 p-6">
-                <div className="flex space-x-1 font-bold border-b border-gray-300 dark:border-gray-600 mb-0">
+                <div className="flex space-x-1 font-inknut border-yellow-600 mb-0">
                   {["General", "Education", "Experience", "Projects", "Skills"].map((label, index) => (
                     <button
                       key={index}
                       onClick={() => setStep(index)}
-                      className={`flex-1 text-center px-3 py-2 rounded-t-lg transition cursor-pointer border-yellow-600 border-2 ${
+                      className={`flex-1 text-center px-3 py-2 rounded-t-lg transition cursor-pointer border-yellow-600 border-r-6 border-2 ${
                         step === index
-                          ? "bg-yellow-600 text-black dark:text-white"
-                          : "bg-white dark:bg-black text-gray-500 hover:text-yellow-600"
+                          ? "bg-yellow-600 text-white dark:text-black"
+                          : "bg-white dark:bg-gray-900 text-gray-500 dark:text-gray-50 hover:text-yellow-700 dark:hover:text-yellow-400"
                       }`}
                     >
                       {label}
@@ -128,7 +132,7 @@ function App() {
               </div>
             </div>
             <div className="flex justify-center">
-              <button className="flex text-center gap-1 font-bold font-dancing text-yellow-600 border-yellow-600 px-6 py-3 rounded-lg border border-solid text-2xl cursor-pointer transition-all ease-in duration-300 mt-20 hover:bg-yellow-600 hover:text-white">
+              <button className="flex text-center gap-1 font-bold font-dancing text-yellow-600 border-yellow-600 px-6 py-3 rounded-lg border border-solid text-2xl cursor-pointer transition-all ease-in duration-300 mt-20 hover:bg-yellow-600 hover:text-white dark:hover:text-black">
                 <svg
                   className="w-7 h-7 fill-current transition-colors duration-300"
                   xmlns="http://www.w3.org/2000/svg"

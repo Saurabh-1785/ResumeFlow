@@ -19,8 +19,8 @@ function Education({ data, setData, setStep }) {
   };
 
   return (
-      <div className="border border-r-20 rounded-tr-4xl rounded-bl-4xl p-10 mt-0 w-full max-w-3xl border-yellow-600">
-        <h2 className="text-[clamp(25px,3vw,60px)] text-center font-sans font-bold mb-20 p-4 text-yellow-600 italic">Education</h2>
+      <div className="border border-r-20 rounded-bl-4xl p-10 mt-0 w-full max-w-3xl border-yellow-600">
+        <h2 className="text-[clamp(25px,4vw,60px)] text-center font-lobster mb-20 p-4 text-yellow-600">Education</h2>
 
         {data.map((edu,i)=>(
           <div key = {edu.id} className = "mb-8 border-b pb-6">
@@ -31,7 +31,7 @@ function Education({ data, setData, setStep }) {
               onChange={(e) => 
                 handleChange(edu.id, "institution", e.target.value)
               }
-              className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white"
+              className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white" required
             />
             
             <input
@@ -41,7 +41,7 @@ function Education({ data, setData, setStep }) {
               onChange={(e) => 
                 handleChange(edu.id, "place", e.target.value)
               }
-              className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white"
+              className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white" required
             />
 
             <input
@@ -51,12 +51,12 @@ function Education({ data, setData, setStep }) {
               onChange={(e) => 
                 handleChange(edu.id, "study", e.target.value)
               }
-              className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white"
+              className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white" required
             />
 
             <input
               type="text"
-              placeholder="Grade"
+              placeholder="Grade (optional)"
               value={edu.grade}
               onChange={(e) => 
                 handleChange(edu.id, "grade", e.target.value)
@@ -72,7 +72,7 @@ function Education({ data, setData, setStep }) {
                 onChange={(e) => 
                   handleChange(edu.id, "datestart", e.target.value)
                 }
-                className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white"
+                className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white" required
               />
               <input
                 type="number"
@@ -81,7 +81,7 @@ function Education({ data, setData, setStep }) {
                 onChange={(e) => 
                   handleChange(edu.id, "dateend", e.target.value)
                 }
-                className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white"
+                className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white" required
               />
             </div>
 

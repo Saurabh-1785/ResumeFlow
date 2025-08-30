@@ -1,7 +1,7 @@
 function Skills({ data, setData, setStep }) {
   return (
-      <div className="border border-r-20 rounded-tr-4xl rounded-bl-4xl p-10 mt-0 w-full max-w-3xl border-yellow-600">
-        <h2 className="text-[clamp(25px,3vw,60px)] text-center font-sans font-bold mb-20 p-4 text-yellow-600 italic">Skills</h2>
+      <div className="border border-r-20 rounded-bl-4xl p-10 mt-0 w-full max-w-3xl border-yellow-600">
+        <h2 className="text-[clamp(25px,4vw,60px)] text-center font-lobster mb-20 p-4 text-yellow-600">Skills</h2>
 
         <input type="text" placeholder="Languages (Python, JavaScript,....)"
           value={data.languages}

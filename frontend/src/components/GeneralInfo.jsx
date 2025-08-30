@@ -1,37 +1,44 @@
 function GeneralInfo({ data, setData, setStep, setShowForm }) {
   return (
       <div className="border border-r-20 rounded-br-4xl rounded-bl-4xl p-10 mt-0 w-full max-w-3xl border-yellow-600">
-        <h2 className="text-[clamp(25px,3vw,60px)] text-center font-sans italic font-bold mb-20 p-4 text-yellow-600">
+        <h2 className="text-[clamp(25px,4vw,60px)] text-center font-lobster mb-20 p-4 text-yellow-600">
           General Info
         </h2>
         
         <input type="text" placeholder="Name"
           value={data.name}
           onChange={(e) => setData({ ...data, name: e.target.value })}
-          className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white"
+          className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white" required
+          
         />
 
         <input type="email" placeholder="Email"
           value={data.email}
           onChange={(e) => setData({ ...data, email: e.target.value })}
-          className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white"
+          className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white" required
         />
 
         <input type="number" placeholder="Phone"
           value={data.phone}
           onChange={(e) => setData({ ...data, phone: e.target.value })}
-          className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white"
+          className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white" required
         />
 
         <input type="text" placeholder="Github Username (optional)"
           value={data.github}
           onChange={(e) => setData({ ...data, github: e.target.value })}
-          className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white"
+          className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white" 
         />
 
         <input type="url" placeholder="LinkedIn Profile URL (optional)"
           value={data.linkedin}
           onChange={(e) => setData({ ...data, linkedin: e.target.value })}
+          className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white"
+        />
+        <textarea
+          placeholder="About Yourself (optional)"
+          value={data.about}
+          onChange={(e) => setData({ ...data, about: e.target.value })}
           className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white"
         />
 

@@ -76,6 +76,7 @@ function Preview({ general, education, experience, projects, skills, setStep }) 
         <p><strong>Phone:</strong> {general.phone}</p>
         {general.github && <p><strong>Github:</strong> {general.github}</p>}
         {general.linkedin && <p><strong>LinkedIn:</strong> {general.linkedin}</p>}
+        <p><strong>About:</strong> {general.about}</p>
       </div>
       <hr className="mb-6 text-yellow-600"></hr>
 
