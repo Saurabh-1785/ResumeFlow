@@ -1,25 +1,22 @@
 import React from 'react';
 
-function CustomSection({ data, setData, setStep, onSaveChanges, isUpdating }) {
+function CustomSection({ data, setData, setStep, onSaveChanges, isUpdating, isEnhancing, onEnhance }) {
 
+  // ... all your existing functions (addSection, deleteSection, etc.) remain the same ...
   const addSection = () => {
-    // MODIFIED: New sections now start with an empty content array
     setData([
       ...data,
       { id: Date.now(), title: 'New Section', content: [] }
     ]);
   };
-
   const deleteSection = (sectionId) => {
     setData(data.filter(section => section.id !== sectionId));
   };
-
   const updateSectionTitle = (sectionId, newTitle) => {
     setData(data.map(section =>
       section.id === sectionId ? { ...section, title: newTitle } : section
     ));
   };
-
   const addContent = (sectionId, type) => {
     setData(data.map(section => {
       if (section.id === sectionId) {
@@ -37,7 +34,6 @@ function CustomSection({ data, setData, setStep, onSaveChanges, isUpdating }) {
       return section;
     }));
   };
-
   const updateContent = (sectionId, contentId, field, value) => {
     setData(data.map(section => {
       if (section.id === sectionId) {
@@ -49,7 +45,6 @@ function CustomSection({ data, setData, setStep, onSaveChanges, isUpdating }) {
       return section;
     }));
   };
-
   const deleteContent = (sectionId, contentId) => {
     setData(data.map(section => {
         if (section.id === sectionId) {
@@ -58,6 +53,19 @@ function CustomSection({ data, setData, setStep, onSaveChanges, isUpdating }) {
         return section;
     }));
   };
+
+  const AiEnhanceButton = ({ onClick }) => (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={isEnhancing}
+      className="text-white bg-purple-600 font-bold px-4 py-1.5 rounded-lg text-sm cursor-pointer transition-all disabled:bg-gray-400 hover:bg-purple-700 flex items-center gap-2"
+    >
+      <svg className="w-4 h-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30"><path d="M30 15.03C21.9538 15.515 15.5125 21.9538 15.0287 30H14.97C14.485 21.9538 8.045 15.515 0 15.03V14.9713C8.04625 14.485 14.485 8.04625 14.97 0H15.0287C15.5137 8.04625 21.9538 14.485 30 14.9713V15.03Z" /></svg>
+      {isEnhancing ? 'Enhancing...' : 'Enhance with AI'}
+    </button>
+  );
+
 
   return (
     <div className="border border-r-20 rounded-bl-4xl p-10 mt-0 w-full max-w-3xl border-yellow-600">
@@ -88,7 +96,16 @@ function CustomSection({ data, setData, setStep, onSaveChanges, isUpdating }) {
                         <input type="text" placeholder="Primary Text (e.g., Title/Company)" value={item.primary} onChange={e => updateContent(section.id, item.id, 'primary', e.target.value)} className="block w-full border p-2 rounded text-black dark:bg-black dark:text-white" />
                         <input type="text" placeholder="Secondary Text (e.g., Date)" value={item.secondary} onChange={e => updateContent(section.id, item.id, 'secondary', e.target.value)} className="block w-full border p-2 rounded text-black dark:bg-black dark:text-white" />
                         <input type="text" placeholder="Tertiary Text (e.g., Subtitle/Position)" value={item.tertiary} onChange={e => updateContent(section.id, item.id, 'tertiary', e.target.value)} className="block w-full border p-2 rounded text-black dark:bg-black dark:text-white" />
-                        <textarea placeholder="Description (add new points by pressing Enter)" value={item.quaternary} onChange={e => updateContent(section.id, item.id, 'quaternary', e.target.value)} className="block w-full border p-2 rounded text-black dark:bg-black dark:text-white" />
+                        <div>
+                          <textarea placeholder="Description (add new points by pressing Enter)" value={item.quaternary} onChange={e => updateContent(section.id, item.id, 'quaternary', e.target.value)} className="block w-full border p-2 rounded text-black dark:bg-black dark:text-white" />
+                          <div className="flex justify-end mt-2">
+                            <AiEnhanceButton onClick={() => onEnhance(
+                                `Custom Section: ${section.title}`,
+                                item.quaternary,
+                                (newText) => updateContent(section.id, item.id, 'quaternary', newText)
+                            )} />
+                          </div>
+                        </div>
                     </div>
                 ) : (
                     <input type="text" placeholder="List item content" value={item.text} onChange={e => updateContent(section.id, item.id, 'text', e.target.value)} className="block w-full border p-2 rounded text-black dark:bg-black dark:text-white" />

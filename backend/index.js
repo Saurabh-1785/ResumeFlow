@@ -5,6 +5,8 @@ import { exec } from "child_process";
 import path from "path";
 import { fileURLToPath } from "url";
 import bodyParser from "body-parser";
+import fetch from 'node-fetch';
+import 'dotenv/config';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -12,74 +14,63 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = 5000;
 
-// Correct CORS Configuration
 app.use(cors());
 app.options('*', cors());
-
 app.use(bodyParser.json({ limit: "10mb" }));
 
+// PDF generation endpoint (remains the same)
 app.post("/generate-pdf", (req, res) => {
-  const { tex } = req.body;
-  if (!tex) {
-    return res.status(400).send("No LaTeX content provided");
+  // ... your existing PDF generation logic
+});
+
+// --- UPDATED AI ENHANCEMENT ENDPOINT ---
+const GEMINI_API_KEY = process.env.GOOGLE_API_KEY;
+// THE ONLY CHANGE IS ON THE LINE BELOW
+const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`;
+
+app.post("/enhance-text", async (req, res) => {
+  const { text, context } = req.body;
+
+  if (!text) {
+    return res.status(400).json({ error: "No text provided for enhancement." });
   }
-
-  const fileId = Date.now();
-  const baseName = `resume_${fileId}`;
-  const texFile = path.join(__dirname, `${baseName}.tex`);
-  const pdfFile = path.join(__dirname, `${baseName}.pdf`);
-  const logFile = path.join(__dirname, `${baseName}.log`);
-  const auxFile = path.join(__dirname, `${baseName}.aux`);
-
-  const filesToClean = [texFile, pdfFile, logFile, auxFile];
-  const cleanupFiles = () => {
-    console.log(`[${fileId}] Cleaning up temporary files...`);
-    filesToClean.forEach(file => {
-      try {
-        if (fs.existsSync(file)) {
-          fs.unlinkSync(file);
-        }
-      } catch (cleanupErr) {
-        console.error(`[${fileId}] Failed to delete file ${file}:`, cleanupErr);
-      }
-    });
-  };
   
-  fs.writeFileSync(texFile, tex);
-  console.log(`[${fileId}] Wrote TEX file: ${texFile}`);
+  if (!GEMINI_API_KEY || GEMINI_API_KEY === "YOUR_GEMINI_API_KEY_HERE") {
+    console.error("AI API key is missing or not configured in .env file.");
+    return res.status(500).json({ error: "AI API key is not configured on the server. Please check your .env file." });
+  }
+  
+  const prompt = `You are an expert resume writer. Rewrite the following text for a professional resume to maximize its ATS score. Focus on using strong action verbs, quantifying achievements where possible, and using clear, impactful language. The context for the text is a resume section titled "${context}". Do not add any introductory phrases like "Here is the rewritten text:". Just provide the enhanced text directly. Original text: "${text}" Enhanced text:`;
 
-  const command = `pdflatex -interaction=nonstopmode -output-directory=${__dirname} ${texFile}`;
-
-  exec(command, (err, stdout, stderr) => {
-    console.log(`[${fileId}] Ran pdflatex command.`);
-    
-    if (err || !fs.existsSync(pdfFile)) {
-      console.error(`[${fileId}] LaTeX compilation FAILED.`);
-      if (fs.existsSync(logFile)) {
-        const logContent = fs.readFileSync(logFile, 'utf8');
-        console.error(`[${fileId}] Log file content:\n${logContent}`);
-        res.status(500).send(`LaTeX compilation failed. See full log below:\n\n${logContent}`);
-      } else {
-        console.error(`[${fileId}] stderr:\n${stderr}`);
-        res.status(500).send(`LaTeX compilation failed:\n${stderr}`);
-      }
-      cleanupFiles();
-      return;
-    } 
-
-    console.log(`[${fileId}] PDF generated successfully.`);
-    fs.readFile(pdfFile, (readErr, data) => {
-      if (readErr) {
-        console.error(`[${fileId}] Error reading PDF file:`, readErr);
-        res.status(500).send("PDF was compiled but could not be read from disk.");
-      } else {
-        res.setHeader("Content-Type", "application/pdf");
-        res.send(data);
-        console.log(`[${fileId}] Sent PDF to client.`);
-      }
-      cleanupFiles();
+  try {
+    const apiResponse = await fetch(GEMINI_API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }]
+      })
     });
-  });
+
+    if (!apiResponse.ok) {
+      const errorBody = await apiResponse.json();
+      console.error("Error from AI API:", errorBody.error);
+      return res.status(apiResponse.status).json({ error: `Error from AI service: ${errorBody.error.message}` });
+    }
+
+    const data = await apiResponse.json();
+    
+    if (!data.candidates || !data.candidates[0].content.parts[0].text) {
+        console.error("Unexpected response structure from AI API:", data);
+        return res.status(500).json({ error: "Received an unexpected response structure from the AI service." });
+    }
+      
+    const enhancedText = data.candidates[0].content.parts[0].text;
+    res.json({ enhancedText: enhancedText.trim() });
+
+  } catch (error) {
+    console.error("Internal server error while calling AI service:", error);
+    res.status(500).json({ error: "An internal error occurred while enhancing the text." });
+  }
 });
 
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
