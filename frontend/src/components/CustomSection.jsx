@@ -1,0 +1,123 @@
+import React from 'react';
+
+function CustomSection({ data, setData, setStep, onSaveChanges, isUpdating }) {
+
+  const addSection = () => {
+    // MODIFIED: New sections now start with an empty content array
+    setData([
+      ...data,
+      { id: Date.now(), title: 'New Section', content: [] }
+    ]);
+  };
+
+  const deleteSection = (sectionId) => {
+    setData(data.filter(section => section.id !== sectionId));
+  };
+
+  const updateSectionTitle = (sectionId, newTitle) => {
+    setData(data.map(section =>
+      section.id === sectionId ? { ...section, title: newTitle } : section
+    ));
+  };
+
+  const addContent = (sectionId, type) => {
+    setData(data.map(section => {
+      if (section.id === sectionId) {
+        const newContent = { id: Date.now(), type };
+        if (type === 'subheading') {
+          newContent.primary = '';
+          newContent.secondary = '';
+          newContent.tertiary = '';
+          newContent.quaternary = '';
+        } else {
+          newContent.text = '';
+        }
+        return { ...section, content: [...section.content, newContent] };
+      }
+      return section;
+    }));
+  };
+
+  const updateContent = (sectionId, contentId, field, value) => {
+    setData(data.map(section => {
+      if (section.id === sectionId) {
+        const newContent = section.content.map(item =>
+          item.id === contentId ? { ...item, [field]: value } : item
+        );
+        return { ...section, content: newContent };
+      }
+      return section;
+    }));
+  };
+
+  const deleteContent = (sectionId, contentId) => {
+    setData(data.map(section => {
+        if (section.id === sectionId) {
+            return { ...section, content: section.content.filter(item => item.id !== contentId) };
+        }
+        return section;
+    }));
+  };
+
+  return (
+    <div className="border border-r-20 rounded-bl-4xl p-10 mt-0 w-full max-w-3xl border-yellow-600">
+      <h2 className="text-[clamp(25px,4vw,60px)] text-center font-lobster mb-10 p-4 text-yellow-600">Custom Sections</h2>
+
+      {data.map((section) => (
+        <div key={section.id} className="mb-8 border-t-2 border-yellow-500 pt-6">
+          <div className="flex items-center mb-4">
+            <input
+              type="text"
+              placeholder="Section Title"
+              value={section.title}
+              onChange={(e) => updateSectionTitle(section.id, e.target.value)}
+              className="block w-full border p-3 rounded italic text-xl font-bold active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white"
+            />
+            <button
+              onClick={() => deleteSection(section.id)}
+              className="ml-4 bg-yellow-700 text-white px-3 py-2 rounded-lg cursor-pointer transition-all ease-in duration-300 hover:bg-yellow-800 text-sm"
+            >
+              Delete Section
+            </button>
+          </div>
+
+          {section.content.map(item => (
+            <div key={item.id} className="mb-4 pl-4 border-l-2">
+                {item.type === 'subheading' ? (
+                    <div className="space-y-2">
+                        <input type="text" placeholder="Primary Text (e.g., Title/Company)" value={item.primary} onChange={e => updateContent(section.id, item.id, 'primary', e.target.value)} className="block w-full border p-2 rounded text-black dark:bg-black dark:text-white" />
+                        <input type="text" placeholder="Secondary Text (e.g., Date)" value={item.secondary} onChange={e => updateContent(section.id, item.id, 'secondary', e.target.value)} className="block w-full border p-2 rounded text-black dark:bg-black dark:text-white" />
+                        <input type="text" placeholder="Tertiary Text (e.g., Subtitle/Position)" value={item.tertiary} onChange={e => updateContent(section.id, item.id, 'tertiary', e.target.value)} className="block w-full border p-2 rounded text-black dark:bg-black dark:text-white" />
+                        <textarea placeholder="Description (add new points by pressing Enter)" value={item.quaternary} onChange={e => updateContent(section.id, item.id, 'quaternary', e.target.value)} className="block w-full border p-2 rounded text-black dark:bg-black dark:text-white" />
+                    </div>
+                ) : (
+                    <input type="text" placeholder="List item content" value={item.text} onChange={e => updateContent(section.id, item.id, 'text', e.target.value)} className="block w-full border p-2 rounded text-black dark:bg-black dark:text-white" />
+                )}
+                <button onClick={() => deleteContent(section.id, item.id)} className="text-red-500 text-xs mt-1 cusor-pointer">Remove</button>
+            </div>
+          ))}
+
+          <div className="mt-4">
+            <button onClick={() => addContent(section.id, 'item')} className="mr-2 text-sm text-yellow-600 border cursor-pointer transition-all ease-in duration-300 border-yellow-600 px-3 py-1 rounded hover:bg-yellow-600 hover:text-white">+ Add List Item</button>
+            <button onClick={() => addContent(section.id, 'subheading')} className="text-sm text-yellow-600 border cursor-pointer transition-all ease-in duration-300 border-yellow-600 px-3 py-1 rounded hover:bg-yellow-600 hover:text-white">+ Add Subheading</button>
+          </div>
+        </div>
+      ))}
+      
+      <button onClick={addSection} className="inline text-yellow-600 border-yellow-600 px-6 py-3 rounded-2xl border border-solid text-2xl font-inherit cursor-pointer transition-all ease-in duration-300 mt-5 mb-5 hover:bg-yellow-600 hover:text-white">+ Add New Section</button>
+
+      <div className="text-center border-t-2 border-yellow-500 pt-4 mt-6">
+        <button onClick={onSaveChanges} disabled={isUpdating} className="text-white bg-green-600 font-bold px-10 py-3 rounded-3xl border text-xl cursor-pointer transition-all disabled:bg-gray-400 hover:bg-green-700">
+          {isUpdating ? 'Updating...' : 'Update Preview'}
+        </button>
+      </div>
+
+      <div className="flex justify-between mt-3 mb-5">
+        <button onClick={() => setStep(4)} className="text-white bg-yellow-600 font-bold px-10 py-2 rounded-3xl border border-solid text-xl cursor-pointer transition-all ease-in duration-300 mt-5 mb-5 hover:bg-white hover:text-yellow-600">Previous</button>
+        <button onClick={() => setStep(6)} className="text-white bg-yellow-600 font-bold px-10 py-2 rounded-3xl border border-solid text-xl cursor-pointer transition-all ease-in duration-300 mt-5 mb-5 hover:bg-white hover:text-yellow-600">Enhance</button>
+      </div>
+    </div>
+  );
+}
+
+export default CustomSection;

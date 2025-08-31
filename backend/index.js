@@ -4,7 +4,7 @@ import fs from "fs";
 import { exec } from "child_process";
 import path from "path";
 import { fileURLToPath } from "url";
-import bodyParser from "body-parser";   // <-- you forgot to import
+import bodyParser from "body-parser";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -12,47 +12,72 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = 5000;
 
-// Middleware
+// Correct CORS Configuration
 app.use(cors());
+app.options('*', cors());
+
 app.use(bodyParser.json({ limit: "10mb" }));
 
-// API to generate PDF
 app.post("/generate-pdf", (req, res) => {
   const { tex } = req.body;
-
   if (!tex) {
     return res.status(400).send("No LaTeX content provided");
   }
 
   const fileId = Date.now();
-  const texFile = path.join(__dirname, `resume_${fileId}.tex`);
-  const pdfFile = path.join(__dirname, `resume_${fileId}.pdf`);
+  const baseName = `resume_${fileId}`;
+  const texFile = path.join(__dirname, `${baseName}.tex`);
+  const pdfFile = path.join(__dirname, `${baseName}.pdf`);
+  const logFile = path.join(__dirname, `${baseName}.log`);
+  const auxFile = path.join(__dirname, `${baseName}.aux`);
 
-  fs.writeFileSync(texFile, tex);
-
-  // Run pdflatex and capture full stderr
-  exec(`pdflatex -interaction=nonstopmode -output-directory=${__dirname} ${texFile}`, (err, stdout, stderr) => {
-    if (err) {
-      console.error("LaTeX compile error:", stderr);  // 👈 show real latex log
-      return res.status(500).send(`LaTeX error:\n${stderr}`);
-    }
-
-    fs.readFile(pdfFile, (err, data) => {
-      if (err) {
-        return res.status(500).send("PDF not generated");
+  const filesToClean = [texFile, pdfFile, logFile, auxFile];
+  const cleanupFiles = () => {
+    console.log(`[${fileId}] Cleaning up temporary files...`);
+    filesToClean.forEach(file => {
+      try {
+        if (fs.existsSync(file)) {
+          fs.unlinkSync(file);
+        }
+      } catch (cleanupErr) {
+        console.error(`[${fileId}] Failed to delete file ${file}:`, cleanupErr);
       }
+    });
+  };
+  
+  fs.writeFileSync(texFile, tex);
+  console.log(`[${fileId}] Wrote TEX file: ${texFile}`);
 
-      res.setHeader("Content-Type", "application/pdf");
-      res.setHeader("Content-Disposition", "attachment; filename=resume.pdf");
-      res.send(data);
+  const command = `pdflatex -interaction=nonstopmode -output-directory=${__dirname} ${texFile}`;
 
-      // Cleanup
-      fs.unlinkSync(texFile);
-      fs.unlinkSync(pdfFile);
-      fs.unlinkSync(texPath);
-      fs.unlinkSync(path.join(__dirname, "resume.log")); // delete log
-      fs.unlinkSync(path.join(__dirname, "resume.aux")); // delete aux
+  exec(command, (err, stdout, stderr) => {
+    console.log(`[${fileId}] Ran pdflatex command.`);
+    
+    if (err || !fs.existsSync(pdfFile)) {
+      console.error(`[${fileId}] LaTeX compilation FAILED.`);
+      if (fs.existsSync(logFile)) {
+        const logContent = fs.readFileSync(logFile, 'utf8');
+        console.error(`[${fileId}] Log file content:\n${logContent}`);
+        res.status(500).send(`LaTeX compilation failed. See full log below:\n\n${logContent}`);
+      } else {
+        console.error(`[${fileId}] stderr:\n${stderr}`);
+        res.status(500).send(`LaTeX compilation failed:\n${stderr}`);
+      }
+      cleanupFiles();
+      return;
+    } 
 
+    console.log(`[${fileId}] PDF generated successfully.`);
+    fs.readFile(pdfFile, (readErr, data) => {
+      if (readErr) {
+        console.error(`[${fileId}] Error reading PDF file:`, readErr);
+        res.status(500).send("PDF was compiled but could not be read from disk.");
+      } else {
+        res.setHeader("Content-Type", "application/pdf");
+        res.send(data);
+        console.log(`[${fileId}] Sent PDF to client.`);
+      }
+      cleanupFiles();
     });
   });
 });
