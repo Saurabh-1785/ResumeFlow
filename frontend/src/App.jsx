@@ -65,7 +65,7 @@ function App() {
   const [isUpdating, setIsUpdating] = useState(false);
   const [isEnhancing, setIsEnhancing] = useState(false);
   const [atsScore, setAtsScore] = useState(null); // ATS score state
-  const [showAtsModal, setShowAtsModal] = useState(false); // ATS modal visibility
+  const [enhancingId, setEnhancingId] = useState(null);
 
   // form states
   const [general, setGeneral] = useState({ name: "", email: "", phone: "", github: "", linkedin: "", about: "" });
@@ -76,31 +76,35 @@ function App() {
   const [customSections, setCustomSections] = useState([]);
 
   // ... (handleEnhanceWithAI and updatePreview functions remain the same) ...
-  const handleEnhanceWithAI = async (context, currentText, onSuccess) => {
+  const handleEnhanceWithAI = async (id, context, currentText, onSuccess) => {
     if (!currentText || currentText.trim() === "") {
         alert("Please enter some text before enhancing.");
         return;
     }
-    setIsEnhancing(true);
+    setEnhancingId(id); // Set the ID of the item being enhanced
     try {
         const response = await fetch("http://localhost:5000/enhance-text", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ text: currentText, context }),
         });
+
         if (!response.ok) {
             const errData = await response.json();
             throw new Error(errData.error || "Failed to enhance text.");
         }
+
         const result = await response.json();
         onSuccess(result.enhancedText);
+
     } catch (err) {
         console.error("Error enhancing text:", err);
         alert(`Enhancement failed: ${err.message}`);
     } finally {
-        setIsEnhancing(false);
+        setEnhancingId(null); // Reset to null when done
     }
   };
+
   const updatePreview = useCallback(async () => {
     if (!general.name || general.name.trim() === "") {
         console.log("Validation failed: Name is required to generate a preview.");
@@ -195,7 +199,6 @@ function App() {
     score += skillScore;
 
     setAtsScore({ total: score, feedback, suggestions });
-    setShowAtsModal(true);
   };
   // --- END OF MOVED LOGIC ---
 
@@ -210,7 +213,7 @@ function App() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
       <ThemeToggle />
-      <AtsScoreModal score={atsScore} onClose={() => setShowAtsModal(false)} />
+      <AtsScoreModal score={atsScore} onClose={() => setAtsScore(null)} />
 
       <div className="relative flex flex-col items-center justify-center p-10">
         {/* ... Intro screen remains unchanged ... */}
@@ -232,12 +235,12 @@ function App() {
                     <button key={index} onClick={() => setStep(index)} className={`flex-1 text-center px-3 py-2 rounded-t-lg transition cursor-pointer border-yellow-600 border-r-6 border-2 ${step === index ? "bg-yellow-600 text-white dark:text-black" : "bg-white dark:bg-gray-900 text-gray-500 dark:text-gray-50 hover:text-yellow-700 dark:hover:text-yellow-400"}`}>{label}</button>
                   ))}
                 </div>
-                {step === 0 && <GeneralInfo data={general} setData={setGeneral} setStep={setStep} setShowForm={setShowForm} onSaveChanges={updatePreview} isUpdating={isUpdating} isEnhancing={isEnhancing} onEnhance={handleEnhanceWithAI} />}
+                {step === 0 && <GeneralInfo data={general} setData={setGeneral} setStep={setStep} setShowForm={setShowForm} onSaveChanges={updatePreview} isUpdating={isUpdating} isEnhancing={enhancingId} onEnhance={handleEnhanceWithAI} />}
                 {step === 1 && <Education data={education} setData={setEducation} setStep={setStep} onSaveChanges={updatePreview} isUpdating={isUpdating} />}
-                {step === 2 && <Experience data={experience} setData={setExperience} setStep={setStep} onSaveChanges={updatePreview} isUpdating={isUpdating} isEnhancing={isEnhancing} onEnhance={handleEnhanceWithAI} />}
-                {step === 3 && <Projects data={projects} setData={setProjects} setStep={setStep} onSaveChanges={updatePreview} isUpdating={isUpdating} isEnhancing={isEnhancing} onEnhance={handleEnhanceWithAI} />}
+                {step === 2 && <Experience data={experience} setData={setExperience} setStep={setStep} onSaveChanges={updatePreview} isUpdating={isUpdating} isEnhancing={enhancingId} onEnhance={handleEnhanceWithAI} />}
+                {step === 3 && <Projects data={projects} setData={setProjects} setStep={setStep} onSaveChanges={updatePreview} isUpdating={isUpdating} isEnhancing={enhancingId} onEnhance={handleEnhanceWithAI} />}
                 {step === 4 && <Skills data={skills} setData={setSkills} setStep={setStep} onSaveChanges={updatePreview} isUpdating={isUpdating} />}
-                {step === 5 && <CustomSection data={customSections} setData={setCustomSections} setStep={setStep} onSaveChanges={updatePreview} isUpdating={isUpdating} isEnhancing={isEnhancing} onEnhance={handleEnhanceWithAI} />}
+                {step === 5 && <CustomSection data={customSections} setData={setCustomSections} setStep={setStep} onSaveChanges={updatePreview} isUpdating={isUpdating} isEnhancing={enhancingId} onEnhance={handleEnhanceWithAI} />}
                 {step === 6 && <Preview general={general} education={education} experience={experience} projects={projects} skills={skills} customSections={customSections} setStep={setStep} />}
               </div>
               
