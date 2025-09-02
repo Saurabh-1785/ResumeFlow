@@ -25,7 +25,7 @@ function Projects({ data, setData, setStep, onSaveChanges, isUpdating, enhancing
     <div className="border border-r-20 rounded-bl-4xl p-10 mt-0 w-full max-w-3xl border-yellow-600">
       <h2 className="text-[clamp(25px,4vw,60px)] text-center font-lobster mb-10 p-4 text-yellow-600">Projects</h2>
       {data.map((proj) => {
-        const isCurrentlyEnhancing = enhancingId === exp.id;
+        const isCurrentlyEnhancing = enhancingId === proj.id;
         return (
           <div key={proj.id} className="mb-8 border-b pb-6">
             <input type="text" placeholder="Project Name" value={proj.name} onChange={(e) => handleChange(proj.id, "name", e.target.value)} className="block w-full border p-3 mb-10 rounded italic text-black dark:bg-black dark:text-white" />

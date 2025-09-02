@@ -1,3 +1,8 @@
+# Ignore all .out files
+*.out
+
+# Ignore all .log files
+*.log
+
+# Ignore .env file
 .env
-.out
-.log

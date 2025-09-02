@@ -13,49 +13,6 @@ import Preview from "./components/Preview";
 import PdfPreview from './components/PdfPreview';
 import { generateLatex } from "./utils/generateLatex";
 
-// --- ATS Score Modal Component (Defined within App.jsx) ---
-const AtsScoreModal = ({ score, onClose }) => {
-  if (!score) return null;
-
-  const getScoreColor = (value, max) => {
-    const percentage = (value / max) * 100;
-    if (percentage >= 80) return 'text-green-500';
-    if (percentage >= 50) return 'text-yellow-500';
-    return 'text-red-500';
-  };
-
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-2xl p-6 w-full max-w-lg text-gray-800 dark:text-gray-200">
-        <h2 className="text-2xl font-bold text-center mb-4 text-yellow-600">ATS Score Analysis 📈</h2>
-        <div className="text-center mb-6">
-          <p className="text-lg">Overall Score:</p>
-          <p className={`text-6xl font-bold ${getScoreColor(score.total, 100)}`}>{score.total}<span className="text-3xl text-gray-400">/100</span></p>
-        </div>
-        <div className="space-y-3">
-          <h3 className="text-xl font-semibold border-b pb-2 mb-3">Breakdown:</h3>
-          {score.feedback.map((item, index) => (
-            <div key={index} className="flex justify-between items-center">
-              <span>{item.label}:</span>
-              <span className={`font-bold ${getScoreColor(item.score, item.max)}`}>{item.score}/{item.max}</span>
-            </div>
-          ))}
-        </div>
-        <div className="mt-6 pt-4 border-t">
-          <h3 className="text-lg font-semibold mb-2">Suggestions for Improvement:</h3>
-          <ul className="list-disc list-inside text-sm space-y-1">
-            {score.suggestions.length > 0 ? score.suggestions.map((s, i) => <li key={i}>{s}</li>) : <li>Great job! Your resume looks well-optimized.</li>}
-          </ul>
-        </div>
-        <div className="text-center mt-8">
-          <button onClick={onClose} className="bg-yellow-600 text-white font-bold px-8 py-2 rounded-lg hover:bg-yellow-700 transition-colors">
-            Close
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
 
 // --- Main App Component ---
 function App() {
@@ -64,7 +21,6 @@ function App() {
   const [pdfUrl, setPdfUrl] = useState(null);
   const [isUpdating, setIsUpdating] = useState(false);
   const [isEnhancing, setIsEnhancing] = useState(false);
-  const [atsScore, setAtsScore] = useState(null); // ATS score state
   const [enhancingId, setEnhancingId] = useState(null);
 
   // form states
@@ -153,53 +109,6 @@ function App() {
       alert("Something went wrong while generating PDF");
     }
   };
-
-  const calculateAtsScore = () => {
-    let score = 0;
-    const feedback = [];
-    const suggestions = [];
-    // 1. Contact Info (Max 15)
-    let contactScore = 0;
-    if (general.name) contactScore += 5;
-    if (general.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(general.email)) contactScore += 5;
-    if (general.phone) contactScore += 5;
-    feedback.push({ label: 'Contact Information', score: contactScore, max: 15 });
-    if (contactScore < 15) suggestions.push('Ensure your Name, Email, and Phone are filled out correctly.');
-    score += contactScore;
-    // 2. Key Sections Present (Max 20)
-    let sectionScore = 0;
-    if (experience.length > 0 && experience[0].company) sectionScore += 10;
-    if (education.length > 0 && education[0].institution) sectionScore += 5;
-    if (Object.values(skills).some(s => s)) sectionScore += 5;
-    feedback.push({ label: 'Essential Sections', score: sectionScore, max: 20 });
-    if (sectionScore < 20) suggestions.push('Include at least one entry in Experience, Education, and Skills.');
-    score += sectionScore;
-    // 3. Content Analysis (Max 45)
-    const actionVerbs = ['managed', 'led', 'developed', 'created', 'implemented', 'designed', 'analyzed', 'negotiated', 'streamlined', 'achieved', 'launched', 'optimized'];
-    const allDescriptions = [...experience.map(e => e.responsibilities), ...projects.map(p => p.description)].join(' ').toLowerCase();
-    let verbCount = actionVerbs.filter(verb => allDescriptions.includes(verb)).length;
-    let verbScore = Math.min(verbCount * 3, 20);
-    feedback.push({ label: 'Action Verbs', score: verbScore, max: 20 });
-    if (verbScore < 10) suggestions.push('Incorporate more action verbs (e.g., "managed", "developed") in your experience and project descriptions.');
-    score += verbScore;
-    let quantifiableCount = (allDescriptions.match(/(\d+%?|\$\d+)/g) || []).length;
-    let quantifiableScore = Math.min(quantifiableCount * 5, 15);
-    feedback.push({ label: 'Quantifiable Results', score: quantifiableScore, max: 15 });
-    if (quantifiableScore < 10) suggestions.push('Add measurable results (e.g., numbers, percentages, dollar amounts) to show impact.');
-    score += quantifiableScore;
-    let summaryScore = (general.about && general.about.length > 50) ? 10 : 0;
-    feedback.push({ label: 'Professional Summary', score: summaryScore, max: 10 });
-    if (summaryScore === 0) suggestions.push('Write a brief professional summary (2-3 sentences) in the "About" section.');
-    score += summaryScore;
-    // 4. Skills Detail (Max 20)
-    let skillCount = Object.values(skills).reduce((acc, curr) => acc + (curr ? curr.split(',').length : 0), 0);
-    let skillScore = Math.min(skillCount * 2, 20);
-    feedback.push({ label: 'Skills Detail', score: skillScore, max: 20 });
-    if (skillScore < 10) suggestions.push('List more skills, separated by commas, in the skills section.');
-    score += skillScore;
-
-    setAtsScore({ total: score, feedback, suggestions });
-  };
   // --- END OF MOVED LOGIC ---
 
   useEffect(() => {
@@ -213,8 +122,6 @@ function App() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
       <ThemeToggle />
-      <AtsScoreModal score={atsScore} onClose={() => setAtsScore(null)} />
-
       <div className="relative flex flex-col items-center justify-center p-10">
         {/* ... Intro screen remains unchanged ... */}
         <div className="absolute inset-0 hidden md:flex items-center justify-center overflow-hidden z-0"><div className="w-[120%] h-[90%] rotate-0 animate-slow-zoom border-8 border-yellow-400 dark:border-yellow-600 opacity-20 "></div></div>
@@ -253,19 +160,13 @@ function App() {
             </div>
 
             {/* --- NEW GLOBAL BUTTONS SECTION --- */}
-            <div className="mt-8 pt-6 border-t-2 border-yellow-500">
-                <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
-                    <button 
-                        onClick={calculateAtsScore} 
-                        className="w-full sm:w-auto text-white bg-purple-600 font-bold px-8 py-3 rounded-full border text-lg cursor-pointer transition-all hover:bg-purple-700 shadow-lg">
-                        Check ATS Score
-                    </button>
-                    <button 
-                        onClick={handleDownloadPDF} 
-                        className="w-full sm:w-auto text-white bg-blue-600 font-bold px-8 py-3 rounded-full border text-lg cursor-pointer transition-all hover:bg-blue-700 shadow-lg">
-                        Download PDF
-                    </button>
-                </div>
+            <div className="mt-8 pt-6 border-t-2 border-yellow-500 flex flex-col sm:flex-row justify-center items-center gap-4">
+              <button 
+                onClick={handleDownloadPDF} 
+                className="w-full sm:w-auto text-white bg-blue-600 font-bold px-8 py-3 rounded-full border text-lg cursor-pointer transition-all hover:bg-blue-700 shadow-lg">
+                Download PDF
+              </button>
+               
             </div>
 
           </div>
