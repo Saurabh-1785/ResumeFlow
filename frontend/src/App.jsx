@@ -13,7 +13,6 @@ import Preview from "./components/Preview";
 import PdfPreview from './components/PdfPreview';
 import { generateLatex } from "./utils/generateLatex";
 
-
 // --- Main App Component ---
 function App() {
   const [showForm, setShowForm] = useState(false);
@@ -22,6 +21,8 @@ function App() {
   const [isUpdating, setIsUpdating] = useState(false);
   const [isEnhancing, setIsEnhancing] = useState(false);
   const [enhancingId, setEnhancingId] = useState(null);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   // form states
   const [general, setGeneral] = useState({ name: "", email: "", phone: "", github: "", linkedin: "", about: "" });
@@ -31,37 +32,41 @@ function App() {
   const [skills, setSkills] = useState({ languages: "", frameworks: "", libraries: "", tools: "", others: "" });
   const [customSections, setCustomSections] = useState([]);
 
-  // ... (handleEnhanceWithAI and updatePreview functions remain the same) ...
+  // --- Responsive Check ---
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const handleEnhanceWithAI = async (id, context, currentText, onSuccess) => {
     if (!currentText || currentText.trim() === "") {
         alert("Please enter some text before enhancing.");
         return;
     }
-    setEnhancingId(id); // Set the ID of the item being enhanced
+    setEnhancingId(id);
     try {
         const response = await fetch("http://localhost:5000/enhance-text", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ text: currentText, context }),
         });
-
         if (!response.ok) {
             const errData = await response.json();
             throw new Error(errData.error || "Failed to enhance text.");
         }
-
         const result = await response.json();
         onSuccess(result.enhancedText);
-
     } catch (err) {
         console.error("Error enhancing text:", err);
         alert(`Enhancement failed: ${err.message}`);
     } finally {
-        setEnhancingId(null); // Reset to null when done
+        setEnhancingId(null);
     }
   };
 
   const updatePreview = useCallback(async () => {
+    if (isMobile) return; // Disable on mobile
     if (!general.name || general.name.trim() === "") {
         console.log("Validation failed: Name is required to generate a preview.");
         setPdfUrl(null);
@@ -88,9 +93,8 @@ function App() {
     } finally {
       setIsUpdating(false);
     }
-  }, [general, education, experience, projects, skills, customSections]);
+  }, [general, education, experience, projects, skills, customSections, isMobile]);
 
-  // --- LOGIC MOVED FROM PREVIEW.JSX TO APP.JSX ---
   const handleDownloadPDF = async () => {
     const data = { generalInfo: general, education: education.map(e => ({ school: e.institution, location: e.place, degree: `${e.study} - ${e.grade}`, date: `${e.datestart} -- ${e.dateend}` })), experience: experience.map(exp => ({ company: exp.company, position: exp.position, description: exp.responsibilities, date: `${exp.from} -- ${exp.to}`, location: "" })), projects: projects.map(p => ({ name: p.name, tech: p.technology, description: p.description, link: p.url, date: "" })), skills: skills, customSections: customSections };
     const tex = generateLatex(data);
@@ -109,23 +113,30 @@ function App() {
       alert("Something went wrong while generating PDF");
     }
   };
-  // --- END OF MOVED LOGIC ---
 
   useEffect(() => {
     return () => {
       if (pdfUrl) URL.revokeObjectURL(pdfUrl);
     };
   }, [pdfUrl]);
-
+  
   const tabs = ["General", "Education", "Experience", "Projects", "Skills", "+"];
   
+  const handleStepChange = (newStep) => {
+    setStep(newStep);
+    setMenuOpen(false);
+  };
+
+  const isPreviewStep = step === tabs.length - 1;
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
       <ThemeToggle />
-      <div className="relative flex flex-col items-center justify-center p-10">
-        {/* ... Intro screen remains unchanged ... */}
+      <div className="relative flex flex-col items-center justify-center p-4 sm:p-10">
+        {/* Decorative backgrounds */}
         <div className="absolute inset-0 hidden md:flex items-center justify-center overflow-hidden z-0"><div className="w-[120%] h-[90%] rotate-0 animate-slow-zoom border-8 border-yellow-400 dark:border-yellow-600 opacity-20 "></div></div>
         <div className="absolute inset-0 flex items-center justify-center overflow-hidden z-0"><div className="w-[120%] h-[90%] rotate-90 animate-slow-zoom border-8 border-yellow-400 dark:border-yellow-600 opacity-20"></div></div>
+        
         {!showForm ? (
           <div className="relative flex flex-col items-center justify-center h-screen w-full text-center z-10">
             <h1 className="text-[clamp(40px,6vw,100px)] font-abril text-yellow-600 mb-10 font-bold hover:text-yellow-700 transition-all ease-in duration-300 cursor-pointer dark:hover:text-yellow-400">ResumeFlow</h1>
@@ -133,42 +144,91 @@ function App() {
             <button onClick={() => { setShowForm(true); setStep(0); }} className="inline font-dancing font-bold text-white bg-yellow-600 px-6 py-3 rounded-lg border border-solid text-3xl font-inherit cursor-pointer transition-all ease-in duration-300 mt-20 hover:bg-yellow-700 hover:text-gray-50 dark:hover:bg-yellow-400 dark:hover:text-gray-900 dark:bg-yellow-600 dark:text-gray-900">Get Started</button>
           </div>
         ) : (
-          <div className="w-full z-10">
-            <div className='flex justify-center mb-10'><h2 className="text-[clamp(40px,5vw,100px)] font-abril text-yellow-600 mb-10 font-bold hover:text-yellow-700 transition-all ease-in duration-300 cursor-pointer dark:hover:text-yellow-400 ">ResumeFlow</h2></div>
-            <div className="flex w-full min-h-screen gap-8">
-              <div className="w-1/2 p-6">
-                <div className="flex space-x-1 font-inknut border-yellow-600 mb-0">
-                  {tabs.map((label, index) => (
-                    <button key={index} onClick={() => setStep(index)} className={`flex-1 text-center px-3 py-2 rounded-t-lg transition cursor-pointer border-yellow-600 border-r-6 border-2 ${step === index ? "bg-yellow-600 text-white dark:text-black" : "bg-white dark:bg-gray-900 text-gray-500 dark:text-gray-50 hover:text-yellow-700 dark:hover:text-yellow-400"}`}>{label}</button>
-                  ))}
+          <div className="w-full max-w-7xl mx-auto z-10">
+            <div className='flex justify-center mb-10'><h2 className="text-[clamp(40px,5vw,100px)] font-abril text-yellow-600 font-bold hover:text-yellow-700 transition-all ease-in duration-300 cursor-pointer dark:hover:text-yellow-400 ">ResumeFlow</h2></div>
+            
+            <div className="flex flex-col md:flex-row w-full gap-8">
+              {/* --- MAIN CONTENT (LEFT COLUMN / FULL WIDTH ON MOBILE) --- */}
+              <div className="w-full md:w-1/2 p-2">
+                {isMobile ? (
+                  // --- MOBILE MENU ---
+                   <div className="relative mb-4">
+                     <button onClick={() => setMenuOpen(!menuOpen)} className="font-bold text-white bg-yellow-600 px-4 py-2 rounded-lg w-full flex justify-between items-center">
+                       <span>{tabs[step]}</span>
+                       <span>&#9662;</span>
+                     </button>
+                     {menuOpen && (
+                       <div className="absolute top-full left-0 w-full bg-white dark:bg-gray-800 border border-yellow-600 rounded-b-lg z-20 shadow-lg">
+                         {tabs.map((label, index) => (
+                           <button key={index} onClick={() => handleStepChange(index)} className="block w-full text-left px-4 py-2 hover:bg-yellow-100 dark:hover:bg-gray-700">
+                             {label}
+                           </button>
+                         ))}
+                       </div>
+                     )}
+                   </div>
+                ) : (
+                  // --- DESKTOP TABS ---
+                  <div className="flex space-x-1 font-inknut border-yellow-600 mb-0">
+                    {tabs.map((label, index) => (
+                      <button key={index} onClick={() => setStep(index)} className={`flex-1 text-center px-3 py-2 rounded-t-lg transition cursor-pointer border-yellow-600 border-r-6 border-2 ${step === index ? "bg-yellow-600 text-white dark:text-black" : "bg-white dark:bg-gray-900 text-gray-500 dark:text-gray-50 hover:text-yellow-700 dark:hover:text-yellow-400"}`}>{label}</button>
+                    ))}
+                  </div>
+                )}
+                
+                {/* --- RENDER CURRENT SECTION --- */}
+                {/* Note: onSaveChanges is passed as 'undefined' on mobile to disable the update button's functionality */}
+                <div className="min-h-[50vh]">
+                  {step === 0 && <GeneralInfo data={general} setData={setGeneral} onSaveChanges={!isMobile ? updatePreview : undefined} isUpdating={isUpdating} isEnhancing={enhancingId} onEnhance={handleEnhanceWithAI} />}
+                  {step === 1 && <Education data={education} setData={setEducation} onSaveChanges={!isMobile ? updatePreview : undefined} isUpdating={isUpdating} />}
+                  {step === 2 && <Experience data={experience} setData={setExperience} onSaveChanges={!isMobile ? updatePreview : undefined} isUpdating={isUpdating} isEnhancing={enhancingId} onEnhance={handleEnhanceWithAI} />}
+                  {step === 3 && <Projects data={projects} setData={setProjects} onSaveChanges={!isMobile ? updatePreview : undefined} isUpdating={isUpdating} isEnhancing={enhancingId} onEnhance={handleEnhanceWithAI} />}
+                  {step === 4 && <Skills data={skills} setData={setSkills} onSaveChanges={!isMobile ? updatePreview : undefined} isUpdating={isUpdating} />}
+                  {step === 5 && <CustomSection data={customSections} setData={setCustomSections} onSaveChanges={!isMobile ? updatePreview : undefined} isUpdating={isUpdating} isEnhancing={enhancingId} onEnhance={handleEnhanceWithAI} />}
+                  {step === 6 && <Preview general={general} education={education} experience={experience} projects={projects} skills={skills} customSections={customSections} setStep={setStep} />}
                 </div>
-                {step === 0 && <GeneralInfo data={general} setData={setGeneral} setStep={setStep} setShowForm={setShowForm} onSaveChanges={updatePreview} isUpdating={isUpdating} isEnhancing={enhancingId} onEnhance={handleEnhanceWithAI} />}
-                {step === 1 && <Education data={education} setData={setEducation} setStep={setStep} onSaveChanges={updatePreview} isUpdating={isUpdating} />}
-                {step === 2 && <Experience data={experience} setData={setExperience} setStep={setStep} onSaveChanges={updatePreview} isUpdating={isUpdating} isEnhancing={enhancingId} onEnhance={handleEnhanceWithAI} />}
-                {step === 3 && <Projects data={projects} setData={setProjects} setStep={setStep} onSaveChanges={updatePreview} isUpdating={isUpdating} isEnhancing={enhancingId} onEnhance={handleEnhanceWithAI} />}
-                {step === 4 && <Skills data={skills} setData={setSkills} setStep={setStep} onSaveChanges={updatePreview} isUpdating={isUpdating} />}
-                {step === 5 && <CustomSection data={customSections} setData={setCustomSections} setStep={setStep} onSaveChanges={updatePreview} isUpdating={isUpdating} isEnhancing={enhancingId} onEnhance={handleEnhanceWithAI} />}
-                {step === 6 && <Preview general={general} education={education} experience={experience} projects={projects} skills={skills} customSections={customSections} setStep={setStep} />}
+
+                {/* --- RESPONSIVE PREVIOUS/NEXT BUTTONS --- */}
+                {!isPreviewStep && (
+                  <div className="flex justify-between items-center mt-8 pt-4 border-t border-yellow-500/30">
+                      <button 
+                        onClick={() => setStep(step - 1)}
+                        disabled={step === 0}
+                        className="px-6 py-2 bg-gray-300 text-gray-800 rounded-md font-semibold hover:bg-gray-400 disabled:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 dark:disabled:bg-gray-800"
+                      >
+                        Previous
+                      </button>
+                      <button 
+                        onClick={() => setStep(step + 1)}
+                        className="px-6 py-2 bg-yellow-600 text-white rounded-md font-semibold hover:bg-yellow-700"
+                      >
+                        Next
+                      </button>
+                  </div>
+                )}
               </div>
               
-              <div className="w-1/2 p-6 flex flex-col">
-                 <h3 className="text-center text-2xl font-lobster text-yellow-600 mb-4">Live Preview</h3>
-                 <div className="flex-grow border rounded-lg shadow-inner overflow-hidden">
-                    <PdfPreview pdfUrl={pdfUrl} />
+              {/* --- PDF PREVIEW (RIGHT COLUMN - DESKTOP ONLY) --- */}
+              {!isMobile && (
+                 <div className="w-1/2 p-6">
+                   <div className="sticky top-10 h-[calc(100vh-5rem)] flex flex-col">
+                      <h3 className="text-center text-2xl font-lobster text-yellow-600 mb-4">Live Preview</h3>
+                      <div className="flex-grow border rounded-lg shadow-inner overflow-hidden">
+                         <PdfPreview pdfUrl={pdfUrl} />
+                      </div>
+                   </div>
                  </div>
-              </div>
+              )}
             </div>
 
-            {/* --- NEW GLOBAL BUTTONS SECTION --- */}
-            <div className="mt-8 pt-6 border-t-2 border-yellow-500 flex flex-col sm:flex-row justify-center items-center gap-4">
+            {/* --- GLOBAL DOWNLOAD BUTTON --- */}
+            <div className="mt-12 pt-6 border-t-2 border-yellow-500 flex justify-center">
               <button 
                 onClick={handleDownloadPDF} 
                 className="w-full sm:w-auto text-white bg-blue-600 font-bold px-8 py-3 rounded-full border text-lg cursor-pointer transition-all hover:bg-blue-700 shadow-lg">
                 Download PDF
               </button>
-               
             </div>
-
           </div>
         )}
       </div>
