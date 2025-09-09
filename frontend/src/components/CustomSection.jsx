@@ -91,30 +91,30 @@ function CustomSection({ data, setData, setStep, onSaveChanges, isUpdating, enha
             const isCurrentlyEnhancing = enhancingId === item.id;
             return (
               <div key={item.id} className="mb-4 pl-4 border-l-2">
-                  {item.type === 'subheading' ? (
-                      <div className="space-y-2">
-                        <input type="text" placeholder="Primary Text (e.g., Title/Company)" value={item.primary} onChange={e => updateContent(section.id, item.id, 'primary', e.target.value)} className="block w-full border p-2 rounded text-black dark:bg-black dark:text-white" />
-                        <input type="text" placeholder="Secondary Text (e.g., Date)" value={item.secondary} onChange={e => updateContent(section.id, item.id, 'secondary', e.target.value)} className="block w-full border p-2 rounded text-black dark:bg-black dark:text-white" />
-                        <input type="text" placeholder="Tertiary Text (e.g., Subtitle/Position)" value={item.tertiary} onChange={e => updateContent(section.id, item.id, 'tertiary', e.target.value)} className="block w-full border p-2 rounded text-black dark:bg-black dark:text-white" />
-                        <div>
-                          <textarea placeholder="Description (add new points by pressing Enter)" value={item.quaternary} onChange={e => updateContent(section.id, item.id, 'quaternary', e.target.value)} className="block w-full border p-2 rounded text-black dark:bg-black dark:text-white" />
-                          <div className="flex justify-end mt-2">
-                            <AiEnhanceButton isEnhancing={isCurrentlyEnhancing}
-                              isDisabled={enhancingId !== null}
-                              onClick={() => onEnhance(
-                                `Custom Section: ${section.title}`,
-                                item.quaternary,
-                                (newText) => updateContent(section.id, item.id, 'quaternary', newText)
-                            )} />
-                          </div>
-                        </div>
+                {item.type === 'subheading' ? (
+                  <div className="space-y-2">
+                    <input type="text" placeholder="Primary Text (e.g., Title/Company)" value={item.primary} onChange={e => updateContent(section.id, item.id, 'primary', e.target.value)} className="block w-full border p-2 rounded text-black dark:bg-black dark:text-white" />
+                    <input type="text" placeholder="Secondary Text (e.g., Date)" value={item.secondary} onChange={e => updateContent(section.id, item.id, 'secondary', e.target.value)} className="block w-full border p-2 rounded text-black dark:bg-black dark:text-white" />
+                    <input type="text" placeholder="Tertiary Text (e.g., Subtitle/Position)" value={item.tertiary} onChange={e => updateContent(section.id, item.id, 'tertiary', e.target.value)} className="block w-full border p-2 rounded text-black dark:bg-black dark:text-white" />
+                    <div>
+                      <textarea placeholder="Description (add new points by pressing Enter)" value={item.quaternary} onChange={e => updateContent(section.id, item.id, 'quaternary', e.target.value)} className="block w-full border p-2 rounded text-black dark:bg-black dark:text-white" />
+                      <div className="flex justify-end mt-2">
+                        <AiEnhanceButton isEnhancing={isCurrentlyEnhancing}
+                          isDisabled={enhancingId !== null}
+                          onClick={() => onEnhance(
+                            `Custom Section: ${section.title}`,
+                            item.quaternary,
+                            (newText) => updateContent(section.id, item.id, 'quaternary', newText)
+                        )} />
                       </div>
-                  ) : (
-                      <input type="text" placeholder="List item content" value={item.text} onChange={e => updateContent(section.id, item.id, 'text', e.target.value)} className="block w-full border p-2 rounded text-black dark:bg-black dark:text-white" />
-                  )}
-                  <button onClick={() => deleteContent(section.id, item.id)} className="text-red-500 text-xs mt-1 cusor-pointer">Remove</button>
+                    </div>
+                  </div>
+                ) : (
+                  <input type="text" placeholder="List item content" value={item.text} onChange={e => updateContent(section.id, item.id, 'text', e.target.value)} className="block w-full border p-2 rounded text-black dark:bg-black dark:text-white" />
+                )}
+                <button onClick={() => deleteContent(section.id, item.id)} className="text-red-500 text-xs mt-1 cusor-pointer">Remove</button>
               </div>
-            )})}
+             )})}
 
           <div className="mt-4">
             <button onClick={() => addContent(section.id, 'item')} className="mr-2 text-sm text-yellow-600 border cursor-pointer transition-all ease-in duration-300 border-yellow-600 px-3 py-1 rounded hover:bg-yellow-600 hover:text-white">+ Add List Item</button>
@@ -125,11 +125,17 @@ function CustomSection({ data, setData, setStep, onSaveChanges, isUpdating, enha
       
       <button onClick={addSection} className="inline text-yellow-600 border-yellow-600 px-6 py-3 rounded-2xl border border-solid text-2xl font-inherit cursor-pointer transition-all ease-in duration-300 mt-5 mb-5 hover:bg-yellow-600 hover:text-white">+ Add New Section</button>
 
-      <div className="text-center border-t-2 border-yellow-500 pt-4 mt-6">
-        <button onClick={onSaveChanges} disabled={isUpdating} className="text-white bg-green-600 font-bold px-10 py-3 rounded-3xl border text-xl cursor-pointer transition-all disabled:bg-gray-400 hover:bg-green-700">
-          {isUpdating ? 'Updating...' : 'Update Preview'}
-        </button>
-      </div>
+      <div className="mt-8">
+          {onSaveChanges && (
+            <button 
+              onClick={onSaveChanges} 
+              disabled={isUpdating} 
+              className="w-full cursor-pointer transition-all ease-in duration-300 text-white bg-yellow-600 font-bold px-4 py-3 rounded-2xl hover:bg-yellow-700 disabled:bg-gray-400"
+            >
+              {isUpdating ? 'Updating...' : 'Update Preview'}
+            </button>
+          )}
+        </div>
     </div>
   );
 }

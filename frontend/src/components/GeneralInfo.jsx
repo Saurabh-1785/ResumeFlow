@@ -43,10 +43,16 @@ function GeneralInfo({ data, setData, setStep, setShowForm, onSaveChanges, isUpd
               onClick={handleAboutEnhance} />
           </div>
         </div>
-        <div className="text-center border-t-2 border-yellow-500 pt-4">
-          <button onClick={onSaveChanges} disabled={isUpdating} className="text-white bg-green-600 font-bold px-10 py-3 rounded-3xl border text-xl cursor-pointer transition-all disabled:bg-gray-400 hover:bg-green-700">
-            {isUpdating ? 'Updating...' : 'Update Preview'}
-          </button>
+        <div className="mt-8">
+          {onSaveChanges && (
+            <button 
+              onClick={onSaveChanges} 
+              disabled={isUpdating} 
+              className="w-full cursor-pointer transition-all ease-in duration-300 text-white bg-yellow-600 font-bold px-4 py-3 rounded-2xl hover:bg-yellow-700 disabled:bg-gray-400"
+            >
+              {isUpdating ? 'Updating...' : 'Update Preview'}
+            </button>
+          )}
         </div>
       </div>
   );

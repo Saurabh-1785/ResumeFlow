@@ -21,7 +21,7 @@ function App() {
   const [isUpdating, setIsUpdating] = useState(false);
   const [isEnhancing, setIsEnhancing] = useState(false);
   const [enhancingId, setEnhancingId] = useState(null);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
   const [menuOpen, setMenuOpen] = useState(false);
 
   // form states
@@ -34,7 +34,7 @@ function App() {
 
   // --- Responsive Check ---
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    const handleResize = () => setIsMobile(window.innerWidth < 1024);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
@@ -134,7 +134,7 @@ function App() {
       <ThemeToggle />
       <div className="relative flex flex-col items-center justify-center p-4 sm:p-10">
         {/* Decorative backgrounds */}
-        <div className="absolute inset-0 hidden md:flex items-center justify-center overflow-hidden z-0"><div className="w-[120%] h-[90%] rotate-0 animate-slow-zoom border-8 border-yellow-400 dark:border-yellow-600 opacity-20 "></div></div>
+        <div className="absolute inset-0 hidden lg:flex items-center justify-center overflow-hidden z-0"><div className="w-[120%] h-[90%] rotate-0 animate-slow-zoom border-8 border-yellow-400 dark:border-yellow-600 opacity-20 "></div></div>
         <div className="absolute inset-0 flex items-center justify-center overflow-hidden z-0"><div className="w-[120%] h-[90%] rotate-90 animate-slow-zoom border-8 border-yellow-400 dark:border-yellow-600 opacity-20"></div></div>
         
         {!showForm ? (
@@ -147,9 +147,9 @@ function App() {
           <div className="w-full max-w-7xl mx-auto z-10">
             <div className='flex justify-center mb-10'><h2 className="text-[clamp(40px,5vw,100px)] font-abril text-yellow-600 font-bold hover:text-yellow-700 transition-all ease-in duration-300 cursor-pointer dark:hover:text-yellow-400 ">ResumeFlow</h2></div>
             
-            <div className="flex flex-col md:flex-row w-full gap-8">
+            <div className="flex flex-col lg:flex-row w-full gap-8">
               {/* --- MAIN CONTENT (LEFT COLUMN / FULL WIDTH ON MOBILE) --- */}
-              <div className="w-full md:w-1/2 p-2">
+              <div className="w-full lg:w-1/2 p-2">
                 {isMobile ? (
                   // --- MOBILE MENU ---
                    <div className="relative mb-4">
@@ -177,7 +177,6 @@ function App() {
                 )}
                 
                 {/* --- RENDER CURRENT SECTION --- */}
-                {/* Note: onSaveChanges is passed as 'undefined' on mobile to disable the update button's functionality */}
                 <div className="min-h-[50vh]">
                   {step === 0 && <GeneralInfo data={general} setData={setGeneral} onSaveChanges={!isMobile ? updatePreview : undefined} isUpdating={isUpdating} isEnhancing={enhancingId} onEnhance={handleEnhanceWithAI} />}
                   {step === 1 && <Education data={education} setData={setEducation} onSaveChanges={!isMobile ? updatePreview : undefined} isUpdating={isUpdating} />}
