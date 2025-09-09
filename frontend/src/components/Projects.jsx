@@ -36,8 +36,9 @@ function Projects({ data, setData, setStep, onSaveChanges, isUpdating, enhancing
               <div className="flex justify-end mt-2">
                 <AiEnhanceButton
                   isEnhancing={isCurrentlyEnhancing}
-                  isDisabled={enhancingId !== null}
+                  isDisabled={enhancingId !== null && enhancingId !== proj.id}
                   onClick={() => onEnhance(
+                    proj.id,
                     "Project Description",
                     proj.description,
                     (newText) => handleChange(proj.id, "description", newText)

@@ -100,8 +100,9 @@ function CustomSection({ data, setData, setStep, onSaveChanges, isUpdating, enha
                       <textarea placeholder="Description (add new points by pressing Enter)" value={item.quaternary} onChange={e => updateContent(section.id, item.id, 'quaternary', e.target.value)} className="block w-full border p-2 rounded text-black dark:bg-black dark:text-white" />
                       <div className="flex justify-end mt-2">
                         <AiEnhanceButton isEnhancing={isCurrentlyEnhancing}
-                          isDisabled={enhancingId !== null}
+                          isDisabled={enhancingId !== null && enhancingId !== item.id}
                           onClick={() => onEnhance(
+                            item.id,
                             `Custom Section: ${section.title}`,
                             item.quaternary,
                             (newText) => updateContent(section.id, item.id, 'quaternary', newText)

@@ -1,5 +1,3 @@
-// frontend/src/components/GeneralInfo.jsx
-
 function GeneralInfo({ data, setData, setStep, setShowForm, onSaveChanges, isUpdating, enhancingId, onEnhance }) {
   const handleAboutEnhance = () => {
     onEnhance(
@@ -27,7 +25,7 @@ function GeneralInfo({ data, setData, setStep, setShowForm, onSaveChanges, isUpd
   return (
       <div className="border md:border-r-20 rounded-br-4xl rounded-bl-4xl p-10 mt-0 w-full max-w-3xl border-yellow-600 ">
         <h2 className="text-[clamp(30px,4vw,60px)] text-center font-lobster mb-20 p-4 text-yellow-600">General Info</h2>
-        {/* ... other input fields ... */}
+  
         <input type="text" placeholder="Name" value={data.name} onChange={(e) => setData({ ...data, name: e.target.value })} className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white" required />
         <input type="email" placeholder="Email" value={data.email} onChange={(e) => setData({ ...data, email: e.target.value })} className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white" required />
         <input type="number" placeholder="Phone" value={data.phone} onChange={(e) => setData({ ...data, phone: e.target.value })} className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-white" required />
@@ -39,7 +37,7 @@ function GeneralInfo({ data, setData, setStep, setShowForm, onSaveChanges, isUpd
           <div className="flex justify-end mt-2">
             <AiEnhanceButton  
               isEnhancing={isCurrentlyEnhancing}
-              isDisabled={enhancingId !== null}
+              isDisabled={enhancingId !== null && enhancingId !== 'general_about'}
               onClick={handleAboutEnhance} />
           </div>
         </div>

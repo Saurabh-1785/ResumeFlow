@@ -1,5 +1,3 @@
-// frontend/src/components/Experience.jsx
-
 function Experience({ data, setData, setStep, onSaveChanges, isUpdating, enhancingId, onEnhance }) {
   const handleChange = (id, field, value) => {
     const updated = data.map((exp) => exp.id === id ? { ...exp, [field]: value } : exp);
@@ -36,8 +34,9 @@ function Experience({ data, setData, setStep, onSaveChanges, isUpdating, enhanci
               <div className="flex justify-end mt-2">
                 <AiEnhanceButton 
                   isEnhancing={isCurrentlyEnhancing}
-                  isDisabled={enhancingId !== null}
+                  isDisabled={enhancingId !== null && enhancingId !== exp.id}
                   onClick={() => onEnhance(
+                    exp.id,
                     "Work Experience Responsibilities",
                     exp.responsibilities,
                     (newText) => handleChange(exp.id, "responsibilities", newText)

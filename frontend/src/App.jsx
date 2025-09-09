@@ -39,28 +39,42 @@ function App() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Debug logging - Add this temporarily to see what's happening
+  useEffect(() => {
+    console.log('enhancingId changed:', enhancingId);
+  }, [enhancingId]);
+
   const handleEnhanceWithAI = async (id, context, currentText, onSuccess) => {
+    console.log('handleEnhanceWithAI called with:', { id, context, currentText: currentText?.substring(0, 50) + '...' });
+    
     if (!currentText || currentText.trim() === "") {
         alert("Please enter some text before enhancing.");
         return;
     }
+    
+    console.log('Setting enhancingId to:', id);
     setEnhancingId(id);
+    
     try {
         const response = await fetch("http://localhost:5000/enhance-text", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ text: currentText, context }),
         });
+        
         if (!response.ok) {
             const errData = await response.json();
             throw new Error(errData.error || "Failed to enhance text.");
         }
+        
         const result = await response.json();
+        console.log('Enhancement successful, calling onSuccess');
         onSuccess(result.enhancedText);
     } catch (err) {
         console.error("Error enhancing text:", err);
         alert(`Enhancement failed: ${err.message}`);
     } finally {
+        console.log('Resetting enhancingId to null');
         setEnhancingId(null);
     }
   };
@@ -178,12 +192,12 @@ function App() {
                 
                 {/* --- RENDER CURRENT SECTION --- */}
                 <div className="min-h-[50vh]">
-                  {step === 0 && <GeneralInfo data={general} setData={setGeneral} onSaveChanges={!isMobile ? updatePreview : undefined} isUpdating={isUpdating} isEnhancing={enhancingId} onEnhance={handleEnhanceWithAI} />}
+                  {step === 0 && <GeneralInfo data={general} setData={setGeneral} onSaveChanges={!isMobile ? updatePreview : undefined} isUpdating={isUpdating} enhancingId={enhancingId} onEnhance={handleEnhanceWithAI} />}
                   {step === 1 && <Education data={education} setData={setEducation} onSaveChanges={!isMobile ? updatePreview : undefined} isUpdating={isUpdating} />}
-                  {step === 2 && <Experience data={experience} setData={setExperience} onSaveChanges={!isMobile ? updatePreview : undefined} isUpdating={isUpdating} isEnhancing={enhancingId} onEnhance={handleEnhanceWithAI} />}
-                  {step === 3 && <Projects data={projects} setData={setProjects} onSaveChanges={!isMobile ? updatePreview : undefined} isUpdating={isUpdating} isEnhancing={enhancingId} onEnhance={handleEnhanceWithAI} />}
+                  {step === 2 && <Experience data={experience} setData={setExperience} onSaveChanges={!isMobile ? updatePreview : undefined} isUpdating={isUpdating} enhancingId={enhancingId} onEnhance={handleEnhanceWithAI} />}
+                  {step === 3 && <Projects data={projects} setData={setProjects} onSaveChanges={!isMobile ? updatePreview : undefined} isUpdating={isUpdating} enhancingId={enhancingId} onEnhance={handleEnhanceWithAI} />}
                   {step === 4 && <Skills data={skills} setData={setSkills} onSaveChanges={!isMobile ? updatePreview : undefined} isUpdating={isUpdating} />}
-                  {step === 5 && <CustomSection data={customSections} setData={setCustomSections} onSaveChanges={!isMobile ? updatePreview : undefined} isUpdating={isUpdating} isEnhancing={enhancingId} onEnhance={handleEnhanceWithAI} />}
+                  {step === 5 && <CustomSection data={customSections} setData={setCustomSections} onSaveChanges={!isMobile ? updatePreview : undefined} isUpdating={isUpdating} enhancingId={enhancingId} onEnhance={handleEnhanceWithAI} />}
                   {step === 6 && <Preview general={general} education={education} experience={experience} projects={projects} skills={skills} customSections={customSections} setStep={setStep} />}
                 </div>
 
