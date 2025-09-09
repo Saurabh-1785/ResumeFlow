@@ -130,11 +130,6 @@ function CustomSection({ data, setData, setStep, onSaveChanges, isUpdating, enha
           {isUpdating ? 'Updating...' : 'Update Preview'}
         </button>
       </div>
-
-      <div className="flex justify-between mt-3 mb-5">
-        <button onClick={() => setStep(4)} className="text-white bg-yellow-600 font-bold px-10 py-2 rounded-3xl border border-solid text-xl cursor-pointer transition-all ease-in duration-300 mt-5 mb-5 hover:bg-white hover:text-yellow-600">Previous</button>
-        <button onClick={() => setStep(6)} className="text-white bg-yellow-600 font-bold px-10 py-2 rounded-3xl border border-solid text-xl cursor-pointer transition-all ease-in duration-300 mt-5 mb-5 hover:bg-white hover:text-yellow-600">Enhance</button>
-      </div>
     </div>
   );
 }

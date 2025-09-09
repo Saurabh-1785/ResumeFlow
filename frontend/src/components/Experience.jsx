@@ -22,7 +22,7 @@ function Experience({ data, setData, setStep, onSaveChanges, isUpdating, enhanci
   );
 
   return (
-    <div className="border border-r-20 rounded-bl-4xl p-10 mt-0 w-full max-w-3xl border-yellow-600">
+    <div className="border md:border-r-20 rounded-bl-4xl p-10 mt-0 w-full max-w-3xl border-yellow-600">
       <h2 className="text-[clamp(25px,4vw,60px)] text-center font-lobster mb-20 p-4 text-yellow-600">Experience</h2>
       {data.map((exp) => {
         const isCurrentlyEnhancing = enhancingId === exp.id;
@@ -54,16 +54,10 @@ function Experience({ data, setData, setStep, onSaveChanges, isUpdating, enhanci
           </div>
         )})}
       <button onClick={addExperience} className="inline cursor-pointer text-yellow-600 border-yellow-600 px-6 py-3 rounded-2xl border text-2xl">+ Add Experience</button>
-
-      {/* ... bottom buttons ... */}
       <div className="text-center border-t-2 border-yellow-500 pt-4 mt-6">
         <button onClick={onSaveChanges} disabled={isUpdating} className="text-white bg-green-600 font-bold px-10 py-3 rounded-3xl border text-xl cursor-pointer transition-all disabled:bg-gray-400 hover:bg-green-700">
           {isUpdating ? 'Updating...' : 'Update Preview'}
         </button>
-      </div>
-      <div className="flex justify-between mt-3 mb-5">
-        <button onClick={() => setStep(1)} className="text-white cursor-pointer bg-yellow-600 font-bold px-10 py-2 rounded-3xl border text-xl">Previous</button>
-        <button onClick={() => setStep(3)} className="text-white cursor-pointer bg-yellow-600 font-bold px-10 py-2 rounded-3xl border text-xl">Next</button>
       </div>
     </div>
   );
