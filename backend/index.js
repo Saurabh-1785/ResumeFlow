@@ -30,7 +30,6 @@ app.post('/generate-pdf', (req, res) => {
     if (!tex) {
         return res.status(400).send('Missing TeX content.');
     }
-
     const fileName = `resume_${Date.now()}`;
     const texPath = path.join(__dirname, `${fileName}.tex`);
     const pdfPath = path.join(__dirname, `${fileName}.pdf`);
@@ -87,15 +86,19 @@ app.post('/enhance-text', async (req, res) => {
   }
   
   // Updated API URL - using the correct v1 endpoint instead of v1beta
-  const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`;
+  const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
 
-  const prompt = `You are an expert resume writer and an ATS (Applicant Tracking System) optimization specialist. Your task is to rewrite the following resume text to achieve a top-tier ATS score (above 90%). The text is from the "${context}" section.
+  const prompt = `You are an expert resume editor specializing in optimizing content for ATS (Applicant Tracking Systems) while keeping it professional and easy for hiring managers to read. Rewrite the following user-provided text to make it more structured, impactful, and aligned with ATS requirements. Follow these guidelines:
 
-  Follow these rules strictly:
-  1.  **Quantify Achievements:** This is the most critical rule. If the original text has numbers, use them. If not, you MUST rephrase the statement to include a placeholder like [Number], [Percentage]%, or $[Amount] to prompt the user to add a specific metric. For example, transform 'Improved efficiency' into 'Improved operational efficiency by [Percentage]% by implementing a new automation script'.
-  2.  **Use Strong Action Verbs:** Start every bullet point with a powerful and specific action verb (e.g., 'Architected', 'Revitalized', 'Negotiated', 'Streamlined'). Avoid weak or common verbs like 'Managed', 'Led', or 'Responsible for'.
-  3.  **Eliminate Buzzwords:** Strictly remove all clichés, corporate jargon, and vague buzzwords. Do not use phrases like 'team player', 'results-driven', 'synergy', 'go-getter', or 'detail-oriented'. Focus on concrete skills and outcomes.
-  4.  **Direct Output:** Provide only the enhanced text. Do not include any introductory phrases like "Here is the revised version:".
+  1. Keep the original meaning and details intact without changing the intent.
+  2. Use strong, relevant action verbs to describe tasks and responsibilities.
+  3. In every sentence quantify achievements especially in description of project and experience (e.g., increased efficiency by 20%, managed a team of 5).
+  4. Remove unnecessary buzzwords and generic phrases that do not add value since these terms are considered clichés by employers because they're so overused, and resumes are usually better off without them entirely (like presentation skills, management skills, drove, founded, etc).
+  5. Ensure the text is clear, concise, and error-free while maintaining a formal tone.
+  6. Include keywords that are relevant to job descriptions and industry requirements without keyword stuffing.
+  7. Organize information logically with proper punctuation and formatting suitable for resumes.
+  8. Direct Output: Provide only the enhanced text and in one paragraph, not in bullet points. Do not include any introductory phrases like "Here is the revised version:"
+
 
   Original text: "${text}"
   Enhanced text:`;

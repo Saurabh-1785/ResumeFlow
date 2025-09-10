@@ -1,5 +1,3 @@
-// frontend/src/App.jsx
-
 import './index.css';
 import { useState, useEffect, useCallback } from "react";
 import GeneralInfo from "./components/GeneralInfo";
@@ -86,7 +84,16 @@ function App() {
         setPdfUrl(null);
         return;
     }
+    
+    // Prevent preview update if AI is enhancing
+    if (enhancingId !== null) {
+        console.log("AI enhancement in progress, skipping preview update");
+        return;
+    }
+    
+    console.log("Starting preview update...");
     setIsUpdating(true);
+    
     const data = { generalInfo: general, education: education.map(e => ({ school: e.institution, location: e.place, degree: `${e.study} - ${e.grade}`, date: `${e.datestart} -- ${e.dateend}` })), experience: experience.map(exp => ({ company: exp.company, position: exp.position, description: exp.responsibilities, date: `${exp.from} -- ${exp.to}`, location: "" })), projects: projects.map(p => ({ name: p.name, tech: p.technology, description: p.description, link: p.url, date: "" })), skills: skills, customSections: customSections };
     const tex = generateLatex(data);
     try {
@@ -102,12 +109,13 @@ function App() {
         if (prevUrl) URL.revokeObjectURL(prevUrl);
         return url;
       });
+      console.log("Preview updated successfully");
     } catch (err) {
       console.error("A network error occurred:", err);
     } finally {
       setIsUpdating(false);
     }
-  }, [general, education, experience, projects, skills, customSections, isMobile]);
+  }, [general, education, experience, projects, skills, customSections, isMobile, enhancingId]);
 
   const handleDownloadPDF = async () => {
     const data = { generalInfo: general, education: education.map(e => ({ school: e.institution, location: e.place, degree: `${e.study} - ${e.grade}`, date: `${e.datestart} -- ${e.dateend}` })), experience: experience.map(exp => ({ company: exp.company, position: exp.position, description: exp.responsibilities, date: `${exp.from} -- ${exp.to}`, location: "" })), projects: projects.map(p => ({ name: p.name, tech: p.technology, description: p.description, link: p.url, date: "" })), skills: skills, customSections: customSections };
@@ -133,7 +141,36 @@ function App() {
       if (pdfUrl) URL.revokeObjectURL(pdfUrl);
     };
   }, [pdfUrl]);
-  
+
+  // --- KEYBOARD SHORTCUTS ---
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      // Use event.metaKey for Command key on macOS
+      if (event.ctrlKey || event.metaKey) {
+        switch (event.key.toLowerCase()) {
+          case 's':
+            event.preventDefault(); // Prevent browser's save action
+            updatePreview();
+            break;
+          // Ctrl+Z and Ctrl+Y are handled natively by input fields.
+          // We don't prevent the default action, so the browser can do its thing.
+          case 'z':
+          case 'y':
+            break;
+          default:
+            break;
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    // Cleanup the event listener when the component is unmounted
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [updatePreview]); // Re-bind the listener if updatePreview function changes
+
   const tabs = ["General", "Education", "Experience", "Projects", "Skills", "+"];
   
   const handleStepChange = (newStep) => {
@@ -166,21 +203,21 @@ function App() {
               <div className="w-full lg:w-1/2 p-2">
                 {isMobile ? (
                   // --- MOBILE MENU ---
-                   <div className="relative mb-4">
-                     <button onClick={() => setMenuOpen(!menuOpen)} className="font-bold text-white bg-yellow-600 px-4 py-2 rounded-lg w-full flex justify-between items-center">
-                       <span>{tabs[step]}</span>
-                       <span>&#9662;</span>
-                     </button>
-                     {menuOpen && (
-                       <div className="absolute top-full left-0 w-full bg-white dark:bg-gray-800 border border-yellow-600 rounded-b-lg z-20 shadow-lg">
-                         {tabs.map((label, index) => (
-                           <button key={index} onClick={() => handleStepChange(index)} className="block w-full text-left px-4 py-2 hover:bg-yellow-100 dark:hover:bg-gray-700">
-                             {label}
-                           </button>
-                         ))}
-                       </div>
-                     )}
-                   </div>
+                    <div className="relative mb-4">
+                      <button onClick={() => setMenuOpen(!menuOpen)} className="font-bold text-white bg-yellow-600 px-4 py-2 rounded-lg w-full flex justify-between items-center">
+                        <span>{tabs[step]}</span>
+                        <span>&#9662;</span>
+                      </button>
+                      {menuOpen && (
+                        <div className="absolute top-full left-0 w-full bg-white dark:bg-gray-800 border border-yellow-600 rounded-b-lg z-20 shadow-lg">
+                          {tabs.map((label, index) => (
+                            <button key={index} onClick={() => handleStepChange(index)} className="block w-full text-left px-4 py-2 hover:bg-yellow-100 dark:hover:bg-gray-700">
+                              {label}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                 ) : (
                   // --- DESKTOP TABS ---
                   <div className="flex space-x-1 font-inknut border-yellow-600 mb-0">
@@ -204,33 +241,33 @@ function App() {
                 {/* --- RESPONSIVE PREVIOUS/NEXT BUTTONS --- */}
                 {!isPreviewStep && (
                   <div className="flex justify-between items-center mt-8 pt-4 border-t border-yellow-500/30">
-                      <button 
-                        onClick={() => setStep(step - 1)}
-                        disabled={step === 0}
-                        className="px-6 py-2 bg-gray-300 text-gray-800 rounded-md font-semibold hover:bg-gray-400 disabled:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 dark:disabled:bg-gray-800"
-                      >
-                        Previous
-                      </button>
-                      <button 
-                        onClick={() => setStep(step + 1)}
-                        className="px-6 py-2 bg-yellow-600 text-white rounded-md font-semibold hover:bg-yellow-700"
-                      >
-                        Next
-                      </button>
+                        <button 
+                          onClick={() => setStep(step - 1)}
+                          disabled={step === 0}
+                          className="px-6 py-2 bg-gray-300 text-gray-800 rounded-md font-semibold hover:bg-gray-400 disabled:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 dark:disabled:bg-gray-800"
+                        >
+                          Previous
+                        </button>
+                        <button 
+                          onClick={() => setStep(step + 1)}
+                          className="px-6 py-2 bg-yellow-600 text-white rounded-md font-semibold hover:bg-yellow-700"
+                        >
+                          Next
+                        </button>
                   </div>
                 )}
               </div>
               
               {/* --- PDF PREVIEW (RIGHT COLUMN - DESKTOP ONLY) --- */}
               {!isMobile && (
-                 <div className="w-1/2 p-6">
-                   <div className="sticky top-10 h-[calc(100vh-5rem)] flex flex-col">
+                  <div className="w-1/2 p-6">
+                    <div className="sticky top-10 h-[calc(100vh-5rem)] flex flex-col">
                       <h3 className="text-center text-2xl font-lobster text-yellow-600 mb-4">Live Preview</h3>
                       <div className="flex-grow border rounded-lg shadow-inner overflow-hidden">
-                         <PdfPreview pdfUrl={pdfUrl} />
+                          <PdfPreview pdfUrl={pdfUrl} />
                       </div>
-                   </div>
-                 </div>
+                    </div>
+                  </div>
               )}
             </div>
 
