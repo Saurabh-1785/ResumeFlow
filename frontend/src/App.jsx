@@ -6,9 +6,9 @@ import Experience from "./components/Experience";
 import Projects from "./components/Projects";
 import Skills from "./components/Skills";
 import CustomSection from "./components/CustomSection";
-import ThemeToggle from "./components/ThemeToggle";
 import Preview from "./components/Preview";
 import PdfPreview from './components/PdfPreview';
+import NavigationBar from './components/NavigationBar';
 import { generateLatex } from "./utils/generateLatex";
 
 // --- Main App Component ---
@@ -20,7 +20,7 @@ function App() {
   const [isEnhancing, setIsEnhancing] = useState(false);
   const [enhancingId, setEnhancingId] = useState(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // form states
   const [general, setGeneral] = useState({ name: "", email: "", phone: "", github: "", linkedin: "", about: "" });
@@ -136,6 +136,16 @@ function App() {
     }
   };
 
+  const handleBackToHome = () => {
+    setShowForm(false);
+    setStep(0);
+  };
+
+  const handleStepChange = (newStep) => {
+    setStep(newStep);
+    setMobileMenuOpen(false);
+  };
+
   useEffect(() => {
     return () => {
       if (pdfUrl) URL.revokeObjectURL(pdfUrl);
@@ -171,18 +181,33 @@ function App() {
     };
   }, [updatePreview]); // Re-bind the listener if updatePreview function changes
 
-  const tabs = ["General", "Education", "Experience", "Projects", "Skills", "+"];
-  
-  const handleStepChange = (newStep) => {
-    setStep(newStep);
-    setMenuOpen(false);
-  };
+  const navItems = [
+    { label: "General Info", step: 0 },
+    { label: "Education", step: 1 },
+    { label: "Experience", step: 2 },
+    { label: "Projects", step: 3 },
+    { label: "Skills", step: 4 },
+    { label: "Custom Sections", step: 5 }
+  ];
 
-  const isPreviewStep = step === tabs.length - 1;
+  const isPreviewStep = step === 6;
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
-      <ThemeToggle />
+      {/* Navigation Bar */}
+      {showForm && (
+        <NavigationBar 
+          navItems={navItems}
+          currentStep={step}
+          onNavigate={handleStepChange}
+          onDownload={handleDownloadPDF}
+          onBackToHome={handleBackToHome}
+          isMobile={isMobile}
+          mobileMenuOpen={mobileMenuOpen}
+          setMobileMenuOpen={setMobileMenuOpen}
+        />
+      )}
+
       <div className="relative flex flex-col items-center justify-center p-4 sm:p-10">
         {/* Decorative backgrounds */}
         <div className="absolute inset-0 hidden lg:flex items-center justify-center overflow-hidden z-0"><div className="w-[120%] h-[90%] rotate-0 animate-slow-zoom border-8 border-yellow-400 dark:border-yellow-600 opacity-20 "></div></div>
@@ -195,38 +220,10 @@ function App() {
             <button onClick={() => { setShowForm(true); setStep(0); }} className="inline font-dancing font-bold text-white bg-yellow-600 px-6 py-3 rounded-lg border border-solid text-3xl font-inherit cursor-pointer transition-all ease-in duration-300 mt-20 hover:bg-yellow-700 hover:text-gray-50 dark:hover:bg-yellow-400 dark:hover:text-gray-900 dark:bg-yellow-600 dark:text-gray-900">Get Started</button>
           </div>
         ) : (
-          <div className="w-full max-w-7xl mx-auto z-10">
-            <div className='flex justify-center mb-10'><h2 className="text-[clamp(40px,5vw,100px)] font-abril text-yellow-600 font-bold hover:text-yellow-700 transition-all ease-in duration-300 cursor-pointer dark:hover:text-yellow-400 ">ResumeFlow</h2></div>
-            
+          <div className="w-full max-w-7xl mx-auto z-10 mt-4">
             <div className="flex flex-col lg:flex-row w-full gap-8">
               {/* --- MAIN CONTENT (LEFT COLUMN / FULL WIDTH ON MOBILE) --- */}
               <div className="w-full lg:w-1/2 p-2">
-                {isMobile ? (
-                  // --- MOBILE MENU ---
-                    <div className="relative mb-4">
-                      <button onClick={() => setMenuOpen(!menuOpen)} className="font-bold text-white bg-yellow-600 px-4 py-2 rounded-lg w-full flex justify-between items-center">
-                        <span>{tabs[step]}</span>
-                        <span>&#9662;</span>
-                      </button>
-                      {menuOpen && (
-                        <div className="absolute top-full left-0 w-full bg-white dark:bg-gray-800 border border-yellow-600 rounded-b-lg z-20 shadow-lg">
-                          {tabs.map((label, index) => (
-                            <button key={index} onClick={() => handleStepChange(index)} className="block w-full text-left px-4 py-2 hover:bg-yellow-100 dark:hover:bg-gray-700">
-                              {label}
-                            </button>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                ) : (
-                  // --- DESKTOP TABS ---
-                  <div className="flex space-x-1 font-inknut border-yellow-600 mb-0">
-                    {tabs.map((label, index) => (
-                      <button key={index} onClick={() => setStep(index)} className={`flex-1 text-center px-3 py-2 rounded-t-lg transition cursor-pointer border-yellow-600 border-r-6 border-2 ${step === index ? "bg-yellow-600 text-white dark:text-black" : "bg-white dark:bg-gray-900 text-gray-500 dark:text-gray-50 hover:text-yellow-700 dark:hover:text-yellow-400"}`}>{label}</button>
-                    ))}
-                  </div>
-                )}
-                
                 {/* --- RENDER CURRENT SECTION --- */}
                 <div className="min-h-[50vh]">
                   {step === 0 && <GeneralInfo data={general} setData={setGeneral} onSaveChanges={!isMobile ? updatePreview : undefined} isUpdating={isUpdating} enhancingId={enhancingId} onEnhance={handleEnhanceWithAI} />}
@@ -242,11 +239,10 @@ function App() {
                 {!isPreviewStep && (
                   <div className="flex justify-between items-center mt-8 pt-4 border-t border-yellow-500/30">
                         <button 
-                          onClick={() => setStep(step - 1)}
-                          disabled={step === 0}
-                          className="px-6 py-2 bg-gray-300 text-gray-800 rounded-md font-semibold hover:bg-gray-400 disabled:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 dark:disabled:bg-gray-800"
+                          onClick={step === 0 ? handleBackToHome : () => setStep(step - 1)}
+                          className="px-6 py-2 bg-gray-300 text-gray-800 rounded-md font-semibold hover:bg-gray-400 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
                         >
-                          Previous
+                          {step === 0 ? 'Back' : 'Previous'}
                         </button>
                         <button 
                           onClick={() => setStep(step + 1)}
@@ -269,15 +265,6 @@ function App() {
                     </div>
                   </div>
               )}
-            </div>
-
-            {/* --- GLOBAL DOWNLOAD BUTTON --- */}
-            <div className="mt-12 pt-6 border-t-2 border-yellow-500 flex justify-center">
-              <button 
-                onClick={handleDownloadPDF} 
-                className="w-full sm:w-auto text-white bg-blue-600 font-bold px-8 py-3 rounded-full border text-lg cursor-pointer transition-all hover:bg-blue-700 shadow-lg">
-                Download PDF
-              </button>
             </div>
           </div>
         )}

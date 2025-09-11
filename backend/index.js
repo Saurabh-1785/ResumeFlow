@@ -88,20 +88,125 @@ app.post('/enhance-text', async (req, res) => {
   // Updated API URL - using the correct v1 endpoint instead of v1beta
   const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
 
-  const prompt = `You are an expert resume editor specializing in optimizing content for ATS (Applicant Tracking Systems) while keeping it professional and easy for hiring managers to read. Rewrite the following user-provided text to make it more structured, impactful, and aligned with ATS requirements. Follow these guidelines:
+  const prompt = `You are an expert ATS (Applicant Tracking System) optimization specialist with 10+ years of experience helping candidates achieve 95%+ ATS compatibility scores. Your task is to transform the provided text into ATS-optimized content that ranks highly in automated screening systems while remaining compelling to human recruiters.
 
-  1. Keep the original meaning and details intact without changing the intent.
-  2. Use strong, relevant action verbs to describe tasks and responsibilities.
-  3. In every sentence quantify achievements especially in description of project and experience (e.g., increased efficiency by 20%, managed a team of 5).
-  4. Remove unnecessary buzzwords and generic phrases that do not add value since these terms are considered clichés by employers because they're so overused, and resumes are usually better off without them entirely (like presentation skills, management skills, drove, founded, etc).
-  5. Ensure the text is clear, concise, and error-free while maintaining a formal tone.
-  6. Include keywords that are relevant to job descriptions and industry requirements without keyword stuffing.
-  7. Organize information logically with proper punctuation and formatting suitable for resumes.
-  8. Direct Output: Provide only the enhanced text and in one paragraph, not in bullet points. Do not include any introductory phrases like "Here is the revised version:"
+  CRITICAL ATS OPTIMIZATION REQUIREMENTS:
 
+  1. KEYWORD OPTIMIZATION:
+    - Incorporate industry-standard keywords naturally (avoid keyword stuffing)
+    - Use exact job title variations and synonyms
+    - Include technical skills, tools, and methodologies mentioned in typical job descriptions
+    - Match verb tenses used in job postings (e.g., "managed" vs "managing")
 
-  Original text: "${text}"
-  Enhanced text:`;
+  2. QUANTIFICATION & METRICS:
+    - Every achievement MUST include specific numbers, percentages, or measurable outcomes
+    - Use concrete data: revenue generated, costs saved, team size, time periods, growth percentages
+    - Format numbers properly: "20%" not "twenty percent", "$1M" not "one million dollars"
+
+  3. ACTION VERB OPTIMIZATION:
+    - Start each accomplishment with powerful, ATS-friendly action verbs
+    - Use variety: Led, Developed, Implemented, Optimized, Delivered, Achieved, Streamlined, Enhanced
+    - Avoid overused buzzwords: "passionate," "team player," "detail-oriented," "go-getter"
+
+  4. STRUCTURAL REQUIREMENTS:
+    - Write in past tense for previous roles, present tense for current roles
+    - Use parallel sentence structure throughout
+    - Keep sentences concise (15-20 words maximum)
+    - Ensure proper grammar and punctuation for automated parsing
+
+  5. ATS PARSING COMPATIBILITY:
+    - Use standard section formatting
+    - Avoid special characters, graphics, or unusual formatting
+    - Use common abbreviations (MBA, B.S., etc.) alongside full forms when relevant
+    - Include both acronyms and spelled-out versions of technical terms (e.g., "AI (Artificial Intelligence)")
+
+  6. CONTEXT-SPECIFIC OPTIMIZATION:
+    Based on the context "${context}", incorporate relevant:
+    - Industry-specific terminology and buzzwords
+    - Required technical competencies
+    - Soft skills valued in this field
+    - Achievement patterns typical for this role level
+
+  7. CONTENT ENHANCEMENT RULES:
+    - Transform weak statements into strong accomplishments
+    - Convert responsibilities into achievements with measurable impact
+    - Add strategic context showing business value and ROI
+    - Demonstrate progression and growth in capabilities
+
+  8. FORMATTING FOR MAXIMUM ATS SCORE:
+    - Output as a single, well-structured paragraph
+    - Use consistent punctuation and capitalization
+    - Ensure keyword density is 2-3% of total word count
+    - Maintain natural flow while optimizing for machine readability
+
+  QUALITY ASSURANCE CHECKLIST:
+  ✓ Each sentence contains quantifiable results
+  ✓ Industry keywords are naturally integrated
+  ✓ Action verbs are strong and varied
+  ✓ Content shows clear business impact
+  ✓ Grammar is perfect for ATS parsing
+  ✓ Text flows naturally for human readers
+
+  AVOID COMPLETELY:
+  - Generic phrases like "responsible for," "duties included"
+  - Overused buzzwords and clichés
+  - Vague accomplishments without metrics
+  - First-person pronouns (I, me, my)
+  - Passive voice constructions
+  - Redundant or filler words
+
+  Original text to optimize: "${text}"
+
+  Enhanced ATS-optimized text (output only the enhanced version without any introductory text):`;
+
+  // Additional context-specific prompts for different sections:
+
+  const sectionSpecificPrompts = {
+    experience: `Focus on:
+  - Quantified business impact and ROI
+  - Leadership and team management metrics
+  - Process improvements and efficiency gains
+  - Revenue generation or cost savings
+  - Project scope, timeline, and outcomes
+  - Technology implementations and results`,
+
+    projects: `Emphasize:
+  - Technical stack and methodologies used
+  - Problem-solving approach and innovation
+  - Measurable outcomes and performance metrics
+  - Collaboration and stakeholder management
+  - Timeline adherence and budget management
+  - User impact or business value delivered`,
+
+    about: `Highlight:
+  - Years of experience and specialization areas
+  - Key technical competencies and certifications
+  - Industry expertise and domain knowledge
+  - Leadership philosophy and management style
+  - Career achievements and recognition received
+  - Value proposition and unique differentiators`,
+
+    customSection: `Adapt based on section purpose:
+  - Use relevant industry terminology
+  - Include specific metrics and achievements
+  - Align with career progression narrative
+  - Support overall professional brand
+  - Demonstrate expertise depth and breadth
+  - Show continuous learning and growth`
+  };
+
+  // Usage example in your enhance-text endpoint:
+  const getContextualPrompt = (text, context) => {
+    const basePrompt = prompt.replace('${text}', text).replace('${context}', context);
+    
+    // Add section-specific guidance if available
+    const sectionGuidance = sectionSpecificPrompts[context.toLowerCase()];
+    if (sectionGuidance) {
+      return basePrompt + `\n\nADDITIONAL CONTEXT-SPECIFIC GUIDANCE:\n${sectionGuidance}`;
+    }
+    
+    return basePrompt;
+  };
 
   const requestBody = {
     contents: [{ 
