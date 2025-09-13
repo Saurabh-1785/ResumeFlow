@@ -63,6 +63,135 @@ app.post('/generate-pdf', (req, res) => {
 });
 
 /**
+ * @route   POST /generate-word
+ * @desc    Generates a Word document from resume data
+ * @access  Public
+ */
+app.post('/generate-word', (req, res) => {
+    const { data } = req.body;
+
+    if (!data) {
+        return res.status(400).send('Missing resume data.');
+    }
+
+    const { generalInfo = {}, education = [], experience = [], projects = [], skills = {}, customSections = [] } = data;
+    
+    // Generate HTML content for Word document
+    let wordContent = `
+    <html>
+    <head>
+    <meta charset="UTF-8">
+    <title>Resume</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.6; }
+        h1 { text-align: center; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        h2 { color: #2c3e50; border-bottom: 1px solid #bdc3c7; padding-bottom: 5px; margin-top: 25px; }
+        .contact-info { text-align: center; margin-bottom: 30px; }
+        .section { margin-bottom: 25px; }
+        .item { margin-bottom: 15px; }
+        .item-title { font-weight: bold; color: #2c3e50; }
+        .item-subtitle { font-style: italic; color: #7f8c8d; }
+        .item-date { float: right; color: #7f8c8d; }
+        ul { padding-left: 20px; }
+        li { margin-bottom: 5px; }
+    </style>
+    </head>
+    <body>
+    
+    <h1>${generalInfo.name || ''}</h1>
+    <div class="contact-info">
+        ${generalInfo.email ? `<span>${generalInfo.email}</span>` : ''}
+        ${generalInfo.phone ? ` | <span>${generalInfo.phone}</span>` : ''}
+        ${generalInfo.github ? `<br><span>GitHub: ${generalInfo.github}</span>` : ''}
+        ${generalInfo.linkedin ? ` | <span>LinkedIn: ${generalInfo.linkedin}</span>` : ''}
+    </div>
+    
+    ${generalInfo.about ? `
+    <div class="section">
+        <h2>Summary</h2>
+        <p>${generalInfo.about}</p>
+    </div>` : ''}
+    
+    ${education.length > 0 ? `
+    <div class="section">
+        <h2>Education</h2>
+        ${education.map(edu => `
+        <div class="item">
+            <div class="item-title">${edu.institution}</div>
+            <div class="item-subtitle">${edu.place}</div>
+            <div class="item-date">${edu.datestart} - ${edu.dateend}</div>
+            <div>${edu.study} ${edu.grade ? `- ${edu.grade}` : ''}</div>
+        </div>
+        `).join('')}
+    </div>` : ''}
+    
+    ${Object.values(skills).some(s => s && s.trim() !== '') ? `
+    <div class="section">
+        <h2>Skills</h2>
+        ${skills.languages ? `<p><strong>Languages:</strong> ${skills.languages}</p>` : ''}
+        ${skills.frameworks ? `<p><strong>Frameworks:</strong> ${skills.frameworks}</p>` : ''}
+        ${skills.libraries ? `<p><strong>Libraries:</strong> ${skills.libraries}</p>` : ''}
+        ${skills.tools ? `<p><strong>Tools:</strong> ${skills.tools}</p>` : ''}
+        ${skills.others ? `<p><strong>Others:</strong> ${skills.others}</p>` : ''}
+    </div>` : ''}
+    
+    ${projects.filter(p => p.name && p.name.trim() !== '').length > 0 ? `
+    <div class="section">
+        <h2>Projects</h2>
+        ${projects.filter(p => p.name && p.name.trim() !== '').map(proj => `
+        <div class="item">
+            <div class="item-title">${proj.name}</div>
+            <div class="item-subtitle">${proj.technology}</div>
+            ${proj.description ? `<p>${proj.description.split('\n').map(line => line.trim()).filter(line => line).join('<br>')}</p>` : ''}
+            ${proj.url ? `<p><strong>Link:</strong> <a href="${proj.url}">${proj.url}</a></p>` : ''}
+        </div>
+        `).join('')}
+    </div>` : ''}
+    
+    ${experience.filter(e => e.company && e.company.trim() !== '').length > 0 ? `
+    <div class="section">
+        <h2>Experience</h2>
+        ${experience.filter(e => e.company && e.company.trim() !== '').map(exp => `
+        <div class="item">
+            <div class="item-title">${exp.company}</div>
+            <div class="item-subtitle">${exp.position}</div>
+            <div class="item-date">${exp.from} - ${exp.to}</div>
+            ${exp.responsibilities ? `<p>${exp.responsibilities.split('\n').map(line => line.trim()).filter(line => line).join('<br>')}</p>` : ''}
+        </div>
+        `).join('')}
+    </div>` : ''}
+    
+    ${customSections.filter(sec => sec.title && sec.title.trim() !== '' && sec.content.length > 0).length > 0 ? `
+    ${customSections.filter(sec => sec.title && sec.title.trim() !== '' && sec.content.length > 0).map(section => `
+    <div class="section">
+        <h2>${section.title}</h2>
+        ${section.content.map(item => {
+            if (item.type === 'subheading') {
+                return `
+                <div class="item">
+                    <div class="item-title">${item.primary || ''}</div>
+                    <div class="item-subtitle">${item.tertiary || ''}</div>
+                    <div class="item-date">${item.secondary || ''}</div>
+                    ${item.quaternary ? `<p>${item.quaternary.split('\n').map(line => line.trim()).filter(line => line).join('<br>')}</p>` : ''}
+                </div>`;
+            } else {
+                return `<p>• ${item.text || ''}</p>`;
+            }
+        }).join('')}
+    </div>
+    `).join('')}` : ''}
+    
+    </body>
+    </html>
+    `;
+
+    // Set headers for Word document download
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+    res.setHeader('Content-Disposition', 'attachment; filename=resume.doc');
+    res.send(wordContent);
+});
+
+/**
  * @route   POST /enhance-text
  * @desc    Enhances a given text using Google Generative AI
  * @access  Public

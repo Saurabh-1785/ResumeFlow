@@ -10,7 +10,7 @@ function escapeLatex(str = "") {
 
 export function generateLatex(data) {
   const {
-    generalInfo = {}, education = [], experience = [], projects = [], skills = {}, customSections = []
+    generalInfo = {}, education = [], experience = [], projects = [], skills = {}, customSections = [], sectionOrder = []
   } = data;
 
   const validProjects = projects.filter(p => p.name && p.name.trim() !== "");
@@ -57,47 +57,124 @@ export function generateLatex(data) {
 \\begin{document}
 `;
 
-// ... (The rest of the file remains exactly the same) ...
-// ---------- HEADING ----------
-latex += `\\begin{center}
-  \\textbf{\\Huge \\scshape ${escapeLatex(generalInfo.name || "")}} \\\\ \\vspace{3pt}
-  ${generalInfo.phone ? `\\small\\href{tel:+91${generalInfo.phone}}{\\raisebox{-0.2\\height}{\\rotatebox[origin=c]{270}\\faPhone}\\ \\underline{+91-${escapeLatex(generalInfo.phone)}}}` : ""}
-  ${generalInfo.email ? ` $|$ \\href{mailto:${generalInfo.email}}{\\faEnvelope\\ \\underline{${escapeLatex(generalInfo.email)}}}` : ""}
-  ${generalInfo.github ? ` $|$ \\href{https://github.com/${generalInfo.github}}{\\faGithub\\ \\underline{GitHub}}` : ""}
-  ${generalInfo.linkedin ? ` $|$ \\href{${generalInfo.linkedin}}{\\faLinkedin\\ \\underline{LinkedIn}}` : ""}
-  
-\\end{center}`;
-if (generalInfo.about && generalInfo.about.trim() !== "") { latex += `\\section{Summary}\\begin{adjustwidth}{0.15in}{0in}\\small{${escapeLatex(generalInfo.about)}}\\end{adjustwidth}`; }
+  // ---------- HEADING ----------
+  latex += `\\begin{center}
+    \\textbf{\\Huge \\scshape ${escapeLatex(generalInfo.name || "")}} \\\\ \\vspace{3pt}
+    ${generalInfo.phone ? `\\small\\href{tel:+91${generalInfo.phone}}{\\raisebox{-0.2\\height}{\\rotatebox[origin=c]{270}\\faPhone}\\ \\underline{+91-${escapeLatex(generalInfo.phone)}}}` : ""}
+    ${generalInfo.email ? ` $|$ \\href{mailto:${generalInfo.email}}{\\faEnvelope\\ \\underline{${escapeLatex(generalInfo.email)}}}` : ""}
+    ${generalInfo.github ? ` $|$ \\href{https://github.com/${generalInfo.github}}{\\faGithub\\ \\underline{GitHub}}` : ""}
+    ${generalInfo.linkedin ? ` $|$ \\href{${generalInfo.linkedin}}{\\faLinkedin\\ \\underline{LinkedIn}}` : ""}
+    
+  \\end{center}`;
 
-if (validEducation.length > 0) { latex += `\\section{Education}\\resumeSubHeadingListStart ${validEducation.map(ed => `\\resumeSubheading{${escapeLatex(ed.school || "")}}{${escapeLatex(ed.date || "")}}{${escapeLatex(ed.degree || "")}}{${escapeLatex(ed.location || "")}}`).join("\n")}\\resumeSubHeadingListEnd`; }
-
-if (skills && Object.values(skills).some(s => s && s.trim() !== "")) { latex += `\\section{Skills}\\begin{itemize}[leftmargin=0.15in, label={}] ${skills.languages ? `\\item \\small \\textbf{Languages}{: ${escapeLatex(skills.languages)}}` : ""} ${skills.frameworks ? `\\item \\small \\textbf{Frameworks}{: ${escapeLatex(skills.frameworks)}}` : ""} ${skills.libraries ? `\\item \\small \\textbf{Libraries}{: ${escapeLatex(skills.libraries)}}` : ""} ${skills.tools ? `\\item \\small \\textbf{Developer Tools}{: ${escapeLatex(skills.tools)}}` : ""} ${skills.others ? `\\item \\small \\textbf{Others}{: ${escapeLatex(skills.others)}}` : ""}\\end{itemize}`; }
-
-if (validProjects.length > 0) { latex += `\\section{Projects}\\resumeSubHeadingListStart ${validProjects.map(p => `\\resumeProjectHeading{\\textbf{${escapeLatex(p.name || "")}} ${p.link ? `\\href{${p.link}}{\\faLink}` : ""} $|$ \\emph{${escapeLatex(p.tech || "")}}}{${escapeLatex(p.date || "")}} ${p.description ? `\\resumeItemListStart ${p.description.split('\n').filter(line => line.trim() !== '').map(line => `\\resumeItem{${escapeLatex(line.trim())}}`).join('\n')} \\resumeItemListEnd` : ""}`).join("\n")}\\resumeSubHeadingListEnd`; }
-
-if (validExperience.length > 0) { latex += `\\section{Experience}\\resumeSubHeadingListStart ${validExperience.map(e => `\\resumeSubheading{${escapeLatex(e.company || "")}}{${escapeLatex(e.date || "")}}{${escapeLatex(e.position || "")}}{${escapeLatex(e.location || "")}} ${e.description ? `\\resumeItemListStart ${e.description.split('\n').filter(line => line.trim() !== '').map(line => `\\resumeItem{${escapeLatex(line.trim())}}`).join('\n')} \\resumeItemListEnd` : ""}`).join("\n")}\\resumeSubHeadingListEnd`; }
-
-
-
-if (validCustomSections.length > 0) {
-  validCustomSections.forEach(section => {
-    latex += `\\section{${escapeLatex(section.title)}} \\resumeSubHeadingListStart`;
-    section.content.forEach(item => {
-      if (item.type === 'subheading' && item.primary && item.primary.trim() !== '') {
-        latex += `\\resumeSubheading
-          {${escapeLatex(item.primary || "")}}
-          {${escapeLatex(item.secondary || "")}}
-          {${escapeLatex(item.tertiary || "")}}
-          {}
-          ${item.quaternary ? `\\resumeItemListStart ${item.quaternary.split('\n').filter(line => line.trim() !== '').map(line => `\\resumeItem{${escapeLatex(line.trim())}}`).join('\n')} \\resumeItemListEnd` : ""}`;
-      } else if (item.type === 'item' && item.text && item.text.trim() !== '') {
-        latex += `\\resumeItem{${escapeLatex(item.text || "")}}`;
+  // Define section generators
+  const sectionGenerators = {
+    summary: () => {
+      if (generalInfo.about && generalInfo.about.trim() !== "") {
+        return `\\section{Summary}\\begin{adjustwidth}{0.15in}{0in}\\small{${escapeLatex(generalInfo.about)}}\\end{adjustwidth}`;
       }
-    });
-    latex += `\\resumeSubHeadingListEnd`;
-  });
-}
+      return '';
+    },
+    
+    education: () => {
+      if (validEducation.length > 0) {
+        return `\\section{Education}\\resumeSubHeadingListStart ${validEducation.map(ed => 
+          `\\resumeSubheading{${escapeLatex(ed.school || "")}}{${escapeLatex(ed.date || "")}}{${escapeLatex(ed.degree || "")}}{${escapeLatex(ed.location || "")}}`
+        ).join("\n")}\\resumeSubHeadingListEnd`;
+      }
+      return '';
+    },
+    
+    skills: () => {
+      if (skills && Object.values(skills).some(s => s && s.trim() !== "")) {
+        return `\\section{Skills}\\begin{itemize}[leftmargin=0.15in, label={}] ${
+          skills.languages ? `\\item \\small \\textbf{Languages}{: ${escapeLatex(skills.languages)}}` : ""
+        } ${
+          skills.frameworks ? `\\item \\small \\textbf{Frameworks}{: ${escapeLatex(skills.frameworks)}}` : ""
+        } ${
+          skills.libraries ? `\\item \\small \\textbf{Libraries}{: ${escapeLatex(skills.libraries)}}` : ""
+        } ${
+          skills.tools ? `\\item \\small \\textbf{Developer Tools}{: ${escapeLatex(skills.tools)}}` : ""
+        } ${
+          skills.others ? `\\item \\small \\textbf{Others}{: ${escapeLatex(skills.others)}}` : ""
+        }\\end{itemize}`;
+      }
+      return '';
+    },
+    
+    projects: () => {
+      if (validProjects.length > 0) {
+        return `\\section{Projects}\\resumeSubHeadingListStart ${validProjects.map(p => 
+          `\\resumeProjectHeading{\\textbf{${escapeLatex(p.name || "")}} ${p.link ? `\\href{${p.link}}{\\faLink}` : ""} $|$ \\emph{${escapeLatex(p.tech || "")}}}{${escapeLatex(p.date || "")}} ${
+            p.description ? `\\resumeItemListStart ${p.description.split('\n').filter(line => line.trim() !== '').map(line => 
+              `\\resumeItem{${escapeLatex(line.trim())}}`
+            ).join('\n')} \\resumeItemListEnd` : ""
+          }`
+        ).join("\n")}\\resumeSubHeadingListEnd`;
+      }
+      return '';
+    },
+    
+    experience: () => {
+      if (validExperience.length > 0) {
+        return `\\section{Experience}\\resumeSubHeadingListStart ${validExperience.map(e => 
+          `\\resumeSubheading{${escapeLatex(e.company || "")}}{${escapeLatex(e.date || "")}}{${escapeLatex(e.position || "")}}{${escapeLatex(e.location || "")}} ${
+            e.description ? `\\resumeItemListStart ${e.description.split('\n').filter(line => line.trim() !== '').map(line => 
+              `\\resumeItem{${escapeLatex(line.trim())}}`
+            ).join('\n')} \\resumeItemListEnd` : ""
+          }`
+        ).join("\n")}\\resumeSubHeadingListEnd`;
+      }
+      return '';
+    },
+    
+    custom: () => {
+      if (validCustomSections.length > 0) {
+        return validCustomSections.map(section => {
+          let sectionLatex = `\\section{${escapeLatex(section.title)}} \\resumeSubHeadingListStart`;
+          section.content.forEach(item => {
+            if (item.type === 'subheading' && item.primary && item.primary.trim() !== '') {
+              sectionLatex += `\\resumeSubheading
+                {${escapeLatex(item.primary || "")}}
+                {${escapeLatex(item.secondary || "")}}
+                {${escapeLatex(item.tertiary || "")}}
+                {}
+                ${item.quaternary ? `\\resumeItemListStart ${item.quaternary.split('\n').filter(line => line.trim() !== '').map(line => 
+                  `\\resumeItem{${escapeLatex(line.trim())}}`
+                ).join('\n')} \\resumeItemListEnd` : ""}`;
+            } else if (item.type === 'item' && item.text && item.text.trim() !== '') {
+              sectionLatex += `\\resumeItem{${escapeLatex(item.text || "")}}`;
+            }
+          });
+          sectionLatex += `\\resumeSubHeadingListEnd`;
+          return sectionLatex;
+        }).join('\n');
+      }
+      return '';
+    }
+  };
 
-latex += `\\end{document}`;
-return latex;
+  // Generate sections based on sectionOrder if provided, otherwise use default order
+  const defaultOrder = [
+    { id: 'summary', enabled: true },
+    { id: 'education', enabled: true },
+    { id: 'skills', enabled: true },
+    { id: 'projects', enabled: true },
+    { id: 'experience', enabled: true },
+    { id: 'custom', enabled: true }
+  ];
+
+  const orderToUse = sectionOrder && sectionOrder.length > 0 ? sectionOrder : defaultOrder;
+
+  orderToUse.forEach(section => {
+    if (section.enabled && sectionGenerators[section.id]) {
+      const sectionContent = sectionGenerators[section.id]();
+      if (sectionContent) {
+        latex += sectionContent;
+      }
+    }
+  });
+
+  latex += `\\end{document}`;
+  return latex;
 }

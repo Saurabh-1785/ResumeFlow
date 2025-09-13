@@ -136,6 +136,118 @@ function App() {
     }
   };
 
+  const handleDownloadWord = async () => {
+    // Create a simple Word document content
+    const data = { generalInfo: general, education, experience, projects, skills, customSections };
+    
+    let wordContent = `
+    <html>
+    <head>
+    <meta charset="UTF-8">
+    <title>Resume</title>
+    </head>
+    <body style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px;">
+    
+    <div style="text-align: center; margin-bottom: 30px;">
+    <h1>${general.name || ''}</h1>
+    <p>${general.email || ''} | ${general.phone || ''}</p>
+    ${general.github ? `<p>GitHub: ${general.github}</p>` : ''}
+    ${general.linkedin ? `<p>LinkedIn: ${general.linkedin}</p>` : ''}
+    </div>
+    
+    ${general.about ? `<div><h2>Summary</h2><p>${general.about}</p></div>` : ''}
+    
+    ${education.length > 0 ? `
+    <div>
+    <h2>Education</h2>
+    ${education.map(edu => `
+    <div style="margin-bottom: 15px;">
+    <strong>${edu.institution}</strong> - ${edu.place}<br>
+    ${edu.study} ${edu.grade ? `- ${edu.grade}` : ''}<br>
+    ${edu.datestart} - ${edu.dateend}
+    </div>
+    `).join('')}
+    </div>` : ''}
+    
+    ${experience.length > 0 ? `
+    <div>
+    <h2>Experience</h2>
+    ${experience.map(exp => `
+    <div style="margin-bottom: 20px;">
+    <strong>${exp.company}</strong> - ${exp.position}<br>
+    ${exp.from} - ${exp.to}<br>
+    <p>${exp.responsibilities || ''}</p>
+    </div>
+    `).join('')}
+    </div>` : ''}
+    
+    ${projects.length > 0 ? `
+    <div>
+    <h2>Projects</h2>
+    ${projects.map(proj => `
+    <div style="margin-bottom: 20px;">
+    <strong>${proj.name}</strong><br>
+    <em>${proj.technology}</em><br>
+    <p>${proj.description || ''}</p>
+    ${proj.url ? `<p>Link: ${proj.url}</p>` : ''}
+    </div>
+    `).join('')}
+    </div>` : ''}
+    
+    <div>
+    <h2>Skills</h2>
+    ${skills.languages ? `<p><strong>Languages:</strong> ${skills.languages}</p>` : ''}
+    ${skills.frameworks ? `<p><strong>Frameworks:</strong> ${skills.frameworks}</p>` : ''}
+    ${skills.libraries ? `<p><strong>Libraries:</strong> ${skills.libraries}</p>` : ''}
+    ${skills.tools ? `<p><strong>Tools:</strong> ${skills.tools}</p>` : ''}
+    ${skills.others ? `<p><strong>Others:</strong> ${skills.others}</p>` : ''}
+    </div>
+    
+    ${customSections.length > 0 ? `
+    ${customSections.map(section => `
+    <div>
+    <h2>${section.title}</h2>
+    ${section.content.map(item => {
+      if (item.type === 'subheading') {
+        return `
+        <div style="margin-bottom: 15px;">
+        <strong>${item.primary || ''}</strong> ${item.secondary || ''}<br>
+        <em>${item.tertiary || ''}</em><br>
+        <p>${item.quaternary || ''}</p>
+        </div>`;
+      } else {
+        return `<p>• ${item.text || ''}</p>`;
+      }
+    }).join('')}
+    </div>
+    `).join('')}` : ''}
+    
+    </body>
+    </html>
+    `;
+
+    const blob = new Blob([wordContent], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "resume.doc";
+    link.click();
+    window.URL.revokeObjectURL(url);
+  };
+
+  const handleDownloadLatex = () => {
+    const data = { generalInfo: general, education: education.map(e => ({ school: e.institution, location: e.place, degree: `${e.study} - ${e.grade}`, date: `${e.datestart} -- ${e.dateend}` })), experience: experience.map(exp => ({ company: exp.company, position: exp.position, description: exp.responsibilities, date: `${exp.from} -- ${exp.to}`, location: "" })), projects: projects.map(p => ({ name: p.name, tech: p.technology, description: p.description, link: p.url, date: "" })), skills: skills, customSections: customSections };
+    const tex = generateLatex(data);
+    
+    const blob = new Blob([tex], { type: 'text/plain' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "resume.tex";
+    link.click();
+    window.URL.revokeObjectURL(url);
+  };
+
   const handleBackToHome = () => {
     setShowForm(false);
     setStep(0);
@@ -144,6 +256,12 @@ function App() {
   const handleStepChange = (newStep) => {
     setStep(newStep);
     setMobileMenuOpen(false);
+  };
+
+  const handleMobilePreview = () => {
+    if (isMobile) {
+      setStep(6);
+    }
   };
 
   useEffect(() => {
@@ -187,20 +305,23 @@ function App() {
     { label: "Experience", step: 2 },
     { label: "Projects", step: 3 },
     { label: "Skills", step: 4 },
-    { label: "Custom Sections", step: 5 }
+    { label: "Custom Sections", step: 5 },
+    { label: "Section Order", step: 6 }
   ];
 
-  const isPreviewStep = step === 6;
+  const isPreviewStep = step === 7;
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
+    <div className="min-h-screen bg-stone-50 dark:bg-gray-900 transition-colors">
       {/* Navigation Bar */}
       {showForm && (
         <NavigationBar 
           navItems={navItems}
           currentStep={step}
           onNavigate={handleStepChange}
-          onDownload={handleDownloadPDF}
+          onDownloadPDF={handleDownloadPDF}
+          onDownloadWord={handleDownloadWord}
+          onDownloadLatex={handleDownloadLatex}
           onBackToHome={handleBackToHome}
           isMobile={isMobile}
           mobileMenuOpen={mobileMenuOpen}
@@ -217,7 +338,7 @@ function App() {
           <div className="relative flex flex-col items-center justify-center h-screen w-full text-center z-10">
             <h1 className="text-[clamp(40px,6vw,100px)] font-abril text-yellow-600 mb-10 font-bold hover:text-yellow-700 transition-all ease-in duration-300 cursor-pointer dark:hover:text-yellow-400">ResumeFlow</h1>
             <p className="mt-10 text-[clamp(20px,2vw,50px)] font-lobster text-yellow-700 text-center italic hover:text-yellow-600 transition-all ease-in duration-300 cursor-pointer dark:hover:text-yellow-800">An AI-powered CV generator that transforms your input into a refined, ATS-optimized resume.</p>
-            <button onClick={() => { setShowForm(true); setStep(0); }} className="inline font-dancing font-bold text-white bg-yellow-600 px-6 py-3 rounded-lg border border-solid text-3xl font-inherit cursor-pointer transition-all ease-in duration-300 mt-20 hover:bg-yellow-700 hover:text-gray-50 dark:hover:bg-yellow-400 dark:hover:text-gray-900 dark:bg-yellow-600 dark:text-gray-900">Get Started</button>
+            <button onClick={() => { setShowForm(true); setStep(0); }} className="inline font-dancing font-bold text-stone-50 bg-yellow-600 px-6 py-3 rounded-lg border border-solid text-3xl font-inherit cursor-pointer transition-all ease-in duration-300 mt-20 hover:bg-yellow-700 hover:text-stone-50 dark:hover:bg-yellow-400 dark:hover:text-gray-900 dark:bg-yellow-600 dark:text-gray-900">Get Started</button>
           </div>
         ) : (
           <div className="w-full max-w-7xl mx-auto z-10 mt-4">
@@ -230,9 +351,10 @@ function App() {
                   {step === 1 && <Education data={education} setData={setEducation} onSaveChanges={!isMobile ? updatePreview : undefined} isUpdating={isUpdating} />}
                   {step === 2 && <Experience data={experience} setData={setExperience} onSaveChanges={!isMobile ? updatePreview : undefined} isUpdating={isUpdating} enhancingId={enhancingId} onEnhance={handleEnhanceWithAI} />}
                   {step === 3 && <Projects data={projects} setData={setProjects} onSaveChanges={!isMobile ? updatePreview : undefined} isUpdating={isUpdating} enhancingId={enhancingId} onEnhance={handleEnhanceWithAI} />}
-                  {step === 4 && <Skills data={skills} setData={setSkills} onSaveChanges={!isMobile ? updatePreview : undefined} isUpdating={isUpdating} />}
-                  {step === 5 && <CustomSection data={customSections} setData={setCustomSections} onSaveChanges={!isMobile ? updatePreview : undefined} isUpdating={isUpdating} enhancingId={enhancingId} onEnhance={handleEnhanceWithAI} />}
-                  {step === 6 && <Preview general={general} education={education} experience={experience} projects={projects} skills={skills} customSections={customSections} setStep={setStep} />}
+                  {step === 4 && <Skills data={skills} setData={setSkills} onSaveChanges={!isMobile ? updatePreview : undefined} isUpdating={isUpdating} onMobilePreview={handleMobilePreview} isMobile={isMobile} />}
+                  {step === 5 && <CustomSection data={customSections} setData={setCustomSections} onSaveChanges={!isMobile ? updatePreview : undefined} isUpdating={isUpdating} enhancingId={enhancingId} onEnhance={handleEnhanceWithAI} onMobilePreview={handleMobilePreview} isMobile={isMobile} />}
+                  {step === 6 && <SectionOrder sectionOrder={sectionOrder} setSectionOrder={setSectionOrder} onSaveChanges={!isMobile ? updatePreview : undefined} isUpdating={isUpdating} />}
+                  {step === 7 && <Preview general={general} education={education} experience={experience} projects={projects} skills={skills} customSections={customSections} setStep={setStep} />}
                 </div>
 
                 {/* --- RESPONSIVE PREVIOUS/NEXT BUTTONS --- */}
@@ -246,7 +368,7 @@ function App() {
                         </button>
                         <button 
                           onClick={() => setStep(step + 1)}
-                          className="px-6 py-2 bg-yellow-600 text-white rounded-md font-semibold hover:bg-yellow-700"
+                          className="px-6 py-2 bg-yellow-600 text-stone-50 rounded-md font-semibold hover:bg-yellow-700"
                         >
                           Next
                         </button>
@@ -257,7 +379,7 @@ function App() {
               {/* --- PDF PREVIEW (RIGHT COLUMN - DESKTOP ONLY) --- */}
               {!isMobile && (
                   <div className="w-1/2 p-6">
-                    <div className="sticky top-10 h-[calc(100vh-5rem)] flex flex-col">
+                    <div className="sticky top-10 h-[calc(100vh-3rem)] flex flex-col">
                       <h3 className="text-center text-2xl font-lobster text-yellow-600 mb-4">Live Preview</h3>
                       <div className="flex-grow border rounded-lg shadow-inner overflow-hidden">
                           <PdfPreview pdfUrl={pdfUrl} />
