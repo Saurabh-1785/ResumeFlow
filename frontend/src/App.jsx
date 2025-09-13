@@ -9,6 +9,7 @@ import CustomSection from "./components/CustomSection";
 import Preview from "./components/Preview";
 import PdfPreview from './components/PdfPreview';
 import NavigationBar from './components/NavigationBar';
+import SectionOrder from './components/SectionOrder';
 import { generateLatex } from "./utils/generateLatex";
 
 // --- Main App Component ---
@@ -137,102 +138,31 @@ function App() {
   };
 
   const handleDownloadWord = async () => {
-    // Create a simple Word document content
-    const data = { generalInfo: general, education, experience, projects, skills, customSections };
+    const data = { generalInfo: general, education, experience, projects, skills, customSections, sectionOrder };
     
-    let wordContent = `
-    <html>
-    <head>
-    <meta charset="UTF-8">
-    <title>Resume</title>
-    </head>
-    <body style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px;">
-    
-    <div style="text-align: center; margin-bottom: 30px;">
-    <h1>${general.name || ''}</h1>
-    <p>${general.email || ''} | ${general.phone || ''}</p>
-    ${general.github ? `<p>GitHub: ${general.github}</p>` : ''}
-    ${general.linkedin ? `<p>LinkedIn: ${general.linkedin}</p>` : ''}
-    </div>
-    
-    ${general.about ? `<div><h2>Summary</h2><p>${general.about}</p></div>` : ''}
-    
-    ${education.length > 0 ? `
-    <div>
-    <h2>Education</h2>
-    ${education.map(edu => `
-    <div style="margin-bottom: 15px;">
-    <strong>${edu.institution}</strong> - ${edu.place}<br>
-    ${edu.study} ${edu.grade ? `- ${edu.grade}` : ''}<br>
-    ${edu.datestart} - ${edu.dateend}
-    </div>
-    `).join('')}
-    </div>` : ''}
-    
-    ${experience.length > 0 ? `
-    <div>
-    <h2>Experience</h2>
-    ${experience.map(exp => `
-    <div style="margin-bottom: 20px;">
-    <strong>${exp.company}</strong> - ${exp.position}<br>
-    ${exp.from} - ${exp.to}<br>
-    <p>${exp.responsibilities || ''}</p>
-    </div>
-    `).join('')}
-    </div>` : ''}
-    
-    ${projects.length > 0 ? `
-    <div>
-    <h2>Projects</h2>
-    ${projects.map(proj => `
-    <div style="margin-bottom: 20px;">
-    <strong>${proj.name}</strong><br>
-    <em>${proj.technology}</em><br>
-    <p>${proj.description || ''}</p>
-    ${proj.url ? `<p>Link: ${proj.url}</p>` : ''}
-    </div>
-    `).join('')}
-    </div>` : ''}
-    
-    <div>
-    <h2>Skills</h2>
-    ${skills.languages ? `<p><strong>Languages:</strong> ${skills.languages}</p>` : ''}
-    ${skills.frameworks ? `<p><strong>Frameworks:</strong> ${skills.frameworks}</p>` : ''}
-    ${skills.libraries ? `<p><strong>Libraries:</strong> ${skills.libraries}</p>` : ''}
-    ${skills.tools ? `<p><strong>Tools:</strong> ${skills.tools}</p>` : ''}
-    ${skills.others ? `<p><strong>Others:</strong> ${skills.others}</p>` : ''}
-    </div>
-    
-    ${customSections.length > 0 ? `
-    ${customSections.map(section => `
-    <div>
-    <h2>${section.title}</h2>
-    ${section.content.map(item => {
-      if (item.type === 'subheading') {
-        return `
-        <div style="margin-bottom: 15px;">
-        <strong>${item.primary || ''}</strong> ${item.secondary || ''}<br>
-        <em>${item.tertiary || ''}</em><br>
-        <p>${item.quaternary || ''}</p>
-        </div>`;
-      } else {
-        return `<p>• ${item.text || ''}</p>`;
+    try {
+      const response = await fetch("http://localhost:5000/generate-word", { 
+        method: "POST", 
+        headers: { "Content-Type": "application/json" }, 
+        body: JSON.stringify({ data }) 
+      });
+      
+      if (!response.ok) { 
+        alert("Error generating Word document"); 
+        return; 
       }
-    }).join('')}
-    </div>
-    `).join('')}` : ''}
-    
-    </body>
-    </html>
-    `;
-
-    const blob = new Blob([wordContent], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "resume.doc";
-    link.click();
-    window.URL.revokeObjectURL(url);
+      
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "resume.doc";
+      link.click();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("Error downloading Word document:", err);
+      alert("Something went wrong while generating Word document");
+    }
   };
 
   const handleDownloadLatex = () => {
