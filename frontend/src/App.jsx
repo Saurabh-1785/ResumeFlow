@@ -30,7 +30,14 @@ function App() {
   const [projects, setProjects] = useState([{ id: Date.now(), name: "", technology: "", description: "", url: "" }]);
   const [skills, setSkills] = useState({ languages: "", frameworks: "", libraries: "", tools: "", others: "" });
   const [customSections, setCustomSections] = useState([]);
-
+  const [sectionOrder, setSectionOrder] = useState([
+  { id: 'summary', name: 'Summary', enabled: true },
+  { id: 'education', name: 'Education', enabled: true },
+  { id: 'skills', name: 'Skills', enabled: true },
+  { id: 'projects', name: 'Projects', enabled: true },
+  { id: 'experience', name: 'Experience', enabled: true },
+  { id: 'custom', name: 'Custom Sections', enabled: true }
+  ]);
   // --- Responsive Check ---
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 1024);
