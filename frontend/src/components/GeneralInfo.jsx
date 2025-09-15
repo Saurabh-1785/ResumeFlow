@@ -23,8 +23,8 @@ function GeneralInfo({ data, setData, setStep, setShowForm, onSaveChanges, isUpd
   const isCurrentlyEnhancing = enhancingId === 'general_about';
 
   return (
-      <div className="border md:border-r-20 rounded-br-4xl rounded-bl-4xl p-10 mt-0 w-full max-w-3xl border-yellow-600 ">
-        <h2 className="text-[clamp(30px,4vw,60px)] text-center font-lobster mb-20 p-4 text-yellow-600">General Info</h2>
+      <div className="border md:border-r-20 rounded-br-4xl rounded-bl-4xl p-10 mt-0 w-full max-w-3xl border-yellow-800 dark:border-yellow-600 ">
+        <h2 className="text-[clamp(30px,5vw,50px)] text-center font-sans font-bold mb-20 p-4 text-yellow-800 dark:text-yellow-600">GENERAL</h2>
   
         <input type="text" placeholder="Name" value={data.name} onChange={(e) => setData({ ...data, name: e.target.value })} className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-stone-50" required />
         <input type="email" placeholder="Email" value={data.email} onChange={(e) => setData({ ...data, email: e.target.value })} className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-stone-50" required />
@@ -46,9 +46,9 @@ function GeneralInfo({ data, setData, setStep, setShowForm, onSaveChanges, isUpd
             <button 
               onClick={onSaveChanges} 
               disabled={isUpdating} 
-              className="w-full cursor-pointer transition-all ease-in duration-300 text-stone-50 bg-yellow-600 font-bold px-4 py-3 rounded-2xl hover:bg-yellow-700 disabled:bg-gray-400"
+              className="w-full cursor-pointer transition-all ease-in duration-300 text-stone-50 bg-yellow-800 font-bold px-4 py-3 rounded-2xl hover:bg-yellow-700 disabled:bg-gray-400 dark:bg-yellow-600 dark:hover:bg-yellow-700"
             >
-              {isUpdating ? 'Updating...' : 'Update Preview'}
+              {isUpdating ? 'Updating...' : 'Preview'}
             </button>
           )}
         </div>

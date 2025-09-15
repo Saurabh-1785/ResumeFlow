@@ -8,8 +8,8 @@ function Education({ data, setData, setStep, onSaveChanges, isUpdating }) {
   };
 
   return (
-    <div className="border md:border-r-20 rounded-bl-4xl p-10 mt-0 w-full max-w-3xl border-yellow-600">
-      <h2 className="text-[clamp(25px,4vw,60px)] text-center font-lobster mb-20 p-4 text-yellow-600">Education</h2>
+    <div className="border md:border-r-20 rounded-bl-4xl p-10 mt-0 w-full max-w-3xl border-yellow-800 dark:border-yellow-600">
+      <h2 className="text-[clamp(25px,5vw,50px)] text-center font-sans font-bold mb-20 p-4 text-yellow-800 dark:text-yellow-600">EDUCATION</h2>
       {data.map((edu) => (
         <div key={edu.id} className="mb-8 border-b pb-6">
           <input type="text" placeholder="Institution Name" value={edu.institution} onChange={(e) => handleChange(edu.id, "institution", e.target.value)} className="block w-full border p-3 mb-10 rounded italic text-black dark:bg-black dark:text-stone-50" required />
@@ -23,16 +23,16 @@ function Education({ data, setData, setStep, onSaveChanges, isUpdating }) {
           {data.length > 1 && (<button onClick={() => setData(data.filter((item) => item.id !== edu.id))} className="bg-red-600 text-stone-50 px-4 py-2 rounded-lg mt-3 cursor-pointer hover:bg-red-700">Delete Education</button>)}
         </div>
       ))}
-      <button onClick={addEducation} className="inline cursor-pointer text-yellow-600 border-yellow-600 px-6 py-3 rounded-2xl border text-2xl">+ Add Education</button>
+      <button onClick={addEducation} className="inline cursor-pointer text-yellow-800 border-yellow-800 dark:text-yellow-600 dark:border-yellow-600 px-6 py-3 rounded-2xl border text-2xl">+ Add Education</button>
       
       <div className="mt-8">
           {onSaveChanges && (
             <button 
               onClick={onSaveChanges} 
               disabled={isUpdating} 
-              className="w-full cursor-pointer transition-all ease-in duration-300 text-stone-50 bg-yellow-600 font-bold px-4 py-3 rounded-2xl hover:bg-yellow-700 disabled:bg-gray-400"
+              className="w-full cursor-pointer transition-all ease-in duration-300 text-stone-50 bg-yellow-800 font-bold px-4 py-3 rounded-2xl hover:bg-yellow-700 disabled:bg-gray-400 dark:bg-yellow-600 dark:hover:bg-yellow-700"
             >
-              {isUpdating ? 'Updating...' : 'Update Preview'}
+              {isUpdating ? 'Updating...' : 'Preview'}
             </button>
           )}
         </div>

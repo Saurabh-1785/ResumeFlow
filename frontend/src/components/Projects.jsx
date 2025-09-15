@@ -22,8 +22,8 @@ function Projects({ data, setData, setStep, onSaveChanges, isUpdating, enhancing
   );
 
   return (
-    <div className="border md:border-r-20 rounded-bl-4xl p-10 mt-0 w-full max-w-3xl border-yellow-600">
-      <h2 className="text-[clamp(25px,4vw,60px)] text-center font-lobster mb-10 p-4 text-yellow-600">Projects</h2>
+    <div className="border md:border-r-20 rounded-bl-4xl p-10 mt-0 w-full max-w-3xl border-yellow-800 dark:border-yellow-600">
+      <h2 className="text-[clamp(25px,5vw,50px)] text-center font-sans font-bold mb-10 p-4 text-yellow-800 dark:text-yellow-600">PROJECT</h2>
       {data.map((proj) => {
         const isCurrentlyEnhancing = enhancingId === proj.id;
         return (
@@ -51,15 +51,15 @@ function Projects({ data, setData, setStep, onSaveChanges, isUpdating, enhancing
             {data.length > 1 && (<button onClick={() => setData(data.filter((item) => item.id !== proj.id))} className="bg-red-600 text-stone-50 px-4 py-2 rounded-lg mt-3 cursor-pointer hover:bg-red-700">Delete Project</button>)}
           </div>
         )})}
-      <button onClick={addProject} className="inline cursor-pointer text-yellow-600 border-yellow-600 px-6 py-3 rounded-2xl border text-2xl">+ Add Project</button>
+      <button onClick={addProject} className="inline cursor-pointer text-yellow-800 border-yellow-800 dark:text-yellow-600 dark:border-yellow-600 px-6 py-3 rounded-2xl border text-2xl">+ Add Project</button>
       <div className="mt-8">
           {onSaveChanges && (
             <button 
               onClick={onSaveChanges} 
               disabled={isUpdating} 
-              className="w-full cursor-pointer transition-all ease-in duration-300 text-stone-50 bg-yellow-600 font-bold px-4 py-3 rounded-2xl hover:bg-yellow-700 disabled:bg-gray-400"
+              className="w-full cursor-pointer transition-all ease-in duration-300 text-stone-50 bg-yellow-800 font-bold px-4 py-3 rounded-2xl hover:bg-yellow-700 disabled:bg-gray-400 dark:bg-yellow-600 dark:hover-bg-yellow-700"
             >
-              {isUpdating ? 'Updating...' : 'Update Preview'}
+              {isUpdating ? 'Updating...' : 'Preview'}
             </button>
           )}
         </div>

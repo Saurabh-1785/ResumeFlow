@@ -22,6 +22,9 @@ function App() {
   const [enhancingId, setEnhancingId] = useState(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [darkMode, setDarkMode] = useState(() => {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  });
 
   // form states
   const [general, setGeneral] = useState({ name: "", email: "", phone: "", github: "", linkedin: "", about: "" });
@@ -38,6 +41,19 @@ function App() {
   { id: 'experience', name: 'Experience', enabled: true },
   { id: 'custom', name: 'Custom Sections', enabled: true }
   ]);
+
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [darkMode]);
+
+  const toggleTheme = () => {
+    setDarkMode(!darkMode);
+  };
+  
   // --- Responsive Check ---
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 1024);
@@ -249,7 +265,7 @@ function App() {
   const isPreviewStep = step === 7;
 
   return (
-    <div className="min-h-screen bg-stone-50 dark:bg-gray-900 transition-colors">
+    <div className="min-h-screen bg-stone-50 dark:bg-gray-800 transition-colors">
       {/* Navigation Bar */}
       {showForm && (
         <NavigationBar 
@@ -263,19 +279,58 @@ function App() {
           isMobile={isMobile}
           mobileMenuOpen={mobileMenuOpen}
           setMobileMenuOpen={setMobileMenuOpen}
+          darkMode={darkMode}
+          toggleTheme={toggleTheme}
         />
       )}
 
       <div className="relative flex flex-col items-center justify-center p-4 sm:p-10">
         {/* Decorative backgrounds */}
-        <div className="absolute inset-0 hidden lg:flex items-center justify-center overflow-hidden z-0"><div className="w-[120%] h-[90%] rotate-0 animate-slow-zoom border-8 border-yellow-400 dark:border-yellow-600 opacity-20 "></div></div>
-        <div className="absolute inset-0 flex items-center justify-center overflow-hidden z-0"><div className="w-[120%] h-[90%] rotate-90 animate-slow-zoom border-8 border-yellow-400 dark:border-yellow-600 opacity-20"></div></div>
+        <div className="absolute inset-0 lg:flex items-center justify-center overflow-hidden z-0"><div className="w-[120%] h-[90%] rotate-0 animate-slow-zoom border-8 border-yellow-400 dark:border-yellow-500 opacity-20 "></div></div>
+        <div className="absolute inset-0 flex items-center justify-center overflow-hidden z-0"><div className="w-[120%] h-[90%] rotate-90 animate-slow-zoom border-8 border-yellow-400 dark:border-yellow-500 opacity-20"></div></div>
         
         {!showForm ? (
           <div className="relative flex flex-col items-center justify-center h-screen w-full text-center z-10">
-            <h1 className="text-[clamp(40px,6vw,100px)] font-abril text-yellow-600 mb-10 font-bold hover:text-yellow-700 transition-all ease-in duration-300 cursor-pointer dark:hover:text-yellow-400">ResumeFlow</h1>
-            <p className="mt-10 text-[clamp(20px,2vw,50px)] font-lobster text-yellow-700 text-center italic hover:text-yellow-600 transition-all ease-in duration-300 cursor-pointer dark:hover:text-yellow-800">An AI-powered CV generator that transforms your input into a refined, ATS-optimized resume.</p>
-            <button onClick={() => { setShowForm(true); setStep(0); }} className="inline font-dancing font-bold text-stone-50 bg-yellow-600 px-6 py-3 rounded-lg border border-solid text-3xl font-inherit cursor-pointer transition-all ease-in duration-300 mt-20 hover:bg-yellow-700 hover:text-stone-50 dark:hover:bg-yellow-400 dark:hover:text-gray-900 dark:bg-yellow-600 dark:text-gray-900">Get Started</button>
+              <button
+              onClick={toggleTheme}
+              className="absolute top-4 right-4 p-2 rounded-full bg-stone-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-stone-300 dark:hover:bg-gray-600 transition-all duration-300 shadow-sm"
+              aria-label="Toggle theme"
+            >
+              {darkMode ? (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="w-5 h-5"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z"
+                  />
+                </svg>
+              ) : (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="w-5 h-5"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z"
+                  />
+                </svg>
+              )}
+          </button>
+            <h1 className="text-[clamp(40px,6vw,100px)] font-abril text-yellow-800 dark:text-yellow-600 mb-10 font-bold hover:text-yellow-700 transition-all ease-in duration-300 cursor-pointer dark:hover:text-yellow-400">ResumeFlow</h1>
+            <p className="mt-10 text-[clamp(20px,2vw,50px)] font-lobster text-yellow-800 dark:text-yellow-700 text-center italic hover:text-yellow-600 transition-all ease-in duration-300 cursor-pointer dark:hover:text-yellow-500">An AI-powered CV generator that transforms your input into a refined, ATS-optimized resume.</p>
+            <button onClick={() => { setShowForm(true); setStep(0); }} className="inline font-dancing font-bold text-stone-50 bg-yellow-800 dark:bg-yellow-600 px-6 py-3 rounded-lg border border-solid text-3xl font-inherit cursor-pointer transition-all ease-in duration-300 mt-20 hover:bg-yellow-900 dark:hover:bg-yellow-500 hover:text-stone-50 dark:hover:text-gray-900 dark:text-gray-900">Get Started</button>
           </div>
         ) : (
           <div className="w-full max-w-7xl mx-auto z-10 mt-4">
@@ -305,7 +360,7 @@ function App() {
                         </button>
                         <button 
                           onClick={() => setStep(step + 1)}
-                          className="px-6 py-2 bg-yellow-600 text-stone-50 rounded-md font-semibold hover:bg-yellow-700"
+                          className="px-6 py-2 bg-yellow-800 dark:bg-yellow-600 text-stone-50 rounded-md font-semibold hover:bg-yellow-900 dark:hover:bg-yellow-500"
                         >
                           Next
                         </button>
@@ -317,7 +372,7 @@ function App() {
               {!isMobile && (
                   <div className="w-1/2 p-6">
                     <div className="sticky top-10 h-[calc(100vh-3rem)] flex flex-col">
-                      <h3 className="text-center text-2xl font-lobster text-yellow-600 mb-4">Live Preview</h3>
+                      <h3 className="text-center text-2xl font-lobster text-yellow-800 dark:text-yellow-600 mb-4">Live Preview</h3>
                       <div className="flex-grow border rounded-lg shadow-inner overflow-hidden">
                           <PdfPreview pdfUrl={pdfUrl} />
                       </div>

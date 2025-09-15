@@ -65,22 +65,22 @@ function CustomSection({ data, setData, setStep, onSaveChanges, isUpdating, enha
 
 
   return (
-    <div className="border border-r-20 rounded-bl-4xl p-10 mt-0 w-full max-w-3xl border-yellow-600">
-      <h2 className="text-[clamp(25px,4vw,60px)] text-center font-lobster mb-10 p-4 text-yellow-600">Custom Sections</h2>
+    <div className="border border-r-20 rounded-bl-4xl p-10 mt-0 w-full max-w-3xl border-yellow-800 dark:border-yellow-600">
+      <h2 className="text-[clamp(25px,4vw,60px)] text-center font-sans font-bold mb-10 p-4 text-yellow-800 dark:text-yellow-600">OTHERS</h2>
 
       {data.map((section) => (
-        <div key={section.id} className="mb-8 border-t-2 border-yellow-500 pt-6">
+        <div key={section.id} className="mb-8 border-t-2 border-yellow-800 dark:border-yellow-600 pt-6">
           <div className="flex items-center mb-4">
             <input
               type="text"
               placeholder="Section Title"
               value={section.title}
               onChange={(e) => updateSectionTitle(section.id, e.target.value)}
-              className="block w-full border p-3 rounded italic text-xl font-bold active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-stone-50"
+              className="block w-full border p-3 rounded italic text-xl font-bold active:border-yellow-800 focus:border-yellow-800 text-black dark:bg-black dark:text-stone-50 dark:active:border-yellow-600 dark:focus:border-yellow-600"
             />
             <button
               onClick={() => deleteSection(section.id)}
-              className="ml-4 bg-yellow-700 text-stone-50 px-3 py-2 rounded-lg cursor-pointer transition-all ease-in duration-300 hover:bg-yellow-800 text-sm"
+              className="ml-4 bg-yellow-800 text-stone-50 px-3 py-2 rounded-lg cursor-pointer transition-all ease-in duration-300 hover:bg-yellow-700 dark:bg-yellow-600 dark:hover-bg-yellow-700 text-sm"
             >
               Delete Section
             </button>
@@ -111,24 +111,24 @@ function CustomSection({ data, setData, setStep, onSaveChanges, isUpdating, enha
                 ) : (
                   <input type="text" placeholder="List item content" value={item.text} onChange={e => updateContent(section.id, item.id, 'text', e.target.value)} className="block w-full border p-2 rounded text-black dark:bg-black dark:text-stone-50" />
                 )}
-                <button onClick={() => deleteContent(section.id, item.id)} className="text-red-500 text-xs mt-1 cusor-pointer">Remove</button>
+                <button onClick={() => deleteContent(section.id, item.id)} className="text-red-500 text-xs mt-1 cursor-pointer">Remove</button>
               </div>
              )})}
-          <button onClick={() => addContent(section.id, 'subheading')} className="text-sm text-yellow-600 border cursor-pointer transition-all ease-in duration-300 border-yellow-600 px-3 py-1 rounded hover:bg-yellow-600 hover:text-stone-50">+ Add Subheading</button>
+          <button onClick={() => addContent(section.id, 'subheading')} className="text-sm text-yellow-800 border cursor-pointer transition-all ease-in duration-300 border-yellow-800 px-3 py-1 rounded dark:text-yellow-600 dark:border-yellow-600">+ Add Subheading</button>
         
         </div>
       ))}
       
-      <button onClick={addSection} className="inline text-yellow-600 border-yellow-600 px-6 py-3 rounded-2xl border border-solid text-2xl font-inherit cursor-pointer transition-all ease-in duration-300 mt-5 mb-5 hover:bg-yellow-600 hover:text-stone-50">+ Add New Section</button>
+      <button onClick={addSection} className="inline text-yellow-800 border-yellow-800 dark:border-yellow-600 dark:text-yellow-600 px-6 py-3 rounded-2xl border border-solid text-2xl font-inherit cursor-pointer transition-all ease-in duration-300 mt-5 mb-5">+ Add New Section</button>
 
       <div className="mt-8 space-y-3">
           {onSaveChanges && (
             <button 
               onClick={onSaveChanges} 
               disabled={isUpdating} 
-              className="w-full cursor-pointer transition-all ease-in duration-300 text-stone-50 bg-yellow-600 font-bold px-4 py-3 rounded-2xl hover:bg-yellow-700 disabled:bg-gray-400"
+              className="w-full cursor-pointer transition-all ease-in duration-300 text-stone-50 bg-yellow-800 font-bold px-4 py-3 rounded-2xl hover:bg-yellow-700 disabled:bg-gray-400 dark:bg-yellow-600"
             >
-              {isUpdating ? 'Updating...' : 'Update Preview'}
+              {isUpdating ? 'Updating...' : 'Preview'}
             </button>
           )}
           

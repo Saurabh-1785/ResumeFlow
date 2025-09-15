@@ -10,21 +10,12 @@ function NavigationBar({
   onBackToHome,
   isMobile,
   mobileMenuOpen,
-  setMobileMenuOpen
+  setMobileMenuOpen,
+  darkMode,
+  toggleTheme
 }) {
-  const [darkMode, setDarkMode] = useState(() => {
-    return window.matchMedia('(prefers-color-scheme: dark)').matches;
-  });
   const [downloadDropdownOpen, setDownloadDropdownOpen] = useState(false);
   const downloadRef = useRef(null);
-
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [darkMode]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -39,10 +30,6 @@ function NavigationBar({
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
-
-  const toggleTheme = () => {
-    setDarkMode(!darkMode);
-  };
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
@@ -66,14 +53,14 @@ function NavigationBar({
   return (
     <>
       {/* Main Navigation Bar */}
-      <nav className="sticky top-0 z-50 bg-stone-50 dark:bg-gray-800 border-b-2 border-yellow-600 shadow-lg">
+      <nav className="sticky top-0 z-50 bg-stone-50 dark:bg-gray-800 border-b-2 border-yellow-800 dark:border-yellow-600 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo/Brand */}
             <div className="flex-shrink-0">
               <button 
                 onClick={onBackToHome}
-                className="text-2xl font-abril font-bold text-yellow-600 hover:text-yellow-700 dark:hover:text-yellow-400 transition-colors cursor-pointer"
+                className="text-2xl font-abril font-bold text-yellow-800 dark:text-yellow-600 hover:text-yellow-900 dark:hover:text-yellow-400 transition-colors cursor-pointer"
               >
                 ResumeFlow
               </button>
@@ -87,10 +74,10 @@ function NavigationBar({
                     <button
                       key={index}
                       onClick={() => onNavigate(item.step)}
-                      className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                      className={`px-3 py-2 rounded-md cursor-pointer text-sm font-medium transition-colors ${
                         currentStep === item.step
-                          ? 'bg-yellow-600 text-stone-50 dark:text-black'
-                          : 'text-gray-700 dark:text-gray-200 hover:text-yellow-600 dark:hover:text-yellow-400 hover:bg-yellow-50 dark:hover:bg-gray-700'
+                          ? 'bg-yellow-800 dark:bg-yellow-600 text-stone-50 dark:text-black'
+                          : 'text-gray-700 dark:text-gray-200 transition-all ease-in duration-200 dark:hover:text-gray-50 hover:bg-yellow-800 hover:text-gray-50 dark:hover:bg-yellow-600'
                       }`}
                     >
                       {item.label}
@@ -105,7 +92,7 @@ function NavigationBar({
               <div className="hidden lg:block relative" ref={downloadRef}>
                 <button
                   onClick={() => setDownloadDropdownOpen(!downloadDropdownOpen)}
-                  className="bg-blue-600 hover:bg-blue-700 text-stone-50 px-4 py-2 rounded-md text-sm font-medium transition-colors shadow-md flex items-center gap-2"
+                  className="bg-blue-800 cursor-pointer ease-in duration-200 hover:bg-blue-700 text-stone-50 px-4 py-2 rounded-md text-sm font-medium transition-colors shadow-md flex items-center gap-2"
                 >
                   Download
                   <svg className={`w-4 h-4 transition-transform ${downloadDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -118,7 +105,7 @@ function NavigationBar({
                     <div className="py-1">
                       <button
                         onClick={() => handleDownloadOption('pdf')}
-                        className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-yellow-50 dark:hover:bg-gray-700 hover:text-yellow-600 flex items-center gap-2"
+                        className="w-full text-left px-4 py-2 text-sm cursor-pointer text-gray-700 dark:text-gray-200 flex items-center gap-2"
                       >
                         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" />
@@ -127,7 +114,7 @@ function NavigationBar({
                       </button>
                       <button
                         onClick={() => handleDownloadOption('latex')}
-                        className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-yellow-50 dark:hover:bg-gray-700 hover:text-yellow-600 flex items-center gap-2"
+                        className="w-full text-left px-4 py-2 text-sm cursor-pointer text-gray-700 dark:text-gray-200 flex items-center gap-2"
                       >
                         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
@@ -169,7 +156,7 @@ function NavigationBar({
 
         {/* Mobile Menu Dropdown */}
         {isMobile && mobileMenuOpen && (
-          <div className="lg:hidden border-t border-yellow-600">
+          <div className="lg:hidden border-t border-yellow-800 dark:border-yellow-600">
             <div className="px-2 pt-2 pb-3 space-y-1 bg-stone-50 dark:bg-gray-800">
               {navItems.map((item, index) => (
                 <button
@@ -177,8 +164,8 @@ function NavigationBar({
                   onClick={() => onNavigate(item.step)}
                   className={`w-full text-left block px-3 py-2 rounded-md text-base font-medium transition-colors ${
                     currentStep === item.step
-                      ? 'bg-yellow-600 text-stone-50 dark:text-black'
-                      : 'text-gray-700 dark:text-gray-200 hover:text-yellow-600 dark:hover:text-yellow-400 hover:bg-yellow-50 dark:hover:bg-gray-700'
+                      ? 'bg-yellow-800 dark:bg-yellow-600 text-stone-50 dark:text-black'
+                      : 'text-gray-700 dark:text-gray-200 hover:text-yellow-800 dark:hover:text-yellow-400 hover:bg-yellow-50 dark:hover:bg-gray-700'
                   }`}
                 >
                   <div className="flex items-center">
@@ -226,7 +213,7 @@ function NavigationBar({
         <div className="flex justify-center py-2 bg-stone-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
           <button
             onClick={toggleTheme}
-            className="p-2 rounded-full bg-stone-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-stone-300 dark:hover:bg-gray-600 transition-all duration-300 shadow-sm"
+            className="p-2 rounded-full cursor-pointer bg-stone-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-stone-300 dark:hover:bg-gray-600 transition-all duration-300 shadow-sm"
             aria-label="Toggle theme"
           >
             {darkMode ? (
