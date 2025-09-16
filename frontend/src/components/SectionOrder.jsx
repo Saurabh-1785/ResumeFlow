@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React from 'react';
 
 function SectionOrder({ sectionOrder, setSectionOrder, onSaveChanges, isUpdating }) {
   const moveSection = (index, direction) => {
@@ -6,7 +6,9 @@ function SectionOrder({ sectionOrder, setSectionOrder, onSaveChanges, isUpdating
     const targetIndex = direction === 'up' ? index - 1 : index + 1;
     
     if (targetIndex >= 0 && targetIndex < newOrder.length) {
+      // Swap the elements
       [newOrder[index], newOrder[targetIndex]] = [newOrder[targetIndex], newOrder[index]];
+      // Use the function passed from App.jsx to update the state
       setSectionOrder(newOrder);
     }
   };
@@ -31,7 +33,7 @@ function SectionOrder({ sectionOrder, setSectionOrder, onSaveChanges, isUpdating
 
   return (
     <div className="border md:border-r-20 rounded-bl-4xl p-10 mt-0 w-full max-w-3xl border-yellow-800 dark:border-yellow-600">
-      <h2 className="text-[clamp(25px,4vw,60px)] text-center font-sans font-bold mb-20 p-4 text-yellow-800 dark:text-yellow-600">Order</h2>
+      <h2 className="text-[clamp(25px,4vw,60px)] text-center font-sans font-bold mb-20 p-4 text-yellow-800 dark:text-yellow-600">Order Sections</h2>
       
       <div className="mb-6">
         <p className="text-lg text-yellow-800 dark:text-yellow-600 mb-4">

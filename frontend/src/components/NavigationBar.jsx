@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
+import DownloadButtons from './DownloadButtons';
+
 
 function NavigationBar({ 
   navItems, 
@@ -181,28 +183,9 @@ function NavigationBar({
                   </div>
                 </button>
               ))}
-
-              {/* Mobile Download Options */}
-              <div className="border-t border-gray-200 dark:border-gray-700 pt-2 mt-2">
-                <button
-                  onClick={() => handleDownloadOption('pdf')}
-                  className="w-full text-left block px-3 py-2 rounded-md text-base font-medium bg-blue-600 hover:bg-blue-700 text-stone-50 transition-colors"
-                >
-                  <div className="flex items-center">
-                    <span className="mr-3 text-lg">📄</span>
-                    Download as PDF
-                  </div>
-                </button>
-                <button
-                  onClick={() => handleDownloadOption('latex')}
-                  className="w-full text-left block px-3 py-2 rounded-md text-base font-medium bg-blue-400 hover:bg-blue-500 text-stone-50 transition-colors"
-                >
-                  <div className="flex items-center">
-                    <span className="mr-3 text-lg">📋</span>
-                    Download LaTeX
-                  </div>
-                </button>
-              </div>
+                <div className="border-t border-gray-200 dark:border-gray-700 pt-2 mt-2">
+                    <DownloadButtons generatePdf={onDownloadPDF} generateLatex={onDownloadLatex} />
+                </div>
             </div>
           </div>
         )}

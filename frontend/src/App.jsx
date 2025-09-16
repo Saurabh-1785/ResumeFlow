@@ -34,12 +34,12 @@ function App() {
   const [skills, setSkills] = useState({ languages: "", frameworks: "", libraries: "", tools: "", others: "" });
   const [customSections, setCustomSections] = useState([]);
   const [sectionOrder, setSectionOrder] = useState([
-  { id: 'summary', name: 'Summary', enabled: true },
-  { id: 'education', name: 'Education', enabled: true },
-  { id: 'skills', name: 'Skills', enabled: true },
-  { id: 'projects', name: 'Projects', enabled: true },
-  { id: 'experience', name: 'Experience', enabled: true },
-  { id: 'custom', name: 'Custom Sections', enabled: true }
+    { id: 'summary', name: 'Summary', enabled: true },
+    { id: 'education', name: 'Education', enabled: true },
+    { id: 'skills', name: 'Skills', enabled: true },
+    { id: 'projects', name: 'Projects', enabled: true },
+    { id: 'experience', name: 'Experience', enabled: true },
+    { id: 'custom', name: 'Custom Sections', enabled: true }
   ]);
 
   useEffect(() => {
@@ -213,7 +213,7 @@ function App() {
 
   const handleMobilePreview = () => {
     if (isMobile) {
-      setStep(6);
+      setStep(7); // Use a dedicated step for mobile preview
     }
   };
 
@@ -346,7 +346,7 @@ function App() {
                   {step === 4 && <Skills data={skills} setData={setSkills} onSaveChanges={!isMobile ? updatePreview : undefined} isUpdating={isUpdating} onMobilePreview={handleMobilePreview} isMobile={isMobile} />}
                   {step === 5 && <CustomSection data={customSections} setData={setCustomSections} onSaveChanges={!isMobile ? updatePreview : undefined} isUpdating={isUpdating} enhancingId={enhancingId} onEnhance={handleEnhanceWithAI} onMobilePreview={handleMobilePreview} isMobile={isMobile} />}
                   {step === 6 && <SectionOrder sectionOrder={sectionOrder} setSectionOrder={setSectionOrder} onSaveChanges={!isMobile ? updatePreview : undefined} isUpdating={isUpdating} />}
-                  {step === 7 && <Preview general={general} education={education} experience={experience} projects={projects} skills={skills} customSections={customSections} setStep={setStep} />}
+                  {step === 7 && <Preview general={general} education={education} experience={experience} projects={projects} skills={skills} customSections={customSections} setStep={setStep} onDownloadPDF={handleDownloadPDF} onDownloadLatex={handleDownloadLatex} />}
                 </div>
 
                 {/* --- RESPONSIVE PREVIOUS/NEXT BUTTONS --- */}
@@ -372,7 +372,6 @@ function App() {
               {!isMobile && (
                   <div className="w-1/2 p-6">
                     <div className="sticky top-10 h-[calc(100vh-3rem)] flex flex-col">
-                      <h3 className="text-center text-2xl font-lobster text-yellow-800 dark:text-yellow-600 mb-4">Live Preview</h3>
                       <div className="flex-grow border rounded-lg shadow-inner overflow-hidden">
                           <PdfPreview pdfUrl={pdfUrl} />
                       </div>

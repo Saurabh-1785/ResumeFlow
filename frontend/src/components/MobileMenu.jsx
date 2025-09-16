@@ -66,7 +66,7 @@ function MobileMenu({ tabs, currentStep, onNavigate, showMenu, setShowMenu }) {
             {/* Preview Button in Mobile Menu */}
             <button
               onClick={() => {
-                onNavigate(6);
+                onNavigate(7); // Corrected Step for Preview
                 setShowMenu(false);
               }}
               className="w-full text-left px-6 py-4 transition-colors bg-green-50 dark:bg-green-900 text-green-700 dark:text-green-300 hover:bg-green-100 dark:hover:bg-green-800"

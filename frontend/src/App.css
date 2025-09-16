@@ -112,3 +112,17 @@
 .nav-item:hover::before {
   left: 100%;
 }
+
+.preview-container {
+  margin-left: 20px;
+}
+
+.mobile-download-buttons {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-download-buttons {
+    display: block;
+  }
+}

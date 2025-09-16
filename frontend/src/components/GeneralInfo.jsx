@@ -13,7 +13,7 @@ function GeneralInfo({ data, setData, setStep, setShowForm, onSaveChanges, isUpd
       type="button"
       onClick={onClick}
       disabled={isDisabled}
-      className="text-stone-50 bg-purple-600 font-bold px-4 py-1.5 rounded-lg text-sm cursor-pointer transition-all disabled:bg-gray-400 hover:bg-purple-700 flex items-center gap-2"
+      className="text-stone-50 bg-linear-to-bl from-purple-600 to-purple-400 font-bold px-4 py-1.5 rounded-lg text-sm cursor-pointer transition-all disabled:bg-gray-400 hover:bg-purple-700 flex items-center gap-2"
     >
       <svg className="w-4 h-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30"><path d="M30 15.03C21.9538 15.515 15.5125 21.9538 15.0287 30H14.97C14.485 21.9538 8.045 15.515 0 15.03V14.9713C8.04625 14.485 14.485 8.04625 14.97 0H15.0287C15.5137 8.04625 21.9538 14.485 30 14.9713V15.03Z" /></svg>
       {isEnhancing ? 'Enhancing...' : 'Enhance with AI'}
