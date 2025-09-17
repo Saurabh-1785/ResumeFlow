@@ -57,6 +57,7 @@ function MobileMenu({ tabs, currentStep, onNavigate, showMenu, setShowMenu }) {
                     {index === 3 && '🚀'}
                     {index === 4 && '🛠️'}
                     {index === 5 && '📝'}
+                    {index === 6 && '↕️'}
                   </span>
                   {label === "Custom" ? "Custom Sections" : label}
                 </div>

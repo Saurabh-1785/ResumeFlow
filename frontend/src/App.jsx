@@ -34,12 +34,12 @@ function App() {
   const [skills, setSkills] = useState({ languages: "", frameworks: "", libraries: "", tools: "", others: "" });
   const [customSections, setCustomSections] = useState([]);
   const [sectionOrder, setSectionOrder] = useState([
-    { id: 'summary', name: 'Summary', enabled: true },
-    { id: 'education', name: 'Education', enabled: true },
-    { id: 'skills', name: 'Skills', enabled: true },
-    { id: 'projects', name: 'Projects', enabled: true },
-    { id: 'experience', name: 'Experience', enabled: true },
-    { id: 'custom', name: 'Custom Sections', enabled: true }
+  { id: 'summary', name: 'Summary', enabled: true },
+  { id: 'education', name: 'Education', enabled: true },
+  { id: 'skills', name: 'Skills', enabled: true },
+  { id: 'projects', name: 'Projects', enabled: true },
+  { id: 'experience', name: 'Experience', enabled: true },
+  { id: 'custom', name: 'Custom Sections', enabled: true }
   ]);
 
   useEffect(() => {
@@ -118,7 +118,34 @@ function App() {
     console.log("Starting preview update...");
     setIsUpdating(true);
     
-    const data = { generalInfo: general, education: education.map(e => ({ school: e.institution, location: e.place, degree: `${e.study} - ${e.grade}`, date: `${e.datestart} -- ${e.dateend}` })), experience: experience.map(exp => ({ company: exp.company, position: exp.position, description: exp.responsibilities, date: `${exp.from} -- ${exp.to}`, location: "" })), projects: projects.map(p => ({ name: p.name, tech: p.technology, description: p.description, link: p.url, date: "" })), skills: skills, customSections: customSections };
+    // Pass sectionOrder to the data object
+    const data = { 
+      generalInfo: general, 
+      education: education.map(e => ({ 
+        school: e.institution, 
+        location: e.place, 
+        degree: `${e.study} - ${e.grade}`, 
+        date: `${e.datestart} -- ${e.dateend}` 
+      })), 
+      experience: experience.map(exp => ({ 
+        company: exp.company, 
+        position: exp.position, 
+        description: exp.responsibilities, 
+        date: `${exp.from} -- ${exp.to}`, 
+        location: "" 
+      })), 
+      projects: projects.map(p => ({ 
+        name: p.name, 
+        tech: p.technology, 
+        description: p.description, 
+        link: p.url, 
+        date: "" 
+      })), 
+      skills: skills, 
+      customSections: customSections,
+      sectionOrder: sectionOrder // Add sectionOrder here
+    };
+    
     const tex = generateLatex(data);
     try {
       const response = await fetch("http://localhost:5000/generate-pdf", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ tex }) });
@@ -139,10 +166,35 @@ function App() {
     } finally {
       setIsUpdating(false);
     }
-  }, [general, education, experience, projects, skills, customSections, isMobile, enhancingId]);
+  }, [general, education, experience, projects, skills, customSections, sectionOrder, isMobile, enhancingId]); // Add sectionOrder to dependencies
 
   const handleDownloadPDF = async () => {
-    const data = { generalInfo: general, education: education.map(e => ({ school: e.institution, location: e.place, degree: `${e.study} - ${e.grade}`, date: `${e.datestart} -- ${e.dateend}` })), experience: experience.map(exp => ({ company: exp.company, position: exp.position, description: exp.responsibilities, date: `${exp.from} -- ${exp.to}`, location: "" })), projects: projects.map(p => ({ name: p.name, tech: p.technology, description: p.description, link: p.url, date: "" })), skills: skills, customSections: customSections };
+    const data = { 
+      generalInfo: general, 
+      education: education.map(e => ({ 
+        school: e.institution, 
+        location: e.place, 
+        degree: `${e.study} - ${e.grade}`, 
+        date: `${e.datestart} -- ${e.dateend}` 
+      })), 
+      experience: experience.map(exp => ({ 
+        company: exp.company, 
+        position: exp.position, 
+        description: exp.responsibilities, 
+        date: `${exp.from} -- ${exp.to}`, 
+        location: "" 
+      })), 
+      projects: projects.map(p => ({ 
+        name: p.name, 
+        tech: p.technology, 
+        description: p.description, 
+        link: p.url, 
+        date: "" 
+      })), 
+      skills: skills, 
+      customSections: customSections,
+      sectionOrder: sectionOrder // Add sectionOrder here
+    };
     const tex = generateLatex(data);
     try {
       const response = await fetch("http://localhost:5000/generate-pdf", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ tex }) });
@@ -189,7 +241,32 @@ function App() {
   };
 
   const handleDownloadLatex = () => {
-    const data = { generalInfo: general, education: education.map(e => ({ school: e.institution, location: e.place, degree: `${e.study} - ${e.grade}`, date: `${e.datestart} -- ${e.dateend}` })), experience: experience.map(exp => ({ company: exp.company, position: exp.position, description: exp.responsibilities, date: `${exp.from} -- ${exp.to}`, location: "" })), projects: projects.map(p => ({ name: p.name, tech: p.technology, description: p.description, link: p.url, date: "" })), skills: skills, customSections: customSections };
+    const data = { 
+      generalInfo: general, 
+      education: education.map(e => ({ 
+        school: e.institution, 
+        location: e.place, 
+        degree: `${e.study} - ${e.grade}`, 
+        date: `${e.datestart} -- ${e.dateend}` 
+      })), 
+      experience: experience.map(exp => ({ 
+        company: exp.company, 
+        position: exp.position, 
+        description: exp.responsibilities, 
+        date: `${exp.from} -- ${exp.to}`, 
+        location: "" 
+      })), 
+      projects: projects.map(p => ({ 
+        name: p.name, 
+        tech: p.technology, 
+        description: p.description, 
+        link: p.url, 
+        date: "" 
+      })), 
+      skills: skills, 
+      customSections: customSections,
+      sectionOrder: sectionOrder // Add sectionOrder here
+    };
     const tex = generateLatex(data);
     
     const blob = new Blob([tex], { type: 'text/plain' });
@@ -213,7 +290,7 @@ function App() {
 
   const handleMobilePreview = () => {
     if (isMobile) {
-      setStep(7); // Use a dedicated step for mobile preview
+      setStep(7); // Changed from 6 to 7 to go to Preview section
     }
   };
 
@@ -346,7 +423,7 @@ function App() {
                   {step === 4 && <Skills data={skills} setData={setSkills} onSaveChanges={!isMobile ? updatePreview : undefined} isUpdating={isUpdating} onMobilePreview={handleMobilePreview} isMobile={isMobile} />}
                   {step === 5 && <CustomSection data={customSections} setData={setCustomSections} onSaveChanges={!isMobile ? updatePreview : undefined} isUpdating={isUpdating} enhancingId={enhancingId} onEnhance={handleEnhanceWithAI} onMobilePreview={handleMobilePreview} isMobile={isMobile} />}
                   {step === 6 && <SectionOrder sectionOrder={sectionOrder} setSectionOrder={setSectionOrder} onSaveChanges={!isMobile ? updatePreview : undefined} isUpdating={isUpdating} />}
-                  {step === 7 && <Preview general={general} education={education} experience={experience} projects={projects} skills={skills} customSections={customSections} setStep={setStep} onDownloadPDF={handleDownloadPDF} onDownloadLatex={handleDownloadLatex} />}
+                  {step === 7 && <Preview general={general} education={education} experience={experience} projects={projects} skills={skills} customSections={customSections} setStep={setStep} onDownloadPDF={handleDownloadPDF} onDownloadWord={handleDownloadWord} onDownloadLatex={handleDownloadLatex} />}
                 </div>
 
                 {/* --- RESPONSIVE PREVIOUS/NEXT BUTTONS --- */}
@@ -370,7 +447,7 @@ function App() {
               
               {/* --- PDF PREVIEW (RIGHT COLUMN - DESKTOP ONLY) --- */}
               {!isMobile && (
-                  <div className="w-1/2 p-6">
+                  <div className="w-1/2 p-2">
                     <div className="sticky top-10 h-[calc(100vh-3rem)] flex flex-col">
                       <div className="flex-grow border rounded-lg shadow-inner overflow-hidden">
                           <PdfPreview pdfUrl={pdfUrl} />
