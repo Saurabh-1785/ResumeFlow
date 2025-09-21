@@ -335,7 +335,7 @@ function App() {
     { label: "Experience", step: 2 },
     { label: "Projects", step: 3 },
     { label: "Skills", step: 4 },
-    { label: "Custom Sections", step: 5 },
+    { label: "Custom", step: 5 },
     { label: "Section Order", step: 6 }
   ];
 
@@ -363,14 +363,14 @@ function App() {
 
       <div className="relative flex flex-col items-center justify-center p-4 sm:p-10">
         {/* Decorative backgrounds */}
-        <div className="absolute inset-0 lg:flex items-center justify-center overflow-hidden z-0"><div className="w-[120%] h-[90%] rotate-0 animate-slow-zoom border-8 border-yellow-400 dark:border-yellow-500 opacity-20 "></div></div>
-        <div className="absolute inset-0 flex items-center justify-center overflow-hidden z-0"><div className="w-[120%] h-[90%] rotate-90 animate-slow-zoom border-8 border-yellow-400 dark:border-yellow-500 opacity-20"></div></div>
+        <div className="absolute inset-0 lg:flex items-center justify-center overflow-hidden z-0"><div className="w-[120%] h-[90%] rotate-0 animate-slow-zoom border-8 border-yellow-800 dark:border-yellow-600 opacity-20 "></div></div>
+        <div className="absolute inset-0 flex items-center justify-center overflow-hidden z-0"><div className="w-[120%] h-[90%] rotate-90 animate-slow-zoom border-8 border-yellow-800 dark:border-yellow-600 opacity-20"></div></div>
         
         {!showForm ? (
           <div className="relative flex flex-col items-center justify-center h-screen w-full text-center z-10">
               <button
               onClick={toggleTheme}
-              className="absolute top-4 right-4 p-2 rounded-full bg-stone-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-stone-300 dark:hover:bg-gray-600 transition-all duration-300 shadow-sm"
+              className="absolute top-4 right-4 p-2 rounded-full cursor-pointer bg-stone-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-stone-300 dark:hover:bg-gray-600 transition-all duration-300 shadow-sm"
               aria-label="Toggle theme"
             >
               {darkMode ? (
@@ -406,7 +406,7 @@ function App() {
               )}
           </button>
             <h1 className="text-[clamp(40px,6vw,100px)] font-abril text-yellow-800 dark:text-yellow-600 mb-10 font-bold hover:text-yellow-700 transition-all ease-in duration-300 cursor-pointer dark:hover:text-yellow-400">ResumeFlow</h1>
-            <p className="mt-10 text-[clamp(20px,2vw,50px)] font-lobster text-yellow-800 dark:text-yellow-700 text-center italic hover:text-yellow-600 transition-all ease-in duration-300 cursor-pointer dark:hover:text-yellow-500">An AI-powered CV generator that transforms your input into a refined, ATS-optimized resume.</p>
+            <p className="mt-10 text-[clamp(20px,2vw,50px)] font-lobster text-yellow-800 dark:text-yellow-700 text-center italic hover:text-yellow-700 transition-all ease-in duration-300 cursor-pointer dark:hover:text-yellow-500">An AI-powered CV generator that transforms your input into a refined, ATS-optimized resume.</p>
             <button onClick={() => { setShowForm(true); setStep(0); }} className="inline font-dancing font-bold text-stone-50 bg-yellow-800 dark:bg-yellow-600 px-6 py-3 rounded-lg border border-solid text-3xl font-inherit cursor-pointer transition-all ease-in duration-300 mt-20 hover:bg-yellow-900 dark:hover:bg-yellow-500 hover:text-stone-50 dark:hover:text-gray-900 dark:text-gray-900">Get Started</button>
           </div>
         ) : (
@@ -431,13 +431,13 @@ function App() {
                   <div className="flex justify-between items-center mt-8 pt-4 border-t border-yellow-500/30">
                         <button 
                           onClick={step === 0 ? handleBackToHome : () => setStep(step - 1)}
-                          className="px-6 py-2 bg-gray-300 text-gray-800 rounded-md font-semibold hover:bg-gray-400 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
+                          className="px-6 py-2 cursor-pointer bg-gray-300 text-gray-800 rounded-md font-semibold hover:bg-gray-400 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
                         >
                           {step === 0 ? 'Back' : 'Previous'}
                         </button>
                         <button 
                           onClick={() => setStep(step + 1)}
-                          className="px-6 py-2 bg-yellow-800 dark:bg-yellow-600 text-stone-50 rounded-md font-semibold hover:bg-yellow-900 dark:hover:bg-yellow-500"
+                          className="px-6 py-2 cursor-pointer bg-yellow-800 dark:bg-yellow-600 text-stone-50 rounded-md font-semibold hover:bg-yellow-900 dark:hover:bg-yellow-500"
                         >
                           Next
                         </button>

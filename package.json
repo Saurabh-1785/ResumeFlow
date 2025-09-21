@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/Saurabh-1785/CV-Application#readme",
   "dependencies": {
+    "@react-pdf/renderer": "^4.3.0",
     "concurrently": "^9.2.1",
     "react-beautiful-dnd": "^13.1.1"
   }
