@@ -14,7 +14,8 @@ function NavigationBar({
   mobileMenuOpen,
   setMobileMenuOpen,
   darkMode,
-  toggleTheme
+  toggleTheme,
+  calculateProgress
 }) {
   const [downloadDropdownOpen, setDownloadDropdownOpen] = useState(false);
   const downloadRef = useRef(null);
@@ -66,6 +67,21 @@ function NavigationBar({
               >
                 ResumeFlow
               </button>
+            </div>
+            
+            {/* Progress Indicator */}
+            <div className="hidden lg:flex items-center ml-8">
+              <div className="w-48">
+                <div className="text-xs text-gray-600 dark:text-gray-400 mb-1">
+                  Progress: {calculateProgress()}%
+                </div>
+                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                  <div 
+                    className="bg-gradient-to-r from-yellow-600 to-yellow-800 dark:from-yellow-500 dark:to-yellow-600 h-2 rounded-full transition-all duration-300"
+                    style={{ width: `${calculateProgress()}%` }}
+                  />
+                </div>
+              </div>
             </div>
 
             {/* Desktop Navigation */}

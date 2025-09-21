@@ -18,7 +18,6 @@ function App() {
   const [step, setStep] = useState(0);
   const [pdfUrl, setPdfUrl] = useState(null);
   const [isUpdating, setIsUpdating] = useState(false);
-  const [isEnhancing, setIsEnhancing] = useState(false);
   const [enhancingId, setEnhancingId] = useState(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -66,32 +65,62 @@ function App() {
     console.log('enhancingId changed:', enhancingId);
   }, [enhancingId]);
 
+  const calculateProgress = () => {
+    let totalFields = 0;
+    let filledFields = 0;
+    
+    // General Info (6 fields, but github and linkedin are optional, so 4 required)
+    totalFields += 4;
+    if (general.name) filledFields++;
+    if (general.email) filledFields++;
+    if (general.phone) filledFields++;
+    if (general.about) filledFields++;
+    
+    // At least one education entry with required fields
+    totalFields += 1;
+    if (education.some(e => e.institution && e.study && e.datestart && e.dateend)) filledFields++;
+    
+    // At least one experience entry
+    totalFields += 1;
+    if (experience.some(e => e.company && e.position && e.from && e.to)) filledFields++;
+    
+    // At least one project
+    totalFields += 1;
+    if (projects.some(p => p.name && p.technology)) filledFields++;
+    
+    // At least one skill category
+    totalFields += 1;
+    if (Object.values(skills).some(s => s && s.trim() !== '')) filledFields++;
+    
+    return Math.round((filledFields / totalFields) * 100);
+  };
+
   const handleEnhanceWithAI = async (id, context, currentText, onSuccess) => {
     console.log('handleEnhanceWithAI called with:', { id, context, currentText: currentText?.substring(0, 50) + '...' });
     
     if (!currentText || currentText.trim() === "") {
-        alert("Please enter some text before enhancing.");
-        return;
+      alert("Please enter some text before enhancing.");
+      return;
     }
     
     console.log('Setting enhancingId to:', id);
     setEnhancingId(id);
     
     try {
-        const response = await fetch("http://localhost:5000/enhance-text", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ text: currentText, context }),
-        });
-        
-        if (!response.ok) {
-            const errData = await response.json();
-            throw new Error(errData.error || "Failed to enhance text.");
-        }
-        
-        const result = await response.json();
-        console.log('Enhancement successful, calling onSuccess');
-        onSuccess(result.enhancedText);
+      const response = await fetch("http://localhost:5000/enhance-text", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: currentText, context }),
+      });
+      
+      if (!response.ok) {
+        const errData = await response.json();
+        throw new Error(errData.error || "Failed to enhance text.");
+      }
+      
+      const result = await response.json();
+      console.log('Enhancement successful, calling onSuccess');
+      onSuccess(result.enhancedText);
     } catch (err) {
         console.error("Error enhancing text:", err);
         alert(`Enhancement failed: ${err.message}`);
@@ -212,34 +241,6 @@ function App() {
     }
   };
 
-  const handleDownloadWord = async () => {
-    const data = { generalInfo: general, education, experience, projects, skills, customSections, sectionOrder };
-    
-    try {
-      const response = await fetch("http://localhost:5000/generate-word", { 
-        method: "POST", 
-        headers: { "Content-Type": "application/json" }, 
-        body: JSON.stringify({ data }) 
-      });
-      
-      if (!response.ok) { 
-        alert("Error generating Word document"); 
-        return; 
-      }
-      
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = "resume.doc";
-      link.click();
-      window.URL.revokeObjectURL(url);
-    } catch (err) {
-      console.error("Error downloading Word document:", err);
-      alert("Something went wrong while generating Word document");
-    }
-  };
-
   const handleDownloadLatex = () => {
     const data = { 
       generalInfo: general, 
@@ -350,7 +351,6 @@ function App() {
           currentStep={step}
           onNavigate={handleStepChange}
           onDownloadPDF={handleDownloadPDF}
-          onDownloadWord={handleDownloadWord}
           onDownloadLatex={handleDownloadLatex}
           onBackToHome={handleBackToHome}
           isMobile={isMobile}
@@ -358,6 +358,7 @@ function App() {
           setMobileMenuOpen={setMobileMenuOpen}
           darkMode={darkMode}
           toggleTheme={toggleTheme}
+          calculateProgress={calculateProgress}
         />
       )}
 
