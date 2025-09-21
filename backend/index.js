@@ -240,7 +240,9 @@ app.post('/enhance-text', async (req, res) => {
   4. STRUCTURAL REQUIREMENTS:
     - Write in past tense for previous roles, present tense for current roles
     - Use parallel sentence structure throughout
-    - Keep sentences concise (15-20 words maximum)
+    - **CRITICAL: Keep sentences between 10-15 words maximum**
+    - **Each bullet point should be ONE concise sentence only**
+    - **Avoid compound sentences with "and", semicolons, or multiple clauses**
     - Ensure proper grammar and punctuation for automated parsing
 
   5. ATS PARSING COMPATIBILITY:
@@ -261,12 +263,23 @@ app.post('/enhance-text', async (req, res) => {
     - Convert responsibilities into achievements with measurable impact
     - Add strategic context showing business value and ROI
     - Demonstrate progression and growth in capabilities
+    - **Split complex ideas into multiple short bullet points**
+    - **Each point should focus on ONE specific achievement or responsibility**
 
   8. FORMATTING FOR MAXIMUM ATS SCORE:
-    - Output as a single, well-structured paragraph
+    - **Output multiple bullet points if needed, but keep each under 15 words**
+    - **Use line breaks to separate multiple points**
     - Use consistent punctuation and capitalization
     - Ensure keyword density is 2-3% of total word count
     - Maintain natural flow while optimizing for machine readability
+
+  SENTENCE LENGTH RULES (MANDATORY):
+  ✓ Maximum 15 words per sentence
+  ✓ One main idea per bullet point
+  ✓ No run-on sentences or multiple clauses
+  ✓ Split complex achievements into separate points
+  ✓ Use simple sentence structure: Subject + Action Verb + Object + Result
+  ✓ Remove unnecessary words like "that", "which", "in order to"
 
   QUALITY ASSURANCE CHECKLIST:
   ✓ Each sentence contains quantifiable results
@@ -275,6 +288,7 @@ app.post('/enhance-text', async (req, res) => {
   ✓ Content shows clear business impact
   ✓ Grammar is perfect for ATS parsing
   ✓ Text flows naturally for human readers
+  ✓ **Every sentence is under 15 words**
 
   AVOID COMPLETELY:
   - Generic phrases like "responsible for," "duties included"
@@ -283,6 +297,9 @@ app.post('/enhance-text', async (req, res) => {
   - First-person pronouns (I, me, my)
   - Passive voice constructions
   - Redundant or filler words
+  - **Sentences longer than 15 words**
+  - **Compound or complex sentences**
+  - **Multiple ideas in one bullet point**
 
   Original text to optimize: "${text}"
 
