@@ -24,7 +24,7 @@ function GeneralInfo({ data, setData, setStep, setShowForm, onSaveChanges, isUpd
 
   return (
       <div className="border md:border-r-20 rounded-br-4xl rounded-bl-4xl p-10 mt-0 w-full max-w-3xl border-yellow-800 dark:border-yellow-600 ">
-        <h2 className="text-[clamp(30px,5vw,50px)] text-center font-sans font-bold mb-20 p-4 text-yellow-800 dark:text-yellow-600">GENERAL</h2>
+        <h2 className="text-[clamp(35px,6vw,55px)] text-center font-sans font-bold mb-20 p-4 text-yellow-800 dark:text-yellow-600">GENERAL</h2>
   
         <input type="text" placeholder="Name" value={data.name} onChange={(e) => setData({ ...data, name: e.target.value })} className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-stone-50" required />
         <input type="email" placeholder="Email" value={data.email} onChange={(e) => setData({ ...data, email: e.target.value })} className="block w-full border p-3 mb-10 rounded italic active:border-yellow-600 focus:border-yellow-600 text-black dark:bg-black dark:text-stone-50" required />

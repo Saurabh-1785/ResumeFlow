@@ -23,7 +23,7 @@ function Projects({ data, setData, setStep, onSaveChanges, isUpdating, enhancing
 
   return (
     <div className="border md:border-r-20 rounded-bl-4xl p-10 mt-0 w-full max-w-3xl border-yellow-800 dark:border-yellow-600">
-      <h2 className="text-[clamp(25px,5vw,50px)] text-center font-sans font-bold mb-10 p-4 text-yellow-800 dark:text-yellow-600">PROJECT</h2>
+      <h2 className="text-[clamp(35px,6vw,55px)] text-center font-sans font-bold mb-10 p-4 text-yellow-800 dark:text-yellow-600">PROJECTS</h2>
       {data.map((proj) => {
         const isCurrentlyEnhancing = enhancingId === proj.id;
         return (

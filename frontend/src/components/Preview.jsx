@@ -4,7 +4,7 @@ function Preview({ general, education, experience, projects, skills, customSecti
 
   return (
     <div className="border border-r-20 rounded-tr-4xl rounded-bl-4xl p-10 mt-10 mb-10 w-full max-w-3xl border-yellow-600">
-      <h2 className="text-[clamp(25px,3vw,60px)] text-center font-bold mb-10 p-4 text-yellow-600 italic">PREVIEW</h2>
+      <h2 className="text-[clamp(35px,6vw,55px)] text-center font-bold mb-10 p-4 text-yellow-600 italic">PREVIEW</h2>
       <hr className="mb-6 text-yellow-600" />
 
       {/* General Info */}

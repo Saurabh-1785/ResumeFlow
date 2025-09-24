@@ -15,7 +15,6 @@ function NavigationBar({
   setMobileMenuOpen,
   darkMode,
   toggleTheme,
-  calculateProgress
 }) {
   const [downloadDropdownOpen, setDownloadDropdownOpen] = useState(false);
   const downloadRef = useRef(null);
@@ -68,21 +67,6 @@ function NavigationBar({
                 ResumeFlow
               </button>
             </div>
-            
-            {/* Progress Indicator */}
-            <div className="hidden lg:flex items-center ml-8">
-              <div className="w-48">
-                <div className="text-xs text-gray-600 dark:text-gray-400 mb-1">
-                  Progress: {calculateProgress()}%
-                </div>
-                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                  <div 
-                    className="bg-gradient-to-r from-yellow-600 to-yellow-800 dark:from-yellow-500 dark:to-yellow-600 h-2 rounded-full transition-all duration-300"
-                    style={{ width: `${calculateProgress()}%` }}
-                  />
-                </div>
-              </div>
-            </div>
 
             {/* Desktop Navigation */}
             {!isMobile && (
@@ -109,7 +93,9 @@ function NavigationBar({
             {!isMobile && (
               <div className="hidden lg:block relative" ref={downloadRef}>
                 <button
-                  onClick={() => setDownloadDropdownOpen(!downloadDropdownOpen)}
+                  onClick={() => {
+                    setTimeout(() => setDownloadDropdownOpen(!downloadDropdownOpen), 100);
+                  }}
                   className="bg-blue-800 cursor-pointer ease-in duration-200 hover:bg-blue-700 text-stone-50 px-4 py-2 rounded-md text-sm font-medium transition-colors shadow-md flex items-center gap-2"
                 >
                   Download
@@ -150,7 +136,7 @@ function NavigationBar({
               <div className="lg:hidden">
                 <button
                   onClick={toggleMobileMenu}
-                  className="p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none"
+                  className="p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none transition-all duration-300 ease-in-out"
                 >
                   <span className="sr-only">Open main menu</span>
                   <svg 
@@ -174,7 +160,7 @@ function NavigationBar({
 
         {/* Mobile Menu Dropdown */}
         {isMobile && mobileMenuOpen && (
-          <div className="lg:hidden border-t border-yellow-800 dark:border-yellow-600">
+          <div className="lg:hidden border-t border-yellow-800 dark:border-yellow-600 animate-in slide-in-from-top duration-300">
             <div className="px-2 pt-2 pb-3 space-y-1 bg-stone-50 dark:bg-gray-800">
               {navItems.map((item, index) => (
                 <button
@@ -194,14 +180,29 @@ function NavigationBar({
                       {index === 3 && '🚀'}
                       {index === 4 && '🛠️'}
                       {index === 5 && '📝'}
+                      {index === 6 && '↕️'}
                     </span>
                     {item.label}
                   </div>
                 </button>
               ))}
-                <div className="border-t border-gray-200 dark:border-gray-700 pt-2 mt-2">
-                    <DownloadButtons generatePdf={onDownloadPDF} generateLatex={onDownloadLatex} />
-                </div>
+              
+              {/* Mobile Theme Toggle in Menu */}
+              <div className="border-t border-gray-200 dark:border-gray-700 pt-2 mt-2">
+                <button
+                  onClick={toggleTheme}
+                  className="w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-yellow-50 dark:hover:bg-gray-700 hover:text-yellow-600 transition-colors flex items-center"
+                >
+                  <span className="mr-3 text-lg">
+                    {darkMode ? '☀️' : '🌙'}
+                  </span>
+                  {darkMode ? 'Light Mode' : 'Dark Mode'}
+                </button>
+              </div>
+              
+              <div className="border-t border-gray-200 dark:border-gray-700 pt-2 mt-2">
+                <DownloadButtons generatePdf={onDownloadPDF} generateLatex={onDownloadLatex} />
+              </div>
             </div>
           </div>
         )}
@@ -252,27 +253,10 @@ function NavigationBar({
         </div>
       )}
 
-      {/* Mobile Theme Toggle - In Mobile Menu */}
-      {isMobile && mobileMenuOpen && (
-        <div className="lg:hidden border-t border-gray-200 dark:border-gray-700 bg-stone-50 dark:bg-gray-800">
-          <div className="px-2 py-3">
-            <button
-              onClick={toggleTheme}
-              className="w-full flex items-center px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-            >
-              <span className="mr-3 text-lg">
-                {darkMode ? '☀️' : '🌙'}
-              </span>
-              {darkMode ? 'Light Mode' : 'Dark Mode'}
-            </button>
-          </div>
-        </div>
-      )}
-
       {/* Mobile Menu Overlay */}
       {isMobile && mobileMenuOpen && (
         <div 
-          className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
+          className="lg:hidden fixed inset-0 bg-white dark:bg-gray-800 bg-opacity-50 z-40"
           onClick={() => setMobileMenuOpen(false)}
         />
       )}

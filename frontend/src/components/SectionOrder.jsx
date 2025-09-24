@@ -33,7 +33,7 @@ function SectionOrder({ sectionOrder, setSectionOrder, onSaveChanges, isUpdating
 
   return (
     <div className="border md:border-r-20 rounded-bl-4xl p-10 mt-0 w-full max-w-3xl border-yellow-800 dark:border-yellow-600">
-      <h2 className="text-[clamp(25px,4vw,60px)] text-center font-sans font-bold mb-20 p-4 text-yellow-800 dark:text-yellow-600">Order Sections</h2>
+      <h2 className="text-[clamp(35px,6vw,55px)] text-center font-sans font-bold mb-20 p-4 text-yellow-800 dark:text-yellow-600">Order Sections</h2>
       
       <div className="mb-6">
         <p className="text-lg text-yellow-800 dark:text-yellow-600 mb-4">

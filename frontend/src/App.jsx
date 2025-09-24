@@ -65,36 +65,6 @@ function App() {
     console.log('enhancingId changed:', enhancingId);
   }, [enhancingId]);
 
-  const calculateProgress = () => {
-    let totalFields = 0;
-    let filledFields = 0;
-    
-    // General Info (6 fields, but github and linkedin are optional, so 4 required)
-    totalFields += 4;
-    if (general.name) filledFields++;
-    if (general.email) filledFields++;
-    if (general.phone) filledFields++;
-    if (general.about) filledFields++;
-    
-    // At least one education entry with required fields
-    totalFields += 1;
-    if (education.some(e => e.institution && e.study && e.datestart && e.dateend)) filledFields++;
-    
-    // At least one experience entry
-    totalFields += 1;
-    if (experience.some(e => e.company && e.position && e.from && e.to)) filledFields++;
-    
-    // At least one project
-    totalFields += 1;
-    if (projects.some(p => p.name && p.technology)) filledFields++;
-    
-    // At least one skill category
-    totalFields += 1;
-    if (Object.values(skills).some(s => s && s.trim() !== '')) filledFields++;
-    
-    return Math.round((filledFields / totalFields) * 100);
-  };
-
   const handleEnhanceWithAI = async (id, context, currentText, onSuccess) => {
     console.log('handleEnhanceWithAI called with:', { id, context, currentText: currentText?.substring(0, 50) + '...' });
     
@@ -358,14 +328,17 @@ function App() {
           setMobileMenuOpen={setMobileMenuOpen}
           darkMode={darkMode}
           toggleTheme={toggleTheme}
-          calculateProgress={calculateProgress}
         />
       )}
 
       <div className="relative flex flex-col items-center justify-center p-4 sm:p-10">
         {/* Decorative backgrounds */}
-        <div className="absolute inset-0 lg:flex items-center justify-center overflow-hidden z-0"><div className="w-[120%] h-[90%] rotate-0 animate-slow-zoom border-8 border-yellow-800 dark:border-yellow-600 opacity-20 "></div></div>
-        <div className="absolute inset-0 flex items-center justify-center overflow-hidden z-0"><div className="w-[120%] h-[90%] rotate-90 animate-slow-zoom border-8 border-yellow-800 dark:border-yellow-600 opacity-20"></div></div>
+        <div className="absolute inset-0 lg:flex items-center justify-center overflow-hidden z-0">
+          <div className="w-[140%] h-[105%] rotate-0 animate-slow-zoom border-8 border-yellow-800 dark:border-yellow-600 opacity-10 "/>
+        </div>
+        <div className="absolute inset-0 flex items-center justify-center overflow-hidden z-0">
+          <div className="w-[140%] h-[105%] rotate-90 animate-slow-zoom border-8 border-yellow-800 dark:border-yellow-600 opacity-10"/>
+        </div>
         
         {!showForm ? (
           <div className="relative flex flex-col items-center justify-center h-screen w-full text-center z-10">

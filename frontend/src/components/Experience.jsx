@@ -21,7 +21,7 @@ function Experience({ data, setData, setStep, onSaveChanges, isUpdating, enhanci
 
   return (
     <div className="border md:border-r-20 rounded-bl-4xl p-10 mt-0 w-full max-w-3xl border-yellow-800 dark:border-yellow-600">
-      <h2 className="text-[clamp(25px,4vw,60px)] text-center font-sans font-bold mb-20 p-4 text-yellow-800 dark:text-yellow-600">Experience</h2>
+      <h2 className="text-[clamp(35px,6vw,55px)] text-center font-sans font-bold mb-20 p-4 text-yellow-800 dark:text-yellow-600">EXPERIENCE</h2>
       {data.map((exp) => {
         const isCurrentlyEnhancing = enhancingId === exp.id;
         return (

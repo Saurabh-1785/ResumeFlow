@@ -9,7 +9,7 @@ function Education({ data, setData, setStep, onSaveChanges, isUpdating }) {
 
   return (
     <div className="border md:border-r-20 rounded-bl-4xl p-10 mt-0 w-full max-w-3xl border-yellow-800 dark:border-yellow-600">
-      <h2 className="text-[clamp(25px,5vw,50px)] text-center font-sans font-bold mb-20 p-4 text-yellow-800 dark:text-yellow-600">EDUCATION</h2>
+      <h2 className="text-[clamp(35px,6vw,55px)] text-center font-sans font-bold mb-20 p-4 text-yellow-800 dark:text-yellow-600">EDUCATION</h2>
       {data.map((edu) => (
         <div key={edu.id} className="mb-8 border-b pb-6">
           <input type="text" placeholder="Institution Name" value={edu.institution} onChange={(e) => handleChange(edu.id, "institution", e.target.value)} className="block w-full border p-3 mb-10 rounded italic text-black dark:bg-black dark:text-stone-50" required />
