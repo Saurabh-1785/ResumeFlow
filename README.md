@@ -188,7 +188,7 @@ npm run backend
 ## 📁 Project Structure
 
 ```
-CV-Application/
+ResumeFlow/
 ├── frontend/                 # React frontend
 │   ├── public/              # Static assets
 │   ├── src/
