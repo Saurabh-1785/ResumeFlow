@@ -3,7 +3,6 @@
 An AI-powered CV generator that transforms your input into a refined, ATS-optimized resume with real-time LaTeX compilation and preview.
 
 ![ResumeFlow](frontend/public/home.png)
-![ResumeFlow](frontend/public/main.png)
 
 ## 🌟 Features
 
