@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Bungee&family=Dancing+Script:wght@400..700&family=Holtwood+One+SC&family=Inknut+Antiqua:wght@300;400;500;600;700;800;900&family=Lobster+Two:ital,wght@0,400;0,700;1,400;1,700&family=Miltonian&family=Nosifer&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Bungee&family=Dancing+Script:wght@400..700&family=Holtwood+One+SC&family=Inknut+Antiqua:wght@300;400;500;600;700;800;900&family=Lobster+Two:ital,wght@0,400;0,700;1,400;1,700&family=Miltonian&family=Nosifer&family=Inter:wght@300;400;500;600;700&display=swap');
 
 @import "tailwindcss";
 
@@ -15,11 +15,12 @@
   --font-miltonian: 'Miltonian', cursive;
   --font-nosifer: 'Nosifer', cursive;
   --font-lobster: 'Lobster Two', cursive;
+  --font-sans: 'Inter', system-ui, sans-serif;
 }
 
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
+  font-family: var(--font-sans);
+  line-height: 1.6;
   font-weight: 400;
 
   color-scheme: light dark;
@@ -33,9 +34,8 @@
 }
 
 html {
-  transition: background-color 0.3s, color 0.3s;
+  transition: background-color 0.3s ease, color 0.3s ease;
   scroll-behavior: smooth;
-  
 }
 
 body {
@@ -43,20 +43,45 @@ body {
   min-width: 320px;
   min-height: 100vh;
   background-color: #f9fafb; /* Off-white for light theme */
-  color: #000000;
+  color: #1f2937; /* Softer black for better readability */
 }
 
-input,textarea {
-  @apply w-full p-4 rounded-lg duration-300 ease-in border-yellow-800 bg-gray-50 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-800 focus:border-transparent dark:border-yellow-600 dark:bg-gray-900 dark:text-white dark:placeholder-gray-300 dark:focus:ring-yellow-500;
+/* Enhanced Input Styles */
+input, textarea, select {
+  @apply w-full p-4 rounded-xl border-2 border-transparent bg-white text-gray-900 placeholder-gray-400 
+  transition-all duration-300 ease-out shadow-sm
+  focus:outline-none focus:ring-4 focus:ring-yellow-800/20 focus:border-yellow-800 
+  hover:border-gray-300
+  dark:bg-gray-800 dark:text-white dark:placeholder-gray-500 dark:focus:ring-yellow-500/20 dark:focus:border-yellow-500 dark:hover:border-gray-600;
 }
 
-input[type="checkbox"]{
-  @apply w-5 h-5 text-yellow-800 bg-stone-50 border-gray-300 rounded focus:ring-yellow-700 dark:text-yellow-600 dark:focus:ring-yellow-700 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 cursor-pointer;
+/* Enhanced Checkbox */
+input[type="checkbox"] {
+  @apply w-5 h-5 text-yellow-800 bg-gray-100 border-gray-300 rounded 
+  focus:ring-yellow-700 dark:focus:ring-yellow-600 dark:ring-offset-gray-800 
+  focus:ring-2 dark:bg-gray-700 dark:border-gray-600 cursor-pointer 
+  transition-transform duration-200 active:scale-95;
+}
+
+/* Button Base Styles (can be used with @apply in components) */
+.btn-primary {
+  @apply px-6 py-3 rounded-xl font-semibold text-white bg-yellow-800 
+  transition-all duration-300 shadow-lg shadow-yellow-900/20
+  hover:bg-yellow-900 hover:shadow-yellow-900/40 hover:-translate-y-0.5
+  active:translate-y-0 active:shadow-sm
+  dark:bg-yellow-600 dark:hover:bg-yellow-500 dark:shadow-yellow-600/20 dark:hover:shadow-yellow-600/40;
+}
+
+.btn-secondary {
+  @apply px-6 py-3 rounded-xl font-semibold text-gray-700 bg-gray-200 
+  transition-all duration-300 
+  hover:bg-gray-300 hover:text-gray-900
+  dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white;
 }
 
 .dark body {
   background-color: #111827;
-  color: #ffffff;
+  color: #f3f4f6;
 }
 
 @keyframes slow-zoom {
@@ -64,15 +89,13 @@ input[type="checkbox"]{
     transform: scale(1) rotate(45deg);
   }
   50% {
-    transform: scale(1.1) rotate(45deg);
+    transform: scale(1.05) rotate(45deg); /* Reduced scale for subtler effect */
   }
 }
 
 .animate-slow-zoom {
-  animation: slow-zoom 12s ease-in-out infinite;
+  animation: slow-zoom 20s ease-in-out infinite; /* Slower animation */
 }
-
-
 
 @media (prefers-color-scheme: light) {
   :root {
@@ -83,6 +106,33 @@ input[type="checkbox"]{
 
 @media (max-width:1024px) {
   input, textarea {
-    height: 2rem;
+    padding: 0.75rem 1rem; /* Adjusted padding for mobile */
   }
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent; 
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d1d5db; 
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af; 
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #4b5563; 
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #6b7280; 
 }
