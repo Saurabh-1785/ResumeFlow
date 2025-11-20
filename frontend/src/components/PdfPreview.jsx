@@ -63,7 +63,7 @@ function PdfPreview({ pdfUrl }) {
               <button
                 onClick={goToPreviousPage}
                 disabled={pageNumber <= 1}
-                className="px-4 py-2 cursor-pointer bg-gray-300 dark:bg-gray-600 rounded-md disabled:opacity-50"
+                className="px-4 py-2 bg-gray-300 dark:bg-gray-600 rounded-md disabled:opacity-50"
               >
                 Previous
               </button>
@@ -73,7 +73,7 @@ function PdfPreview({ pdfUrl }) {
               <button
                 onClick={goToNextPage}
                 disabled={pageNumber >= numPages}
-                className="px-4 py-2 cursor-pointer bg-gray-300 dark:bg-gray-600 rounded-md disabled:opacity-50"
+                className="px-4 py-2 bg-gray-300 dark:bg-gray-600 rounded-md disabled:opacity-50"
               >
                 Next
               </button>
