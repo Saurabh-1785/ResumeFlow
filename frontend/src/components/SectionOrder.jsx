@@ -61,29 +61,32 @@ function SectionOrder({ sectionOrder, setSectionOrder, onSaveChanges, isUpdating
               </div>
             </label>
 
-            {/* Move Up Button */}
-            <button
-              onClick={() => moveSection(index, 'up')}
-              disabled={index === 0}
-              className="p-2 rounded-md bg-yellow-800 text-stone-50 hover:bg-yellow-700 dark:bg-yellow-600 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed transition-colors"
-              aria-label="Move up"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
-              </svg>
-            </button>
+            {/* Move Buttons Container */}
+            <div className="flex items-center gap-2">
+              {/* Move Up Button */}
+              <button
+                onClick={() => moveSection(index, 'up')}
+                disabled={index === 0}
+                className="p-2 rounded-md bg-yellow-800 text-stone-50 hover:bg-yellow-700 dark:bg-yellow-600 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed transition-colors"
+                aria-label="Move up"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                </svg>
+              </button>
 
-            {/* Move Down Button */}
-            <button
-              onClick={() => moveSection(index, 'down')}
-              disabled={index === sectionOrder.length - 1}
-              className="p-2 rounded-md bg-yellow-800 text-stone-50 hover:bg-yellow-700 dark:bg-yellow-600 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed transition-colors"
-              aria-label="Move down"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
+              {/* Move Down Button */}
+              <button
+                onClick={() => moveSection(index, 'down')}
+                disabled={index === sectionOrder.length - 1}
+                className="p-2 rounded-md bg-yellow-800 text-stone-50 hover:bg-yellow-700 dark:bg-yellow-600 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed transition-colors"
+                aria-label="Move down"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+            </div>
           </div>
         ))}
       </div>

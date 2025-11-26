@@ -13,11 +13,13 @@ import SectionOrder from './components/SectionOrder';
 import { generateLatex } from "./utils/generateLatex";
 import { mapStateToResumeData } from "./utils/resumeMapper";
 import { enhanceTextWithAI, generatePdf } from "./services/api";
+import TemplateSelector from './components/TemplateSelector';
 
 // --- Main App Component ---
 function App() {
   const [showForm, setShowForm] = useState(false);
   const [step, setStep] = useState(0);
+  const [templateId, setTemplateId] = useState('standard');
   const [pdfUrl, setPdfUrl] = useState(null);
   const [isUpdating, setIsUpdating] = useState(false);
   const [enhancingId, setEnhancingId] = useState(null);
@@ -111,7 +113,7 @@ function App() {
     // Pass sectionOrder to the data object
     const data = mapStateToResumeData({ general, education, experience, projects, skills, customSections, sectionOrder });
 
-    const tex = generateLatex(data);
+    const tex = generateLatex(data, templateId);
     try {
       const blob = await generatePdf(tex);
       const url = URL.createObjectURL(blob);
@@ -129,7 +131,7 @@ function App() {
 
   const handleDownloadPDF = async () => {
     const data = mapStateToResumeData({ general, education, experience, projects, skills, customSections, sectionOrder });
-    const tex = generateLatex(data);
+    const tex = generateLatex(data, templateId);
     try {
       const blob = await generatePdf(tex);
       const url = window.URL.createObjectURL(blob);
@@ -146,7 +148,7 @@ function App() {
 
   const handleDownloadLatex = () => {
     const data = mapStateToResumeData({ general, education, experience, projects, skills, customSections, sectionOrder });
-    const tex = generateLatex(data);
+    const tex = generateLatex(data, templateId);
 
     const blob = new Blob([tex], { type: 'text/plain' });
     const url = window.URL.createObjectURL(blob);
@@ -250,7 +252,7 @@ function App() {
           <div className="relative flex flex-col items-center justify-center max-w-4xl mx-auto text-center z-10 animate-fadeIn">
             <button
               onClick={toggleTheme}
-              className="absolute top-0 right-0 lg:fixed lg:top-8 lg:right-8 p-3 rounded-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm text-gray-800 dark:text-gray-200 hover:bg-white dark:hover:bg-gray-700 shadow-lg hover:shadow-xl transition-all duration-300 group"
+              className="absolute top-4 right-4 lg:fixed lg:top-8 lg:right-8 p-3 rounded-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm text-gray-800 dark:text-gray-200 hover:bg-white dark:hover:bg-gray-700 shadow-lg hover:shadow-xl transition-all duration-300 group z-50"
               aria-label="Toggle theme"
             >
               {darkMode ? (
@@ -277,7 +279,7 @@ function App() {
             </p>
 
             <button
-              onClick={() => { setShowForm(true); setStep(0); }}
+              onClick={() => { setTemplateId('standard'); setShowForm(true); setStep(0); }}
               className="group relative inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-white transition-all duration-300 bg-yellow-800 dark:bg-yellow-600 rounded-full hover:bg-yellow-900 dark:hover:bg-yellow-500 hover:scale-105 shadow-xl hover:shadow-2xl hover:shadow-yellow-900/30"
             >
               <span className="mr-2">Get Started</span>
@@ -285,6 +287,8 @@ function App() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
               </svg>
             </button>
+
+            <TemplateSelector onSelect={(id) => { setTemplateId(id); setShowForm(true); setStep(0); }} />
           </div>
         ) : (
           <div className="w-full max-w-[1600px] mx-auto z-10 mt-4 lg:mt-8">

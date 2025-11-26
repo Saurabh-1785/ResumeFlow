@@ -39,7 +39,7 @@ const Experience = ({ data, setData, onSaveChanges, isUpdating, enhancingId, onE
 
   return (
     <div className="space-y-6 animate-fadeIn">
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
         <h2 className="text-2xl font-bold text-gray-800 dark:text-white flex items-center gap-3">
           <span className="flex items-center justify-center w-10 h-10 rounded-xl bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-500 text-xl">
             💼
@@ -48,7 +48,7 @@ const Experience = ({ data, setData, onSaveChanges, isUpdating, enhancingId, onE
         </h2>
         <button
           onClick={addExperience}
-          className="px-4 py-2 text-sm font-medium text-yellow-800 dark:text-yellow-500 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg hover:bg-yellow-100 dark:hover:bg-yellow-900/30 transition-colors flex items-center gap-2"
+          className="w-full sm:w-auto px-4 py-2 text-sm font-medium text-yellow-800 dark:text-yellow-500 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg hover:bg-yellow-100 dark:hover:bg-yellow-900/30 transition-colors flex items-center justify-center gap-2"
         >
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4">
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
