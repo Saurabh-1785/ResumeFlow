@@ -6,40 +6,43 @@ An AI-powered CV generator that transforms your input into a refined, ATS-optimi
 
 ## 🌟 Features
 
-- **AI-Powered Enhancement**: Automatically optimize your resume content for ATS (Applicant Tracking Systems) using Google Gemini AI
-- **Real-time LaTeX Compilation**: Live preview of your resume as you type
-- **Responsive Design**: Works seamlessly on desktop and mobile devices
-- **Dark/Light Mode**: Toggle between themes with system preference detection
-- **Custom Sections**: Add personalized sections beyond standard resume templates
-- **Section Reordering**: Drag and rearrange resume sections as needed
-- **Multiple Export Formats**: Download as PDF or LaTeX source code
-- **Mobile-Friendly Interface**: Optimized experience across all devices
+- **AI-Powered Enhancement**: Automatically optimize your resume content for ATS (Applicant Tracking Systems) using Google Gemini 2.0 Flash.
+- **Real-time LaTeX Compilation**: Server-side LaTeX compilation for professional-grade PDF output.
+- **Responsive Mobile-First Design**: Seamless experience across desktop, tablet, and mobile devices.
+- **Modern UI/UX**: 
+  - **Custom Cursor**: sleek, interactive cursor for enhanced usability.
+  - **Glassmorphism & Animations**: Premium visual aesthetics.
+  - **Dark/Light Mode**: Automatic theme detection and toggling.
+- **Custom Sections**: Add personalized sections beyond standard resume templates.
+- **Section Reordering**: Easily rearrange resume sections to fit your narrative.
+- **Multiple Templates**: Choose from different professional resume layouts.
+- **Multiple Export Formats**: Download as PDF or LaTeX source code.
 
 ## 🚀 Tech Stack
 
 ### Frontend
-- **React** (v18+) - UI framework
-- **Vite** - Build tool and dev server
-- **Tailwind CSS** - Styling framework
-- **React-PDF** - PDF preview functionality
+- **React** (v19) - Latest UI library for building interactive interfaces.
+- **Vite** - Next-generation frontend tooling.
+- **Tailwind CSS** (v4) - Utility-first CSS framework for styling.
+- **React-PDF** - For rendering PDF previews in the browser.
+- **Framer Motion** (implied by animations) / **CSS Animations** - For smooth transitions.
 
 ### Backend
-- **Node.js** - Runtime environment
-- **Express.js** - Web framework
-- **Google Generative AI (Gemini)** - AI text enhancement
-- **LaTeX (pdflatex)** - PDF generation
+- **Node.js** & **Express.js** - Robust server-side runtime and framework.
+- **Google Gemini API** (Gemini 2.0 Flash) - Advanced AI model for text optimization.
+- **LaTeX (pdflatex)** - Professional typesetting system for generating high-quality PDFs.
 
 ## 📋 Prerequisites
 
 Before running this project, ensure you have the following installed:
 
-- **Node.js** (v16.0 or higher)
-- **npm** or **yarn** package manager
-- **LaTeX distribution** (for PDF generation):
-  - **Windows**: MiKTeX or TeX Live
-  - **macOS**: MacTeX or TeX Live
-  - **Linux**: TeX Live (`sudo apt-get install texlive-full` on Ubuntu)
-- **Google AI API Key** (for AI enhancement features)
+1.  **Node.js** (v18.0 or higher)
+2.  **npm** (Node Package Manager)
+3.  **LaTeX Distribution** (CRITICAL for PDF generation):
+    *   **Windows**: [MiKTeX](https://miktex.org/download) or [TeX Live](https://www.tug.org/texlive/)
+    *   **macOS**: [MacTeX](https://www.tug.org/mactex/) (`brew install --cask mactex`)
+    *   **Linux**: TeX Live (`sudo apt-get install texlive-full`)
+4.  **Google AI API Key**: Get one from [Google AI Studio](https://aistudio.google.com/app/apikey).
 
 ## 🛠️ Installation & Setup
 
@@ -52,236 +55,109 @@ cd ResumeFlow
 
 ### 2. Install Dependencies
 
-Install root dependencies:
-```bash
-npm install
-```
+Install dependencies for both frontend and backend from the root directory:
 
-Install frontend dependencies:
 ```bash
+# Install root dependencies
+npm install
+
+# Install frontend dependencies
 cd frontend
 npm install
 cd ..
-```
 
-Install backend dependencies:
-```bash
+# Install backend dependencies
 cd backend
 npm install
 cd ..
 ```
 
-### 3. Environment Setup
+### 3. Environment Configuration
 
 Create a `.env` file in the `backend` directory:
 
 ```bash
 cd backend
+# Create .env file (Windows PowerShell)
+New-Item -Path .env -ItemType File
+# OR (Bash)
 touch .env
 ```
 
-Add the following environment variables to `backend/.env`:
+Open `backend/.env` and add your configuration:
 
 ```env
 # Google AI API Configuration
-GOOGLE_API_KEY=your_gemini_api_key_here
+GOOGLE_API_KEY=your_actual_gemini_api_key_here
 
 # Server Configuration
 PORT=5000
-
-# Optional: Set NODE_ENV for production
-NODE_ENV=development
 ```
 
-### 4. Get Google AI API Key
+### 4. Verify LaTeX Installation
 
-1. Go to [Google AI Studio](https://aistudio.google.com/app/apikey)
-2. Sign in with your Google account
-3. Create a new API key
-4. Copy the API key and paste it in your `.env` file
-
-### 5. Verify LaTeX Installation
-
-Test if LaTeX is properly installed:
+Ensure `pdflatex` is accessible from your terminal:
 
 ```bash
 pdflatex --version
 ```
 
-If command not found, install LaTeX:
-
-**Ubuntu/Debian:**
-```bash
-sudo apt-get update
-sudo apt-get install texlive-full
-```
-
-**macOS (with Homebrew):**
-```bash
-brew install --cask mactex
-```
-
-**Windows:**
-- Download and install [MiKTeX](https://miktex.org/download)
+If this command fails, please install a LaTeX distribution (see Prerequisites).
 
 ## 🚀 Running the Application
 
-### Development Mode
-
-Run both frontend and backend concurrently:
+You can run both the frontend and backend concurrently with a single command from the **root** directory:
 
 ```bash
 npm run dev
 ```
 
 This will start:
-- Frontend development server: `http://localhost:5173`
-- Backend API server: `http://localhost:5000`
+- **Frontend**: http://localhost:5173
+- **Backend**: http://localhost:5000
 
-### Individual Services
+### Running Services Individually
 
-Run frontend only:
+If you prefer to run them in separate terminals:
+
+**Frontend:**
 ```bash
-npm run frontend
+cd frontend
+npm run dev
 ```
 
-Run backend only:
+**Backend:**
 ```bash
-npm run backend
+cd backend
+npm start
 ```
 
-## 📱 Usage
+## 📱 Usage Guide
 
-1. **Start the Application**: Navigate to `http://localhost:5173`
-2. **Fill Your Information**: 
-   - General Info (name, contact, summary)
-   - Education details
-   - Work experience
-   - Projects
-   - Skills
-   - Custom sections (optional)
-3. **AI Enhancement**: Click "Enhance with AI" buttons to optimize content for ATS
-4. **Real-time Preview**: See live LaTeX-compiled PDF preview (desktop only)
-5. **Customize Layout**: Reorder sections in the "Section Order" tab
-6. **Download**: Export as PDF or LaTeX source code
-
-## 🎨 Customization
-
-### Adding New Resume Templates
-
-1. Modify `frontend/src/utils/generateLatex.js`
-2. Update LaTeX template structure
-3. Adjust styling and formatting
-
-### Modifying AI Prompts
-
-1. Edit the AI enhancement prompts in `backend/index.js`
-2. Customize context-specific optimization rules
-3. Adjust AI model parameters
-
-### Theme Customization
-
-1. Update Tailwind CSS configuration in `frontend/tailwind.config.js`
-2. Modify color schemes in component files
-3. Add new theme variants
-
-## 📁 Project Structure
-
-```
-CV-Application/
-├── frontend/                 # React frontend
-│   ├── public/              # Static assets
-│   ├── src/
-│   │   ├── components/      # React components
-│   │   │   ├── GeneralInfo.jsx
-│   │   │   ├── Education.jsx
-│   │   │   ├── Experience.jsx
-│   │   │   ├── Projects.jsx
-│   │   │   ├── Skills.jsx
-│   │   │   ├── CustomSection.jsx
-│   │   │   ├── Preview.jsx
-│   │   │   ├── PdfPreview.jsx
-│   │   │   ├── NavigationBar.jsx
-│   │   │   └── SectionOrder.jsx
-│   │   ├── utils/
-│   │   │   └── generateLatex.js  # LaTeX generation logic
-│   │   ├── App.jsx          # Main app component
-│   │   └── main.jsx         # Entry point
-│   ├── package.json
-│   └── vite.config.js
-├── backend/                 # Express backend
-│   ├── index.js            # Server and API routes
-│   ├── package.json
-│   └── .env               # Environment variables
-├── package.json           # Root package.json
-└── README.md
-```
-
-## 🔧 API Endpoints
-
-### POST `/generate-pdf`
-- **Description**: Generates PDF from LaTeX content
-- **Body**: `{ "tex": "LaTeX_content_string" }`
-- **Response**: PDF file download
-
-### POST `/enhance-text`
-- **Description**: Enhances text using AI for ATS optimization
-- **Body**: `{ "text": "content_to_enhance", "context": "section_context" }`
-- **Response**: `{ "enhancedText": "optimized_content" }`
+1.  **Fill Details**: Enter your personal info, education, experience, and skills.
+2.  **AI Enhance**: Click the "Enhance with AI" button next to text fields to optimize your content for ATS using Gemini 2.0.
+3.  **Customize**:
+    - Use the **Section Order** tab to drag and drop sections.
+    - Toggle **Dark/Light** mode for your preferred viewing experience.
+4.  **Preview**: The PDF preview updates automatically (on desktop).
+5.  **Download**: Click "Download PDF" to get your resume.
 
 ## ⚠️ Troubleshooting
 
-### Common Issues
+### PDF Generation Fails
+*   **Issue**: "Error generating PDF" or 500 error.
+*   **Fix**: Ensure `pdflatex` is installed and added to your system's PATH. Restart your terminal/IDE after installing LaTeX.
 
-1. **LaTeX compilation errors**:
-   - Ensure LaTeX is properly installed
-   - Check if all required LaTeX packages are available
-   - Try installing `texlive-full` for complete package set
+### AI Enhancement Not Working
+*   **Issue**: "Error from AI service".
+*   **Fix**: Check your `GOOGLE_API_KEY` in `backend/.env`. Ensure it has active quota.
 
-2. **AI enhancement not working**:
-   - Verify Google AI API key is correctly set in `.env`
-   - Check internet connection
-   - Ensure API key has proper permissions
-
-3. **PDF preview not loading**:
-   - Check browser console for errors
-   - Ensure React-PDF dependencies are installed
-   - Try refreshing the page
-
-4. **Port conflicts**:
-   - Change ports in `package.json` scripts if 5000 or 5173 are occupied
-   - Update backend port in frontend API calls if changed
-
-### Development Tips
-
-- Use browser developer tools to debug frontend issues
-- Check backend console logs for API errors
-- Test LaTeX compilation manually with sample `.tex` files
-- Monitor network tab for API request/response debugging
+### Styles Looking Wrong?
+*   **Fix**: Ensure you are using a modern browser. The project uses Tailwind CSS v4 features.
 
 ## 🤝 Contributing
 
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature-name`
-3. Commit changes: `git commit -am 'Add new feature'`
-4. Push to branch: `git push origin feature-name`
-5. Submit a Pull Request
-
-
-## 🙏 Acknowledgments
-
-- Google Generative AI for text enhancement capabilities
-- LaTeX community for excellent documentation
-- React and Vite teams for amazing development tools
-- Tailwind CSS for responsive design utilities
-
-## 📞 Support
-
-If you encounter any issues or have questions:
-
-1. Check the [Issues](https://github.com/Saurabh-1785/ResumeFlow/issues) page
-2. Create a new issue with detailed description
-3. Include system information and error logs
+Contributions are welcome! Please feel free to submit a Pull Request.
 
 ---
 
