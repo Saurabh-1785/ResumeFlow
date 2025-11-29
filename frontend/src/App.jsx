@@ -1,19 +1,28 @@
 import './index.css';
-import { useState, useEffect, useCallback } from "react";
-import GeneralInfo from "./components/GeneralInfo";
-import Education from "./components/Education";
-import Experience from "./components/Experience";
-import Projects from "./components/Projects";
-import Skills from "./components/Skills";
-import CustomSection from "./components/CustomSection";
-import Preview from "./components/Preview";
-import PdfPreview from './components/PdfPreview';
+import { useState, useEffect, useCallback, lazy, Suspense } from "react";
 import NavigationBar from './components/NavigationBar';
-import SectionOrder from './components/SectionOrder';
+import TemplateSelector from './components/TemplateSelector';
 import { generateLatex } from "./utils/generateLatex";
 import { mapStateToResumeData } from "./utils/resumeMapper";
 import { enhanceTextWithAI, generatePdf } from "./services/api";
-import TemplateSelector from './components/TemplateSelector';
+
+// Lazy load heavy components for code splitting
+const GeneralInfo = lazy(() => import("./components/GeneralInfo"));
+const Education = lazy(() => import("./components/Education"));
+const Experience = lazy(() => import("./components/Experience"));
+const Projects = lazy(() => import("./components/Projects"));
+const Skills = lazy(() => import("./components/Skills"));
+const CustomSection = lazy(() => import("./components/CustomSection"));
+const Preview = lazy(() => import("./components/Preview"));
+const PdfPreview = lazy(() => import('./components/PdfPreview'));
+const SectionOrder = lazy(() => import('./components/SectionOrder'));
+
+// Loading fallback component
+const LoadingFallback = () => (
+  <div className="flex items-center justify-center p-8">
+    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-800 dark:border-yellow-500"></div>
+  </div>
+);
 
 // --- Main App Component ---
 function App() {
@@ -297,14 +306,16 @@ function App() {
               <div className="w-full lg:w-1/2 xl:w-5/12 flex flex-col">
                 {/* --- RENDER CURRENT SECTION --- */}
                 <div className="flex-grow bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-3xl p-6 sm:p-8 shadow-xl border border-white/20 dark:border-gray-700/30 transition-all duration-300">
-                  {step === 0 && <GeneralInfo data={general} setData={setGeneral} onSaveChanges={!isMobile ? updatePreview : undefined} isUpdating={isUpdating} enhancingId={enhancingId} onEnhance={handleEnhanceWithAI} />}
-                  {step === 1 && <Education data={education} setData={setEducation} onSaveChanges={!isMobile ? updatePreview : undefined} isUpdating={isUpdating} />}
-                  {step === 2 && <Experience data={experience} setData={setExperience} onSaveChanges={!isMobile ? updatePreview : undefined} isUpdating={isUpdating} enhancingId={enhancingId} onEnhance={handleEnhanceWithAI} />}
-                  {step === 3 && <Projects data={projects} setData={setProjects} onSaveChanges={!isMobile ? updatePreview : undefined} isUpdating={isUpdating} enhancingId={enhancingId} onEnhance={handleEnhanceWithAI} />}
-                  {step === 4 && <Skills data={skills} setData={setSkills} onSaveChanges={!isMobile ? updatePreview : undefined} isUpdating={isUpdating} onMobilePreview={handleMobilePreview} isMobile={isMobile} />}
-                  {step === 5 && <CustomSection data={customSections} setData={setCustomSections} onSaveChanges={!isMobile ? updatePreview : undefined} isUpdating={isUpdating} enhancingId={enhancingId} onEnhance={handleEnhanceWithAI} onMobilePreview={handleMobilePreview} isMobile={isMobile} />}
-                  {step === 6 && <SectionOrder sectionOrder={sectionOrder} setSectionOrder={setSectionOrder} onSaveChanges={!isMobile ? updatePreview : undefined} isUpdating={isUpdating} />}
-                  {step === 7 && <Preview general={general} education={education} experience={experience} projects={projects} skills={skills} customSections={customSections} setStep={setStep} onDownloadPDF={handleDownloadPDF} onDownloadLatex={handleDownloadLatex} />}
+                  <Suspense fallback={<LoadingFallback />}>
+                    {step === 0 && <GeneralInfo data={general} setData={setGeneral} onSaveChanges={!isMobile ? updatePreview : undefined} isUpdating={isUpdating} enhancingId={enhancingId} onEnhance={handleEnhanceWithAI} />}
+                    {step === 1 && <Education data={education} setData={setEducation} onSaveChanges={!isMobile ? updatePreview : undefined} isUpdating={isUpdating} />}
+                    {step === 2 && <Experience data={experience} setData={setExperience} onSaveChanges={!isMobile ? updatePreview : undefined} isUpdating={isUpdating} enhancingId={enhancingId} onEnhance={handleEnhanceWithAI} />}
+                    {step === 3 && <Projects data={projects} setData={setProjects} onSaveChanges={!isMobile ? updatePreview : undefined} isUpdating={isUpdating} enhancingId={enhancingId} onEnhance={handleEnhanceWithAI} />}
+                    {step === 4 && <Skills data={skills} setData={setSkills} onSaveChanges={!isMobile ? updatePreview : undefined} isUpdating={isUpdating} onMobilePreview={handleMobilePreview} isMobile={isMobile} />}
+                    {step === 5 && <CustomSection data={customSections} setData={setCustomSections} onSaveChanges={!isMobile ? updatePreview : undefined} isUpdating={isUpdating} enhancingId={enhancingId} onEnhance={handleEnhanceWithAI} onMobilePreview={handleMobilePreview} isMobile={isMobile} />}
+                    {step === 6 && <SectionOrder sectionOrder={sectionOrder} setSectionOrder={setSectionOrder} onSaveChanges={!isMobile ? updatePreview : undefined} isUpdating={isUpdating} />}
+                    {step === 7 && <Preview general={general} education={education} experience={experience} projects={projects} skills={skills} customSections={customSections} setStep={setStep} onDownloadPDF={handleDownloadPDF} onDownloadLatex={handleDownloadLatex} />}
+                  </Suspense>
                 </div>
 
                 {/* --- RESPONSIVE PREVIOUS/NEXT BUTTONS --- */}
@@ -338,7 +349,9 @@ function App() {
                   <div className="sticky top-24 h-[calc(100vh-6rem)] flex flex-col">
                     <div className="flex-grow bg-gray-100 dark:bg-gray-900 rounded-2xl shadow-2xl overflow-hidden border border-gray-200 dark:border-gray-700 relative group">
                       <div className="absolute inset-0 bg-grid-slate-200 [mask-image:linear-gradient(0deg,#fff,rgba(255,255,255,0.6))] dark:bg-grid-slate-700/25 dark:[mask-image:linear-gradient(0deg,rgba(255,255,255,0.1),rgba(255,255,255,0.5))]" />
-                      <PdfPreview pdfUrl={pdfUrl} />
+                      <Suspense fallback={<LoadingFallback />}>
+                        <PdfPreview pdfUrl={pdfUrl} />
+                      </Suspense>
                     </div>
                   </div>
                 </div>
