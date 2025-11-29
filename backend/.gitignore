@@ -7,3 +7,7 @@
 # Ignore .env file
 .env
 node_modules/
+
+.aux
+.out
+

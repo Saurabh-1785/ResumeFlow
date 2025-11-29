@@ -17,6 +17,14 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 
+// --- Database Connection ---
+import connectDB from './config/db.js';
+connectDB();
+
+// --- Routes ---
+import authRoutes from './routes/authRoutes.js';
+app.use('/api/auth', authRoutes);
+
 // --- API Endpoints ---
 
 /**
@@ -25,41 +33,41 @@ app.use(express.json({ limit: '10mb' }));
  * @access  Public
  */
 app.post('/generate-pdf', (req, res) => {
-    const { tex } = req.body;
+  const { tex } = req.body;
 
-    if (!tex) {
-        return res.status(400).send('Missing TeX content.');
+  if (!tex) {
+    return res.status(400).send('Missing TeX content.');
+  }
+  const fileName = `resume_${Date.now()}`;
+  const texPath = path.join(__dirname, `${fileName}.tex`);
+  const pdfPath = path.join(__dirname, `${fileName}.pdf`);
+
+  fs.writeFile(texPath, tex, (err) => {
+    if (err) {
+      console.error('Error writing .tex file:', err);
+      return res.status(500).send('Error creating .tex file.');
     }
-    const fileName = `resume_${Date.now()}`;
-    const texPath = path.join(__dirname, `${fileName}.tex`);
-    const pdfPath = path.join(__dirname, `${fileName}.pdf`);
 
-    fs.writeFile(texPath, tex, (err) => {
+    exec(`pdflatex -output-directory=${__dirname} ${texPath}`, (error, stdout, stderr) => {
+      // Cleanup the temporary files
+      fs.unlink(texPath, () => { });
+      fs.unlink(path.join(__dirname, `${fileName}.aux`), () => { });
+      fs.unlink(path.join(__dirname, `${fileName}.log`), () => { });
+
+      if (error) {
+        console.error('PDF Generation Error:', stderr);
+        return res.status(500).send('Error generating PDF.');
+      }
+
+      res.sendFile(pdfPath, (err) => {
         if (err) {
-            console.error('Error writing .tex file:', err);
-            return res.status(500).send('Error creating .tex file.');
+          console.error('Error sending PDF file:', err);
         }
-
-        exec(`pdflatex -output-directory=${__dirname} ${texPath}`, (error, stdout, stderr) => {
-            // Cleanup the temporary files
-            fs.unlink(texPath, () => {});
-            fs.unlink(path.join(__dirname, `${fileName}.aux`), () => {});
-            fs.unlink(path.join(__dirname, `${fileName}.log`), () => {});
-
-            if (error) {
-                console.error('PDF Generation Error:', stderr);
-                return res.status(500).send('Error generating PDF.');
-            }
-
-            res.sendFile(pdfPath, (err) => {
-                if (err) {
-                    console.error('Error sending PDF file:', err);
-                }
-                // Cleanup the PDF file after sending
-                fs.unlink(pdfPath, () => {});
-            });
-        });
+        // Cleanup the PDF file after sending
+        fs.unlink(pdfPath, () => { });
+      });
     });
+  });
 });
 
 /**
@@ -77,14 +85,14 @@ app.post('/enhance-text', async (req, res) => {
   console.log('API Key first 10 chars:', GEMINI_API_KEY?.substring(0, 10) + '...');
 
   if (!text || !context) {
-      return res.status(400).json({ error: 'Text and context are required.' });
+    return res.status(400).json({ error: 'Text and context are required.' });
   }
 
   if (!GEMINI_API_KEY || GEMINI_API_KEY === 'YOUR_GEMINI_API_KEY_HERE') {
-      console.error('AI API key is missing or not configured in .env file.');
-      return res.status(500).json({ error: 'AI API key is not configured.' });
+    console.error('AI API key is missing or not configured in .env file.');
+    return res.status(500).json({ error: 'AI API key is not configured.' });
   }
-  
+
   // Updated API URL - using the correct v1 endpoint instead of v1beta
   const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
 
@@ -215,19 +223,19 @@ app.post('/enhance-text', async (req, res) => {
   // Usage example in your enhance-text endpoint:
   const getContextualPrompt = (text, context) => {
     const basePrompt = prompt.replace('${text}', text).replace('${context}', context);
-    
+
     // Add section-specific guidance if available
     const sectionGuidance = sectionSpecificPrompts[context.toLowerCase()];
     if (sectionGuidance) {
       return basePrompt + `\n\nADDITIONAL CONTEXT-SPECIFIC GUIDANCE:\n${sectionGuidance}`;
     }
-    
+
     return basePrompt;
   };
 
   const requestBody = {
-    contents: [{ 
-      parts: [{ text: prompt }] 
+    contents: [{
+      parts: [{ text: prompt }]
     }],
     generationConfig: {
       temperature: 0.7,
@@ -259,55 +267,55 @@ app.post('/enhance-text', async (req, res) => {
 
   try {
     const apiResponse = await fetch(GEMINI_API_URL, {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(requestBody)
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(requestBody)
     });
 
     console.log('API Response status:', apiResponse.status);
 
     if (!apiResponse.ok) {
-        const errorBody = await apiResponse.text();
-        console.error('Error from AI API:', errorBody);
-        
-        // Try to parse as JSON, but fallback to text if it fails
-        let errorMessage = 'Unknown error occurred';
-        try {
-          const errorJson = JSON.parse(errorBody);
-          errorMessage = errorJson.error?.message || errorJson.message || errorBody;
-        } catch {
-          errorMessage = errorBody;
-        }
-        
-        return res.status(apiResponse.status).json({ 
-          error: `Error from AI service: ${errorMessage}` 
-        });
+      const errorBody = await apiResponse.text();
+      console.error('Error from AI API:', errorBody);
+
+      // Try to parse as JSON, but fallback to text if it fails
+      let errorMessage = 'Unknown error occurred';
+      try {
+        const errorJson = JSON.parse(errorBody);
+        errorMessage = errorJson.error?.message || errorJson.message || errorBody;
+      } catch {
+        errorMessage = errorBody;
+      }
+
+      return res.status(apiResponse.status).json({
+        error: `Error from AI service: ${errorMessage}`
+      });
     }
 
     const data = await apiResponse.json();
     console.log('API Response received:', JSON.stringify(data, null, 2));
-    
+
     if (!data.candidates || !data.candidates[0] || !data.candidates[0].content || !data.candidates[0].content.parts || !data.candidates[0].content.parts[0] || !data.candidates[0].content.parts[0].text) {
-        console.error('Unexpected response structure from AI API:', data);
-        return res.status(500).json({ error: 'Received an unexpected response from the AI service.' });
+      console.error('Unexpected response structure from AI API:', data);
+      return res.status(500).json({ error: 'Received an unexpected response from the AI service.' });
     }
-    
+
     const enhancedText = data.candidates[0].content.parts[0].text;
     console.log('Enhanced text generated successfully');
     res.json({ enhancedText: enhancedText.trim() });
 
   } catch (error) {
-      console.error('Internal server error while calling AI service:', error);
-      res.status(500).json({ error: 'An internal error occurred while enhancing the text.' });
+    console.error('Internal server error while calling AI service:', error);
+    res.status(500).json({ error: 'An internal error occurred while enhancing the text.' });
   }
 });
 
 // --- Start Server ---
 app.listen(PORT, () => {
-    console.log(`🚀 Server is running on http://localhost:${PORT}`);
-    console.log('Environment variables check:');
-    console.log('- GOOGLE_API_KEY exists:', !!process.env.GOOGLE_API_KEY);
-    console.log('- PORT:', process.env.PORT || 5000);
+  console.log(`🚀 Server is running on http://localhost:${PORT}`);
+  console.log('Environment variables check:');
+  console.log('- GOOGLE_API_KEY exists:', !!process.env.GOOGLE_API_KEY);
+  console.log('- PORT:', process.env.PORT || 5000);
 });

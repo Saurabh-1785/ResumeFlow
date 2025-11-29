@@ -1,0 +1,5 @@
+{
+    "terminal.explorerKind": "both",
+    "terminal.integrated.accessibleViewPreserveCursorPosition": true,
+    "terminal.integrated.accessibleViewFocusOnCommandExecution": true
+}
