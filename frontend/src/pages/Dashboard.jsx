@@ -4,7 +4,6 @@ import TemplateSelector from '../components/TemplateSelector';
 import { generateLatex } from "../utils/generateLatex";
 import { mapStateToResumeData } from "../utils/resumeMapper";
 import { enhanceTextWithAI, generatePdf } from "../services/api";
-import { useAuth } from "../context/AuthContext";
 import { useNavigate, useLocation } from "react-router-dom";
 
 // Lazy load heavy components for code splitting
@@ -26,7 +25,6 @@ const LoadingFallback = () => (
 );
 
 const Dashboard = () => {
-    const { user, logout, loading } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -56,12 +54,6 @@ const Dashboard = () => {
         { id: 'experience', name: 'Experience', enabled: true },
         { id: 'custom', name: 'Custom Sections', enabled: true }
     ]);
-
-    useEffect(() => {
-        if (!loading && !user) {
-            navigate('/login');
-        }
-    }, [user, loading, navigate]);
 
     useEffect(() => {
         if (darkMode) {
@@ -217,8 +209,6 @@ const Dashboard = () => {
 
     const isPreviewStep = step === 7;
 
-    if (loading) return <LoadingFallback />;
-
     return (
         <div className="min-h-screen bg-stone-50 dark:bg-gray-900 transition-colors duration-500 font-sans selection:bg-yellow-200 dark:selection:bg-yellow-900">
             <NavigationBar
@@ -233,8 +223,6 @@ const Dashboard = () => {
                 setMobileMenuOpen={setMobileMenuOpen}
                 darkMode={darkMode}
                 toggleTheme={toggleTheme}
-                user={user}
-                logout={logout}
             />
 
             <div className="relative flex flex-col items-center justify-center p-4 sm:p-8 lg:p-12 min-h-screen pt-24">
