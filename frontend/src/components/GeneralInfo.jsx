@@ -16,9 +16,6 @@ const GeneralInfo = ({ data, setData, onSaveChanges, isUpdating, enhancingId, on
     <div className="space-y-6 animate-fadeIn">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold text-gray-800 dark:text-white flex items-center gap-3">
-          <span className="flex items-center justify-center w-10 h-10 rounded-xl bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-500 text-xl">
-            👤
-          </span>
           General Information
         </h2>
       </div>
@@ -29,7 +26,7 @@ const GeneralInfo = ({ data, setData, onSaveChanges, isUpdating, enhancingId, on
           <input
             type="text"
             name="name"
-            placeholder="e.g. John Doe"
+            placeholder="e.g. Saurabh Chauhan"
             value={data.name}
             onChange={handleChange}
             className="w-full"
@@ -41,7 +38,7 @@ const GeneralInfo = ({ data, setData, onSaveChanges, isUpdating, enhancingId, on
           <input
             type="email"
             name="email"
-            placeholder="e.g. john@example.com"
+            placeholder="e.g. saurabh@example.com"
             value={data.email}
             onChange={handleChange}
             className="w-full"
@@ -53,7 +50,7 @@ const GeneralInfo = ({ data, setData, onSaveChanges, isUpdating, enhancingId, on
           <input
             type="text"
             name="phone"
-            placeholder="e.g. +1 (555) 123-4567"
+            placeholder="e.g. +91-1234567890"
             value={data.phone}
             onChange={handleChange}
             className="w-full"
@@ -65,7 +62,7 @@ const GeneralInfo = ({ data, setData, onSaveChanges, isUpdating, enhancingId, on
           <input
             type="text"
             name="github"
-            placeholder="github.com/johndoe"
+            placeholder="github.com/saurabhchauhan"
             value={data.github}
             onChange={handleChange}
             className="w-full"
@@ -77,7 +74,7 @@ const GeneralInfo = ({ data, setData, onSaveChanges, isUpdating, enhancingId, on
           <input
             type="text"
             name="linkedin"
-            placeholder="linkedin.com/in/johndoe"
+            placeholder="linkedin.com/in/saurabhchauhan"
             value={data.linkedin}
             onChange={handleChange}
             className="w-full"

@@ -38,9 +38,6 @@ const CustomSection = ({ data, setData, onSaveChanges, isUpdating, enhancingId, 
     <div className="space-y-6 animate-fadeIn">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold text-gray-800 dark:text-white flex items-center gap-3">
-          <span className="flex items-center justify-center w-10 h-10 rounded-xl bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-500 text-xl">
-            📝
-          </span>
           Custom Sections
         </h2>
         <button
